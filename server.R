@@ -1,3 +1,4 @@
+# EDCmet
 library(shiny)
 library(shinyjs)
 options(shiny.maxRequestSize=100*1024^2)   # maximum 100 mb upload limit for the bigger networks
