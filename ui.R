@@ -171,7 +171,7 @@ shinyUI(
         
         
         #  # 4. tab Class probabities for EDCs -----------------------------------------
-        
+        #'inputData/all_precompiled_pipeline.rds'
         
         tabItem(tabName = 'p3',         
                  headerPanel('Compound EDC Probability'), 
@@ -187,6 +187,13 @@ shinyUI(
                             "as well as the EDC scores for maximum 5 compounds ",
                             ""),hr(),hr(),
                    textInput("txt_input_newcompound_name", "Name of the compound", value = "new_compound"),
+                   bsButton("qtfile", label = "", icon = icon("question"), style = "info", size = "extra-small"),
+                   bsPopover(id = "qtfile", title = "Precompiled networks",
+                             content = paste0('For this module to run the file inputData/all_precompiled_pipeline.rds  ',
+                                              'should exist'),
+                             placement = "right", 
+                             trigger = "hover",
+                             options = list(container = "body")),
                    textInput("txt_input_mies", "MIES of one compound", value = "4617,4654,4656,5077,25937"),
                    useShinyjs(),
                    actionButton(inputId = 'mie2classprob_btn',label = 'Calculate from MIEs'),hr()
