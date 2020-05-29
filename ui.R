@@ -189,7 +189,7 @@ shinyUI(
                    textInput("txt_input_newcompound_name", "Name of the compound", value = "new_compound"),
                    bsButton("qtfile", label = "", icon = icon("question"), style = "info", size = "extra-small"),
                    bsPopover(id = "qtfile", title = "Precompiled networks",
-                             content = paste0('For this module to run the file large_file/all_precompiled_pipeline.rds  ',
+                             content = paste0('For this module to run the file large_file/all_precompiled_pipeline.RDSS  ',
                                               'should exist'),
                              placement = "right", 
                              trigger = "hover",
