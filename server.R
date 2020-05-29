@@ -1,4 +1,4 @@
-# EDCmet project Rshiny app
+# 
 library(shiny)
 library(shinyjs)
 options(shiny.maxRequestSize=100*1024^2)   # maximum 100 mb upload limit for the bigger networks
@@ -316,7 +316,8 @@ function(input,output,session){
   updateSelectInput(session,"edc_score_layer_input",choices = networks,selected = networks[c(1,2,4,13,14,15)])
   ranges_class_prob <- reactiveValues(x = NULL, y = NULL)
   ranges_edc_score <- reactiveValues(x = NULL, y = NULL)
-  if(!file.exists('inputData/all_precompiled_pipeline.rds'))shinyjs::hide('mie2classprob_btn')
+  path_2_network<-'large_file/all_precompiled_pipeline.rds'
+  if(!file.exists(path_2_network))shinyjs::hide('mie2classprob_btn')
   
   observeEvent(input$plot_class_prob_scores_dbl_click, {brush_adjust(input$class_prob_scores_brush, ranges_class_prob)}) #plot fucntion call
   
@@ -351,7 +352,7 @@ function(input,output,session){
 
       
       newcomp<-strsplit(input$txt_input_mies,',') #genes as MIEs
-      if (!"all_pipeline_precompiled_data" %in% ls())all_pipeline_precompiled_data<-readRDS('inputData/all_precompiled_pipeline.rds')
+      if (!"all_pipeline_precompiled_data" %in% ls())all_pipeline_precompiled_data<-readRDS(path_2_network)
       
       results<-onecompound_mies2classprob(all_pipeline_precompiled_data$networks,
                                           all_pipeline_precompiled_data$pathways,
