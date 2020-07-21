@@ -1,38 +1,17 @@
 # EDC_shiny
 ## EDC_shiny Execution Steps
 ## Run EDC_shiny
-## Install Dependencies
-# Install CRAN dependencies
-# cran_pkgs <- c(  "doParallel", "foreach", "igraph", "plyr", "shiny",
-#                 "shinyjs", "shinyBS", "shinydashboard",  "DT", 
-#                  "ggplot2","RColorBrewer", "dnet","tidyr")
+# Install Dependencies
+## Install CRAN dependencies
+## cran_pkgs <- c(  "doParallel", "foreach", "igraph", "plyr", "shiny","shinyjs", "shinyBS", "shinydashboard",  "DT", "ggplot2","RColorBrewer", "dnet","tidyr")
 
-## cran_pkgs.inst <- cran_pkgs[!(cran_pkgs %in% rownames(installed.packages()))]
-## if(length(cran_pkgs.inst)>0){
-## print(paste0("Missing ", length(cran_pkgs.inst), " CRAN Packages:"))
-## for(pkg in cran_pkgs.inst){
-##    print(paste0("Installing Package:'", pkg, "'..."))
-##    install.packages(pkg, repo="http://cran.rstudio.org", dependencies=TRUE)
-##    print("Installed!!!")
-##  }
-## }
+## cran_pkgs.inst <- cran_pkgs[!(cran_pkgs %in% rownames(installed.packages()))]; if(length(cran_pkgs.inst)>0){ print(paste0("Missing ", length(cran_pkgs.inst), " CRAN Packages:")); for(pkg in cran_pkgs.inst){print(paste0("Installing Package:'", pkg, "'..."));  install.packages(pkg, repo="http://cran.rstudio.org", dependencies=TRUE);print("Installed!!!") }}
 
-## source("http://bioconductor.org/biocLite.R")
-## bioc_pkgs <- c( "supraHex","hexbin",  "fgsea")
-## bioc_pkgs.inst <- bioc_pkgs[!(bioc_pkgs %in% rownames(installed.packages()))]
-## if(length(bioc_pkgs.inst)>0){
-##  source("http://bioconductor.org/biocLite.R")
-##  print(paste0("Missing ", length(bioc_pkgs.inst), " Bioconductor Packages:"))
-##  for(pkg in bioc_pkgs.inst){
-##  print(paste0("Installing Package:'", pkg, "'..."))
-##  biocLite(pkg, suppressUpdates=TRUE)
-##  print("Installed!!!")
-##  }
-## }
+## source("http://bioconductor.org/biocLite.R"); bioc_pkgs <- c( "supraHex","hexbin",  "fgsea");bioc_pkgs.inst <- bioc_pkgs[!(bioc_pkgs %in% rownames(installed.packages()))];if(length(bioc_pkgs.inst)>0){source("http://bioconductor.org/biocLite.R");print(paste0("Missing ", length(bioc_pkgs.inst), " Bioconductor Packages:"));  for(pkg in bioc_pkgs.inst){print(paste0("Installing Package:'", pkg, "'..."));  biocLite(pkg, suppressUpdates=TRUE); print("Installed!!!")}}
 
 # Launch from GitHub
-# Load 'shiny' library
-# library(shiny)
+## Load 'shiny' library
+## library(shiny)
 # Using runGitHub
 # runGitHub("EDC_shiny", "vittoriofortino84", subdir="INfORM-app")
 # Using the archived file
@@ -45,8 +24,4 @@
 ## setwd("~/EDC-shiny")
 
 
-# shiny::runApp(appDir = getwd(), port = getOption("shiny.port"),
-#       launch.browser = getOption("shiny.launch.browser", interactive()),
-#       host = getOption("shiny.host", "127.0.0.1"), workerId = "",
-#       quiet = FALSE, display.mode = c("auto", "normal", "showcase"),
-#       test.mode = getOption("shiny.testmode", FALSE))
+# shiny::runApp(appDir = getwd(), port = getOption("shiny.port"),launch.browser = getOption("shiny.launch.browser", interactive()),host = getOption("shiny.host", "127.0.0.1"), workerId = "",quiet = FALSE, display.mode = c("auto", "normal", "showcase"), test.mode = getOption("shiny.testmode", FALSE))
