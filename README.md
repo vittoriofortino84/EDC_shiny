@@ -10,8 +10,7 @@
 #### source("http://bioconductor.org/biocLite.R"); bioc_pkgs <- c( "supraHex","hexbin",  "fgsea");bioc_pkgs.inst <- bioc_pkgs[!(bioc_pkgs %in% rownames(installed.packages()))];if(length(bioc_pkgs.inst)>0){source("http://bioconductor.org/biocLite.R");print(paste0("Missing ", length(bioc_pkgs.inst), " Bioconductor Packages:"));  for(pkg in bioc_pkgs.inst){print(paste0("Installing Package:'", pkg, "'..."));  biocLite(pkg, suppressUpdates=TRUE); print("Installed!!!")}}
 
 ## Launch from GitHub
-## Load 'shiny' library
-#### library(shiny)
+
 ## Using runGitHub
 #### runGitHub("EDC_shiny", "vittoriofortino84", subdir="INfORM-app")
 ## Using the archived file
