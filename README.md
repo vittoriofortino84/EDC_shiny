@@ -51,7 +51,7 @@ runUrl("https://github.com/vittoriofortino84/EDC_shiny/archive/master.zip", subd
 
 ```r
 ## Run by using runApp()
-#### setwd("~/EDC-shiny")
+setwd("~/EDC-shiny")
 shiny::runApp(appDir = getwd(), port = getOption("shiny.port"),
               launch.browser = getOption("shiny.launch.browser", interactive()),
               host = getOption("shiny.host", "127.0.0.1"), workerId = "",
