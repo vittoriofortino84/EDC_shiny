@@ -34,18 +34,28 @@ if(length(bioc_pkgs.inst)>0){
 
 ## Launch from GitHub
 
-```
-runGitHub("EDC_shiny", "vittoriofortino84", subdir="INfORM-app")
+```r
+runGitHub("EDC_shiny", "vittoriofortino84", subdir="EDC_shiny")
 ## Using the archived file
-#### runUrl("https://github.com/vittoriofortino84/EDC_shiny/archive/master.tar.gz", subdir="EDC-shiny")
-#### runUrl("https://github.com/vittoriofortino84/EDC_shiny/archive/master.zip", subdir="EDC-shiny")
-#### Launch locally
-## Clone the git repository
-#### git clone https://github.com/vittoriofortino84/EDC_shiny EDC_shiny_clone
-## Run by using runApp()
-#### setwd("~/EDC-shiny")
+runUrl("https://github.com/vittoriofortino84/EDC_shiny/archive/master.tar.gz", subdir="EDC-shiny")
+runUrl("https://github.com/vittoriofortino84/EDC_shiny/archive/master.zip", subdir="EDC-shiny")
 ```
 
 ```
-shiny::runApp(appDir = getwd(), port = getOption("shiny.port"),launch.browser = getOption("shiny.launch.browser", interactive()),host = getOption("shiny.host", "127.0.0.1"), workerId = "",quiet = FALSE, display.mode = c("auto", "normal", "showcase"), test.mode = getOption("shiny.testmode", FALSE))
+#### Launch locally
+## Clone the git repository
+#### git clone https://github.com/vittoriofortino84/EDC_shiny EDC_shiny_clone
 ```
+
+## Launch from R
+
+```r
+## Run by using runApp()
+#### setwd("~/EDC-shiny")
+shiny::runApp(appDir = getwd(), port = getOption("shiny.port"),
+              launch.browser = getOption("shiny.launch.browser", interactive()),
+              host = getOption("shiny.host", "127.0.0.1"), workerId = "",
+              quiet = FALSE, display.mode = c("auto", "normal", "showcase"), 
+              test.mode = getOption("shiny.testmode", FALSE))
+```
+
