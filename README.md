@@ -38,11 +38,6 @@ if(length(bioc_pkgs.inst)>0){
 if (!requireNamespace("BiocManager", quietly = TRUE))
     install.packages("BiocManager")
 BiocManager::install(version = "3.12")
-
-
-
-
-
 bioc_pkgs <- c( "supraHex","hexbin",  "fgsea")
 bioc_pkgs.inst <- bioc_pkgs[!(bioc_pkgs %in% rownames(installed.packages()))];
 if(length(bioc_pkgs.inst)>0){
