@@ -31,7 +31,26 @@ if(length(bioc_pkgs.inst)>0){
   }
 }
 ```
+```r
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+BiocManager::install(version = "3.12")
 
+
+
+
+
+bioc_pkgs <- c( "supraHex","hexbin",  "fgsea")
+bioc_pkgs.inst <- bioc_pkgs[!(bioc_pkgs %in% rownames(installed.packages()))];
+if(length(bioc_pkgs.inst)>0){
+ print(paste0("Missing ", length(bioc_pkgs.inst), " Bioconductor Packages:"));  
+  for(pkg in bioc_pkgs.inst){
+    print(paste0("Installing Package:'", pkg, "'..."));  
+    BiocManager::install(pkg)
+    print("Installed!!!")
+  }
+}
+```
 ## Launch from GitHub
 
 ```r
