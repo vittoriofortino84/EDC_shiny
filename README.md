@@ -17,6 +17,8 @@ if(length(cran_pkgs.inst)>0){
   }
 }
 ```
+
+## Install Bioconductor dependencies for R versions < 3.5
 ```r
 source("http://bioconductor.org/biocLite.R")
 bioc_pkgs <- c( "supraHex","hexbin",  "fgsea")
@@ -31,6 +33,7 @@ if(length(bioc_pkgs.inst)>0){
   }
 }
 ```
+## Install Bioconductor dependencies for R versions > 3.5
 ```r
 if (!requireNamespace("BiocManager", quietly = TRUE))
     install.packages("BiocManager")
