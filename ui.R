@@ -36,7 +36,7 @@ shinyUI(
                bsButton("qtf1", label = "", icon = icon("question"), style = "info", size = "extra-small"),
                bsPopover(id = "qtf1", title = "F1_scores",
                          content = paste0('a data frame as RDS file with two columns. The first column should be named values (the F1 scores)',
-                                          '. The second column should be named networks (a similar name for all rows).'),
+                                          '. The second column should be named networks (a similar name for all rows i.e example/outPut/F1_scores.rds).'),
                          placement = "right", 
                          trigger = "hover",
                          options = list(container = "body")),
