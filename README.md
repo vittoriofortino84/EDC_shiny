@@ -2,7 +2,7 @@
 ## EDC_shiny Execution Steps
 ## Run EDC_shiny
 ## Install Dependencies
-## Install CRAN dependencies
+### Install CRAN dependencies
 
 ```r
 cran_pkgs <- c("doParallel", "foreach", "igraph", "plyr", "shiny","shinyjs", "shinyBS", "shinydashboard", "DT", "ggplot2","RColorBrewer", "dnet","tidyr","ggpubr","rPref","caret","glmnet","shape")
@@ -18,7 +18,7 @@ if(length(cran_pkgs.inst)>0){
 }
 ```
 
-## Install Bioconductor dependencies for R versions < 3.5
+### Install Bioconductor dependencies for R versions < 3.5
 ```r
 source("http://bioconductor.org/biocLite.R")
 bioc_pkgs <- c( "supraHex","hexbin",  "fgsea","Rgraphviz")
@@ -33,7 +33,7 @@ if(length(bioc_pkgs.inst)>0){
   }
 }
 ```
-## Install Bioconductor dependencies for R versions > 3.5
+### Install Bioconductor dependencies for R versions > 3.5
 ```r
 if (!requireNamespace("BiocManager", quietly = TRUE))
     install.packages("BiocManager")
