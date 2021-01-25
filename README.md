@@ -56,11 +56,9 @@ runGitHub("EDC_shiny", "vittoriofortino84", subdir="EDC_shiny")
 runUrl("https://github.com/vittoriofortino84/EDC_shiny/archive/master.tar.gz", subdir="EDC-shiny")
 runUrl("https://github.com/vittoriofortino84/EDC_shiny/archive/master.zip", subdir="EDC-shiny")
 ```
-
+## Launch locally
 ```
-#### Launch locally
-## Clone the git repository
-#### git clone https://github.com/vittoriofortino84/EDC_shiny EDC_shiny_clone
+git clone https://github.com/vittoriofortino84/EDC_shiny EDC_shiny_clone
 ```
 
 ## Launch from R
