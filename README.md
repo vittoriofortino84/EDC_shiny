@@ -1,12 +1,4 @@
 # EDC_shiny
-## EDC_shiny Execution Steps
-### Summary Tab
-![alt text](https://github.com/vittoriofortino84/EDC_shiny/blob/master/example/figure/Summary_tab.png)
-
-
-- presents an overview of the 24 toxicogenomics data layers, the pathways used in this application as well as the distribution of the predicted toxicity scores across all 24 data layers for 12 k compounds in CTD.
-- The F1 accuracy of different data layers are compared using one boxplot. 
-- The input file bellow the F1 scores plot permits the user to upload and compare F1 accuracy score from a new generated classifier. 
 ## Run EDC_shiny
 ## Install Dependencies
 #### Install CRAN dependencies
@@ -83,3 +75,11 @@ shiny::runApp(appDir = getwd(), port = getOption("shiny.port"),
               test.mode = getOption("shiny.testmode", FALSE))
 ```
 
+## EDC_shiny Execution Steps
+### Summary Tab
+![alt text](https://github.com/vittoriofortino84/EDC_shiny/blob/master/example/figure/Summary_tab.png)
+
+
+- presents an overview of the 24 toxicogenomics data layers, the pathways used in this application as well as the distribution of the predicted toxicity scores across all 24 data layers for 12 k compounds in CTD.
+- The F1 accuracy of different data layers are compared using one boxplot. 
+- The input file bellow the F1 scores plot permits the user to upload and compare F1 accuracy score from a new generated classifier. 
