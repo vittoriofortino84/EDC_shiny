@@ -1,6 +1,6 @@
 # EDC_shiny
 ## EDC_shiny Execution Steps
-![alt text](http://url/to/img.png)
+![alt text](https://github.com/vittoriofortino84/EDC_shiny/blob/master/example/figure/Summary_tab.png)
 ## Run EDC_shiny
 ## Install Dependencies
 #### Install CRAN dependencies
