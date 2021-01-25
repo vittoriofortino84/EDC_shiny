@@ -1,5 +1,6 @@
 # EDC_shiny
 ## EDC_shiny Execution Steps
+![alt text](http://url/to/img.png)
 ## Run EDC_shiny
 ## Install Dependencies
 #### Install CRAN dependencies
