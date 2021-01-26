@@ -99,7 +99,7 @@ For the next two boxes including list of EDCs and MIEs and list of negative cont
 - After termination of machine learning and cross validation steps, the user can visualize the accuracy of the generated classifier as F1 scores and save the generated results including pathway activation scores together with the generated models and coefficients of the classifier, the F1 scores (input file for comparison of accuracy values in Summary tab) and the data frame of coefficients and pathway scores.
 
 ![alt text](https://github.com/vittoriofortino84/EDC_shiny/blob/master/example/figure/toxicogenomics_pipeline5.png)
-Using the generated classifier, it is possible to predict the EDC-probability as well as the class labels for the new compounds from their list of MIEs as starting point. At this point, it is also possible to load the models and classification from a previous experiment as RDS file for the predictions. The predicted results can be also saved from the export section of the panel as one RDS file.
+- Using the generated classifier, it is possible to predict the EDC-probability as well as the class labels for the new compounds from their list of MIEs as starting point. At this point, it is also possible to load the models and classification from a previous experiment as RDS file for the predictions. The predicted results can be also saved from the export section of the panel as one RDS file.
 
 
 
