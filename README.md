@@ -1,8 +1,8 @@
 # EDC_shiny
 ## Description of EDC_shiny
 - EDC_shiny is a shiny app to predict endocrine disrupting compound (EDC) probability  using a machine learning approach based on toxicogenomics data. 
-In this approach random walk with restart on gene co-expression networks starting from molecular initiating events (genes related to the compounds) will be used before fast geneset enrichment analysis (FGSEA). The results of FGSEA will be used as pathway activation scores to train elastic net GLM classifier with compounds of known EDC effect and compounds without edc effect as negative controls (decoys). After validation of the classifier by means of cross validation the obtained model can be used to predict EDC probability of un known compound from a set primary perturbing known genes.  
-- This appraoch was used 
+In this approach random walk with restart on gene co-expression networks starting from MIES ,molecular initiating events, (perturbing genes related to each compounds) will be used before fast geneset enrichment analysis (FGSEA). The results of FGSEA will be used as pathway activation scores to train elastic net GLM classifier with compounds of known EDC effect and compounds without edc effect as negative controls (decoys). After validation of the classifier by means of cross validation the obtained model can be used to predict EDC probability of unknown compound from a set of primary perturbing known genes.  
+- This approach was tested to predict the EDC probability of 12 K compounds in CTD using a large toxicogenomics data space composed of DrugMatrix, open TG-gates, LINCS and PPI. For this purpose 24 gene co-expression networks werer compiled using transcritpome level of data and the MIEs from CTD were used in this approach to obtain the probabilty scores from all these 24 networks. While the user can use his own network, training set and set of MIES, all these knowledge based data for the precompiled networks and 12K componuds are implemented in EDC shiny.
 ## Install Dependencies
 #### Install CRAN dependencies
 
