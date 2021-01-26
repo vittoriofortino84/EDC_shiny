@@ -102,6 +102,8 @@ For the next two boxes including list of EDCs and MIEs and list of negative cont
 - Using the generated classifier, it is possible to predict the EDC-probability as well as the class labels for the new compounds from their list of MIEs as starting point. At this point, it is also possible to load the models and classification from a previous experiment as RDS file for the predictions. The predicted results can be also saved from the export section of the panel as one RDS file.
 
 ### Pathway activation scores tab
+![alt text](https://github.com/vittoriofortino84/EDC_shiny/blob/master/example/figure/pathway_score.png)
+- Putative pathways as the possible mode of action for the EDCs are displayed as a bubble plot where the size of the circles represent the GLM coefficients and the color represent the pathway activation (NES) scores. It is also possible to select specific class of pathways i.e. KEGG, REACTOME,etc or data layers for comparison. While the data frame the previous step is automatically updated in the list of layers, it is possible to add a new data frame manually to the list for comparison. In this case the data frame should be one RDS file with five columns. The first column should be the name of the data layer, the second column should be the average of pathway activations scores across all EDCs for that pathway, the third column is the GLM coefficients for the pathway, and the last column is the name of the pathway. The user can select any names for the columns but the order should be as described above.
 
 
 
