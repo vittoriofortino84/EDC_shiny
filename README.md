@@ -83,9 +83,11 @@ shiny::runApp(appDir = getwd(), port = getOption("shiny.port"),
 - The input file bellow the F1 scores plot permits the user to upload and compare F1 accuracy score from a new generated machine learning based classifier. 
 ### Toxicogenomics Pipeline Tab
 ![alt text](https://github.com/vittoriofortino84/EDC_shiny/blob/master/example/figure/Toxicogenomics_pipeline.png)
+
 - In this tab the concept of gene-gene network, random walk with restart and gene set enrichment analysis will be used for classification of EDCs and negative controls (decoys). Meanwhile, it is possible to predict the EDC class probability for new compounds using the generated classifier model.
 The user can select the CPU usage for the shiny application in the box named number of CPUs from the main panel. A proper name for the Job name box is highly recommended to make it possible for further analyses of the results including comparison of F1-scores, GLM coefficients and pathway activation scores between previously generated data layers and the one generated with this application.
 Gene-gene networks should be one RDS file with three columns; the first two columns represent the edges as the nodes related to gene co-expression network and the third column is the weights or topological overlaps between the edges. Different packages including wTO or wGCNA can be utilized to prepare the gene-gene networks for EDC-shiny application.
 For the next two boxes including list of EDCs and MIEs and list of negative controls and MIEs, the user should provide the list of compounds and their MIEs as RDS files for the compounds used as training set (EDCs and negative controls).
 
+![alt text](https://github.com/vittoriofortino84/EDC_shiny/blob/master/example/figure/toxicogenomics_pipeline2.png)
 
