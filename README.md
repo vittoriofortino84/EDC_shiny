@@ -1,5 +1,8 @@
 # EDC_shiny
-## Run EDC_shiny
+## Description of EDC_shiny
+EDC_shiny is a shiny app to predict endocrine disrupting compound (EDC) probability of the compounds using a machine learning approach on toxicogenomics data.
+classification 
+(elastic net generalized linear models) of pathway activation scores
 ## Install Dependencies
 #### Install CRAN dependencies
 
