@@ -92,3 +92,5 @@ For the next two boxes including list of EDCs and MIEs and list of negative cont
 ![alt text](https://github.com/vittoriofortino84/EDC_shiny/blob/master/example/figure/toxicogenomics_pipeline2.png)
 - To increase the homogeneity of the networks and enhance robustness of enrichment analysis, the user can select to use pareto solution for optimization. In this step the pipeline will be optimized based on three parameters: (1) selection of the top K (.02, .03, .05, .1) proportion of the edges with respect to their topological overlap or correlation; (2) selection of the top N (200, 500, 1000) genes (based on the probabilities calculated by the RWR) with the highest proximities with respect to ED-MIEs; (3) silhouette scores to measure the EDC-cluster cohesion based on the set of N genes selected with the RWR. The final combination of K and N values giving the highest silhouette score within each network will be suggested by the EDC shiny application for the further random walk with restart and gene set enrichment steps of the pipeline.
 
+![alt text](https://github.com/vittoriofortino84/EDC_shiny/blob/master/example/figure/toxicogenomics_pipeline3.png)
+
