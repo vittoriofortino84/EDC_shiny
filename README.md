@@ -100,15 +100,15 @@ For the next two boxes including list of EDCs and MIEs and list of negative cont
 - Using the generated classifier, it is possible to predict the EDC-probability as well as the class labels for the new compounds from their list of MIEs as starting point. At this point, it is also possible to load the models and classification from a previous experiment as RDS file for the predictions. The predicted results can be also saved from the export section of the panel as one RDS file.
 
 ### Pathway activation scores tab
-![alt text](https://github.com/vittoriofortino84/EDC_shiny/blob/master/example/figure/pathway_score.png)
+<img src="https://github.com/vittoriofortino84/EDC_shiny/blob/master/example/figure/pathway_score.png" width="600">
 - Putative pathways as the possible mode of action for the EDCs are displayed as a bubble plot where the size of the circles represent the GLM coefficients and the color represent the pathway activation (NES) scores. It is also possible to select specific class of pathways i.e. KEGG, REACTOME,etc or data layers for comparison. While the data frame the previous step is automatically updated in the list of layers, it is possible to add a new data frame manually to the list for comparison. In this case the data frame should be one RDS file with five columns. The first column should be the name of the data layer, the second column should be the average of pathway activations scores across all EDCs for that pathway, the third column is the GLM coefficients for the pathway, and the last column is the name of the pathway. The user can select any names for the columns but the order should be as described above.
 
 ### Predicted EDC scores Tab
-![alt text](https://github.com/vittoriofortino84/EDC_shiny/blob/master/example/figure/predicted_score.png)
+<img src="https://github.com/vittoriofortino84/EDC_shiny/blob/master/example/figure/predicted_score.png" width="600">
 - In this tab it is possible to visualize our compiled class probabilities for about 12 K compounds in CTD across 24 data layers. Meanwhile, it is possible to compare the results of class probabilities as well as average and harmonic sum EDC scores with other compounds using an interactive plot and table.  The user can select any combination of data layers for compiling the average and harmonic sum EDC scores.
 In another module of this tab, it is possible to predict the class probability and EDC scores for a new compound using its MIEs (genes) as starting points. By running “Calculate from MIEs”, the MIEs will be used as the seed genes to start random walk with restart and gene set enrichment analysis with 24 optimized networks and the resulting pathway scores will be used to predict class probabilities and EDC scores for the new compound. The result of prediction for the new compound can be compared with other compounds in EDC shiny database.
 
 ### Toxpi scores Tab
-![alt text](https://github.com/vittoriofortino84/EDC_shiny/blob/master/example/figure/toxpi_tab.png)
+<img src="https://github.com/vittoriofortino84/EDC_shiny/blob/master/example/figure/toxpi_score.png" width="600">
 - Different data layers can be selected by the user to evaluate the compiled average EDC score with ToxPi score. The interactive scatter plot allows the user to click on each compound and visualize the generated EDC score in comparison with ToxPi score. The link to comptox dashboard for each compound will be also generated which directs the user to monograph of the compound where more updated data regarding the hazard assessment and other experimental in vitro assays can be found. It is also possible to export the input data for the generated plots as csv file using EDC-shiny application.
 
