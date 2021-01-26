@@ -75,7 +75,7 @@ shiny::runApp(appDir = getwd(), port = getOption("shiny.port"),
 
 ## EDC_shiny Execution Steps
 ### Summary Tab
-![alt text](https://github.com/vittoriofortino84/EDC_shiny/blob/master/example/figure/Summary_tab.png)
+![alt text](https://github.com/vittoriofortino84/EDC_shiny/blob/master/example/figure/Summary_tab.png | width=100)
 
 
 - presents an overview of the 24 toxicogenomics data layers, the pathways used in this application as well as the distribution of the predicted toxicity scores across all 24 data layers for 12 k compounds in CTD.
