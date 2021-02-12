@@ -1,50 +1,52 @@
-bar_stat<-function(patwa_statistics){ 
-require(ggplot2)
-p<-ggplot(patwa_statistics, aes(x=type,
-                             y=number,
-                             fill=type)) +
-  geom_bar(stat="identity",show.legend = F)+
-  ggtitle('Pathways Used in the pipeline')+
-  ylab('Number of Pathways')+xlab('')+
-  theme_minimal()+
-  theme(legend.position = 'bottom',
-        axis.title.y =  element_text(size = 14),
-        axis.text.x=element_text(size = 14,angle = 45 ,hjust = 1 ))
-return(p)
-}# used in summary tab for barplot of pathways
+# Bar plot of pathway numbers --------------------------------------------------
 
-
-pie_chart<-function(pie_data,title){
+bar_stat <- function(patwa_statistics){ 
   require(ggplot2)
-  ggplot(pie_data, aes(x = 2, y = prop, fill=factor(Category,levels=rev(Category)))) +
-    geom_bar(stat = "identity", color = "white") +
-    coord_polar(theta = "y")+labs(fill=title)+
-    geom_text(aes(y = lab.ypos, label = Number), color = "Black",size=4)+
-    scale_fill_manual(values = rev(pie_data$colr))+
-    facet_wrap(.~pie_data$type)+
-    theme_void()+theme(legend.title = element_text(size = 14),
-                       strip.text = element_text(size = 16),
-                       legend.text = element_text(size = 14))+
-    xlim(0.5, 2.5)
-} # ggplot
-
-
-
-box_plot<-function(dat,nams,color_values,min_point=0.7){ 
-  require(ggplot2)
-  p<-ggplot(dat, aes(x=factor(networks,level=nams), y=values,fill=factor(networks,level=nams))) +
-    geom_boxplot(show.legend = F) +theme_minimal()+ ggtitle('Accuracy of Data layers')+
-    xlab('Data Layers')+
-    ylab('F1-score')+scale_fill_manual(values=color_values)+
-    labs(x='',fill='Data Layers')+
-    scale_y_continuous(breaks = seq(min_point,1,0.05), limits = c(min_point,1)) +
-    theme(axis.text.x=element_text(angle = 45,hjust = 1,size = 14),
-      axis.title.y = element_text(size = 16),
-      axis.ticks.x=element_blank(),legend.position = 'none',
-      plot.margin = margin(0, 0, 0, 5, "cm"),
-      panel.grid.minor = element_blank())
+  p <- ggplot(patwa_statistics, aes(x = type, y = number, fill=type)) +
+          geom_bar(stat = "identity", show.legend = F) +
+          ggtitle("") +
+          ylab("Number of Pathways") + xlab('') +
+          theme_minimal() +
+          theme(legend.position = "bottom",
+                axis.title.y = element_text(size = 14),
+                axis.text.x = element_text(size = 14, angle = 0, hjust = 1))
   return(p)
-}#used in summary tab for k-fold-cv results
+  }# used in summary tab for barplot of pathways
+
+
+# Doughnut/Pie chart of EDC average and harmonic scores distribution -----------
+
+pie_chart <- function(pie_data,title){
+  require(ggplot2)
+  ggplot(pie_data, aes(x = 2, y = prop, fill = factor(Category, levels = rev(Category)))) +
+    geom_bar(stat = "identity", color = "white") +
+    coord_polar(theta = "y") + labs(fill=title) +
+    geom_text(aes(y = lab.ypos, label = Number), color = "Black", size = 4) +
+    scale_fill_manual(values = rev(pie_data$colr)) +
+    facet_wrap(.~pie_data$type) +
+    theme_void() + 
+    theme(legend.title = element_text(size = 14), strip.text = element_text(size = 16), legend.text = element_text(size = 14)) +
+    xlim(0.5, 2.5)
+  } # ggplot
+
+
+# Box-plot of F1 scores --------------------------------------------------------
+
+box_plot <- function(dat, nams, color_values, min_point = 0.7){
+  require(ggplot2)
+  p <- ggplot(dat, aes(x = factor(networks, level = nams), y = values)) +
+          geom_boxplot(show.legend = F) + theme_minimal() + ggtitle("Accuracy of Data layers") +
+          xlab("Data Layers") +
+          ylab("F1-score") + scale_fill_manual(values = color_values)+
+          labs(x = '', fill='Data Layers') +
+          scale_y_continuous(breaks = seq(min_point, 1, 0.05), limits = c(min_point, 1)) +
+          theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 10), 
+                axis.title.y = element_text(size = 16),
+                axis.ticks.x = element_blank(),legend.position = "none",
+                plot.margin = margin(0, 0, 0, 5, "cm"),
+                panel.grid.minor = element_blank())
+  return(p)
+  }#used in summary tab for k-fold-cv results
 
 bubble_plot<-function(data_x,net_names,ranges,Title=''){
   require(ggplot2);require(RColorBrewer)

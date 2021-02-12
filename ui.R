@@ -1,163 +1,195 @@
 #ui.R
-# libraries and menues---------------------------------------------------------------
 
+# Libraries to import ----------------------------------------------------------
 
 library(shiny)
 library(shinyBS)
 library(shinydashboard)
 library(shinyjs)
 library(DT)
+
+# Sidebar menu -----------------------------------------------------------------
+
 shinyUI(
   dashboardPage(
-    dashboardHeader(title="EDCmet"),
+    dashboardHeader(title = "EDTox"),
     dashboardSidebar(
-      sidebarMenu(id="tabs",
+      sidebarMenu(id = "tabs",
+                 #menuItem("Home", tabName = "home", icon = icon("dashboard")),
                   menuItem("Summary", tabName = "dashboard", icon = icon("dashboard")),
-                  menuItem('Toxicogenomics Pipeline',tabName = 'p1',icon = icon('th')),
-                  menuItem("Pathway activation scores",tabName="p2",icon = icon('th')),
-                  menuItem("Predcited EDC scores",tabName="p3",icon = icon('th')),
-                  menuItem("Evaluation with ToxPi ",tabName="p4",icon = icon('th'))
-                #  menuItem("Prediction from MIEs ",tabName="p5",icon = icon('th'))
-      )
-    ),
+                  menuItem("Toxicogenomics Pipeline", tabName = "p1", icon = icon('th')),
+                  menuItem("Pathway activation scores", tabName = "p2", icon = icon('th')),
+                  menuItem("Predcited EDC scores", tabName = "p3", icon = icon('th')),
+                  menuItem("Evaluation with ToxPi", tabName = "p4", icon = icon('th'))
+                 #menuItem("Prediction from MIEs", tabName = "p5", icon = icon('th'))
+                )
+      ),
     dashboardBody(
       tabItems(
-
-        #  # 1. tab summary-----------------------------------------------------------------------
-
- tabItem(tabName = "dashboard",
-         fluidRow(
-           box(plotOutput("plot_st1",height = 250),width = 6,height =300),
-           box(plotOutput("plot_st2",height = 250),width = 6,height = 300)
-         ),
-         fluidRow(
-        # box(plotOutput("plot_st3",height = 400),width = 12,height = 500),
-           box(plotOutput("plot_st4",height = 400),
-               bsButton("qtf1", label = "", icon = icon("question"), style = "info", size = "extra-small"),
-               bsPopover(id = "qtf1", title = "F1_scores",
-                         content = paste0('a data frame as RDS file with two columns. The first column should be named values (the F1 scores)',
-                                          '. The second column should be named networks (a similar name for all rows i.e example/outPut/F1_scores.rds).'),
-                         placement = "right", 
-                         trigger = "hover",
-                         options = list(container = "body")),
-               fluidRow(box(
-                 fileInput('F1_scores_input',label = 'Add new F1-scores',accept = c("rds","A list",".rds")),width = 6,solidHeader = T),
-               box(textInput("new_F1_Colr_input", "Color for the new layer", value = "orange"),width = 6,solidHeader = T)
-
-               ),
-               width = 12,height = 580)
-       
-           
-         )
-),        
-        #  # 2. tab Toxicogenomics pipeline -----------------------------------------------
         
-        tabItem(tabName = 'p1',
-                headerPanel('Network Optimization, RWR, FGSEA,elastic net GLM'),
-                mainPanel(
+
+### Tab 0: Home ----------------------------------------------------------------
+
+#        tabItem(),
+# To create home page with pipeline diagram and text expaining the pipeline
+
+### Tab 1: Summary -------------------------------------------------------------
+
+        tabItem(tabName = "dashboard",
                 fluidRow(
-                 box(tags$script('
-                             $(document).ready(function(){
-                             var d = new Date();
-                             var target = $("#clientTime");
-                             target.val(d.toLocaleString());
-                             target.trigger("change");
-                             });
-                             '),
-                 textInput("clientTime", "Client Time", value = ""),
-                 numericInput('number_cpu_input','number of cpus',4,min=1,step = 1),
-                 bsButton("qtjob", label = "", icon = icon("question"), style = "info", size = "extra-small"),
-                 bsPopover(id = "qtjob", title = "Job name",
-                           content = paste0('Please select a proper job name based on the gene-gene network.  ',
-                                            'The pathways activation score tab and other genereated parameters use this name for comparison'),
-                           placement = "right", 
-                           trigger = "hover",
-                           options = list(container = "body")),
-                 textInput('job_name_input',label = 'Job name',value = 'my_job'),
-                 verbatimTextOutput('status_lbl'), br()
-                 ,height = 400,width = 6,solidHeader = T),
-                
-                 box(
-                   bsButton("qt1", label = "", icon = icon("question"), style = "info", size = "extra-small"),
-                   bsPopover(id = "qt1", title = "Network",
-                             content = paste0('A dataframe as rds file with three columns, the first two columns are gene entrez IDs ',
-                                              ', the third column can be the weights from wTO package or weights from WGCNA. The maximum size should not exceed 100mb.'),
-                             placement = "right", 
-                             trigger = "hover",
-                             options = list(container = "body")),
-                   fileInput('network_input',label = 'Gene-Gene network',accept = c(
-                     "rds","A data frame with three columns gene1 gene2 weight/p_value",".rds")),
-                   bsButton("qtedc", label = "", icon = icon("question"), style = "info", size = "extra-small"),
-                   bsPopover(id = "qtedc", title = "EDCs",
-                             content = paste0('Named R list as rds file where each item contain the MIEs releated  ',
-                                              'to that EDC as ENTREZ gene IDs'),
-                             placement = "right", 
-                             trigger = "hover",
-                             options = list(container = "body")),
-                   fileInput('edc_input',label = 'A list of EDCs and MIEs',accept = c("rds","A list", ".rds")),
-                   bsButton("qtdec", label = "", icon = icon("question"), style = "info", size = "extra-small"),
-                   bsPopover(id = "qtdec", title = "Negative controls",
-                             content = paste0('Named R list as rds file where each item contain the MIEs releated  ',
-                                              'to that negative control as ENTREZ gene IDs'),
-                             placement = "right", 
-                             trigger = "hover",
-                             options = list(container = "body")),
-                   fileInput('decoy_input',label = 'A list of negative controls and MIEs',accept = c("rds","A list",".rds"))
-                   ,height = 400,width = 6,solidHeader = T)
-                 ), 
-                box(
-                  fluidRow(
-                   box(textInput('gene_set_input',label = 'Number of top Genes after Random walk :',value = '200,500,1000'),width = 6,solidHeader = T),
-                   box(textInput('edge_set_input',label = 'Network Edge proportion before random walk:',value = '0.02,0.03,0.05,0.1'),width = 6,solidHeader = T)
+                  box(plotOutput("plot_st1", height = 250), width = 6, height = 300),
+                  box(
+                    title = "Pathways used in the pipeline",
+                    bsButton("qtf2", label = "", icon = icon("question"), style = "info", size = "extra-small"),
+                    bsPopover(id = "qtf2", title = "Pathways",
+                              content = paste0("Only pathways related to metabolic syndrome were considered from each databases."),
+                              placement = "right", 
+                              trigger = "hover",
+                              options = list(container = "body")),
+                    plotOutput("plot_st2", height = 200), width = 6, height = 300
+                    )
                   ),
-                   actionButton('pareto_btn',label = 'Use Pareto solution for optimization'), 
-                   tableOutput('pareto_tabl')
-                   ,width = 12,collapsible = T,collapsed = T,title = 'Pareto based optimization of the pipeline'
-                  ),
-                box(
+                fluidRow(
+                  #box(plotOutput("plot_st3",height = 400),width = 12,height = 500),
+                  box(plotOutput("plot_st4", height = 400),
+                      bsButton("qtf1", label = "", icon = icon("question"), style = "info", size = "extra-small"),
+                      bsPopover(id = "qtf1", title = "F1 scores",
+                                content = paste0('a data frame as RDS file with two columns. The first column should be named values (the F1 scores)',
+                                                 '. The second column should be named networks (a similar name for all rows i.e example/outPut/F1_scores.rds).'),
+                                placement = "right", 
+                                trigger = "hover",
+                                options = list(container = "body")),
+                      fluidRow(
+                        box(fileInput("F1_scores_input", label = "Add new F1-scores", accept = c("rds","A list",".rds")), width = 6, solidHeader = T),
+                        box(textInput("new_F1_Colr_input", label = "Color for the new layer", value = "orange"), width = 6, solidHeader = T)
+                        ),
+                      width = 12,height = 580)
+                  )
+                ),        
+        
+
+### Tab 2: Toxicogenomics pipeline ---------------------------------------------
+
+        tabItem(tabName = 'p1',
+                headerPanel(""),
+                mainPanel(
                   fluidRow(
-                   box( bsButton("qfinal_gene", label = "", icon = icon("question"), style = "info", size = "extra-small"),
-                        bsPopover(id = "qfinal_gene", title = "Final Gene set for enrichment",
-                        content = paste0('The maximum number of sorted genes based on visit probability to be selected for gene set enrichment analysis after randomwalk',
-                        '. In case of running pareto solution this parameter will be automatically updated'),
-                                                    placement = "right", 
-                                                    trigger = "hover",
-                                                    options = list(container = "body")),
-                     textInput('final_gene_input',label = 'Final Number of genes after random walk:',value = '500'),width = 6,solidHeader = T),
-                   box(bsButton("qfinal_edge", label = "", icon = icon("question"), style = "info", size = "extra-small"),
-                        bsPopover(id = "qfinal_edge", title = "Edge percent from the network",
-                                  content = paste0('The portion of sorted edges to be extracted from the network ',
-                                                   '. In case of running pareto solution this parameter will be automatically updated'),
+                    
+                    box(tags$script('
+                          $(document).ready(function(){
+                          var d = new Date();
+                          var target = $("#clientTime");
+                          target.val(d.toLocaleString());
+                          target.trigger("change");
+                          });
+                                    '),
+                        textInput("clientTime", "Client Time", value = ""),
+                        numericInput('number_cpu_input', 'number of cpus', 4, min=1, step = 1),
+                        bsButton("qtjob", label = "", icon = icon("question"), style = "info", size = "extra-small"),
+                        bsPopover(id = "qtjob", title = "Job name",
+                                  content = paste("Please enter a job name. This name will be used during visualization of the relults."),
                                   placement = "right", 
                                   trigger = "hover",
                                   options = list(container = "body")),
-                     textInput('final_edge_input',label = 'Final Edge  proportion from the network:',value = '.05'),width = 6,solidHeader = T)
+                        textInput('job_name_input', label = 'Job name', value = 'my_job'),
+                        verbatimTextOutput('status_lbl'), br(),
+                        height = 400, width = 6, solidHeader = T),
+                    
+                    box(
+                      bsButton("qtnet", label = "", icon = icon("question"), style = "info", size = "extra-small"),
+                      bsPopover(id = "qtnet", title = "Network",
+                                content = paste("Gene-gene co-expression network as three column (gene1, gene2, edge parameter) data frame in rds format. Maximum file size: 100mb.",
+                                                 "Note: Use only Entrez IDs for gene. The edge parameter could be edge weight generated from WGCNA or wTO package.", sep = " " ),
+                                placement = "right", 
+                                trigger = "hover",
+                                options = list(container = "body")),
+                      fileInput('network_input', label = 'Gene-Gene network', accept = c("rds", "A data frame with three columns gene1 gene2 weight/p_value", ".rds")),
+                      bsButton("qtedc", label = "", icon = icon("question"), style = "info", size = "extra-small"),
+                      bsPopover(id = "qtedc", title = "EDCs",
+                                content = paste0('Named R list as rds file where each item contain the MIEs releated  ',
+                                                 'to that EDC as Entrez gene IDs'),
+                                placement = "right", 
+                                trigger = "hover",
+                                options = list(container = "body")),
+                      fileInput('edc_input', label = 'List of EDCs and its MIEs',accept = c("rds","A list", ".rds")),
+                      bsButton("qtdec", label = "", icon = icon("question"), style = "info", size = "extra-small"),
+                      bsPopover(id = "qtdec", title = "Negative controls",
+                                content = paste0('Named R list as rds file where each item contain the MIEs releated  ',
+                                                 'to that negative control as Entrez gene IDs'),
+                                placement = "right", 
+                                trigger = "hover",
+                                options = list(container = "body")),
+                      fileInput('decoy_input',label = 'List of negative controls and MIEs', accept = c("rds","A list",".rds")),
+                      height = 400, width = 6, solidHeader = T)
+                    
                   ),
-                  fluidRow(
-                   box(numericInput('k_input','K folds Cross Validation',5,min=2,max = 20,step = 1),width = 6,solidHeader = T),
-                   box(numericInput('repeat_input','Cross validation repeats',1,min=1,max = 10,step = 1),width = 6,solidHeader = T)),
-                   actionButton('network_btn',label = 'Run RWR-FGSEA-GLM'),
-                   plotOutput('f1_plt')
-                ,width = 12,collapsed = T,collapsible = T,title = 'RWR-Gene set enrichment-GLM'),
-                box(
-                   selectInput('export_input', 'Select a data set to export as rds file:',
-                               choices = c('pathway activation score',
-                                           'All_model_parameters_for_prediction',
-                                           'F1_scores','data_frame_GLM_coefs',
-                                           'predicted_items')),
-                   downloadButton('export_btn','Export selected item'),width = 12,title = 'Export',collapsible = T,collapsed = T),
-                box(
-                  fluidRow(
-                   box(fileInput('test_compounds_input',label = 'A list of MIEs for unknown compounds',accept = c("rds","A list",".rds")),width = 6,solidHeader = T),
-                   box(fileInput('all_model_parameters_input',label = ' Model and paramters for prediction',accept = c("rds","A list",".rds")),width = 6,solidHeader = T)),
-                   actionButton('predict_btn',label = 'Predict Unknown compounds'),
-                   tableOutput('prediction_tab1'),width = 12,collapsible = T,title = 'prediction of new compounds',collapsed = T)
-                                                      #end of side bar panel2
-                 ,width = 12)),
+                  
+                  box(
+                    bsButton("qtopt", label = "", icon = icon("question"), style = "info", size = "extra-small"),
+                    bsPopover(id = "qtopt", title = "Parameter selection",
+                              content = paste("Selection of optimal parameters for RWR-GSEA (Optional step). The step uses pareto based solution to", 
+                                              "find the optimal (read minimal) proportion of edges with highest weight from the actual network to be", 
+                                              "used during RWR and the number of genes with highest visit probability to be selected post-RWR for", 
+                                              "GSEA. These values are also optimized to maximize the clustering of EDCs and negative controls based on their respective MIEs.",
+                                              "Here, enter all possible values to be considered during optimization.",
+                                              "The combination with the highest silhouette is preferably used.", sep=" "),
+                              placement = "right", 
+                              trigger = "hover",
+                              options = list(container = "body")),
+                    fluidRow(
+                      box(textInput('edge_set_input', label = "Proportion of network edges to consider for Random Walk (%):", value = '2,3,5,10'), width = 6, solidHeader = T),
+                      box(textInput('gene_set_input', label = "Number of top genes to select after Random Walk :", value = '200,500,1000'), width = 6, solidHeader = T)
+                    ),
+                    actionButton('pareto_btn',label = 'Optimize'), 
+                    tableOutput('pareto_tabl'),
+                    width = 12, collapsible = T, collapsed = T, title = "Selction of optimal parameters for RWR-GSEA"),
+                  
+                  box(
+                    fluidRow(
+                      box( bsButton("qfinal_gene", label = "", icon = icon("question"), style = "info", size = "extra-small"),
+                           bsPopover(id = "qfinal_gene", title = "Final gene set for enrichment",
+                                     content = paste("The number of genes with highest visit probability to be selected after RWR for gene set enrichment analysis.",
+                                                     "The field is automatically updated if optimization step is used.", sep = " "),
+                                     placement = "right", 
+                                     trigger = "hover",
+                                     options = list(container = "body")),
+                           textInput('final_gene_input',label = 'Final number of genes after random walk:', value = '500'),width = 6, solidHeader = T),
+                      box(bsButton("qfinal_edge", label = "", icon = icon("question"), style = "info", size = "extra-small"),
+                          bsPopover(id = "qfinal_edge", title = "Edge percent from the network",
+                                    content = paste("The proportion of edges with highest weight from the actual network  to be used for RWR.",
+                                                     "The field is automatically updated if optimization step is used.", sep = " "),
+                                    placement = "right", 
+                                    trigger = "hover",
+                                    options = list(container = "body")),
+                          textInput('final_edge_input',label = 'Final Edge  proportion from the network:',value = '.05'), width = 6, solidHeader = T)
+                    ),
+                    fluidRow(
+                      box(numericInput('k_input', 'K folds Cross Validation', 5, min=2, max = 20, step = 1),width = 6,solidHeader = T),
+                      box(numericInput('repeat_input', 'Cross validation repeats',1, min=1, max = 10, step = 1),width = 6,solidHeader = T)
+                      ),
+                    actionButton('network_btn',label = 'Run RWR-FGSEA-GLM'),
+                    plotOutput('f1_plt'),
+                    width = 12, collapsed = T, collapsible = T, title = 'RWR-Gene set enrichment-GLM'),
+                  
+                  box(
+                    selectInput('export_input', 'Select data set to export as rds file:',
+                                choices = c('pathway activation score',
+                                            'All_model_parameters_for_prediction',
+                                            'F1_scores','data_frame_GLM_coefs',
+                                            'predicted_items')),
+                    downloadButton('export_btn', 'Export selected item'), width = 12, title = 'Export', collapsible = T, collapsed = T),
+                  
+                  box(
+                    fluidRow(
+                      box(fileInput('test_compounds_input',label = 'A list of MIEs for unknown compounds', accept = c("rds","A list",".rds")), width = 6, solidHeader = T),
+                      box(fileInput('all_model_parameters_input', label = 'Model and paramters for prediction', accept = c("rds","A list",".rds")), width = 6, solidHeader = T)),
+                    actionButton('predict_btn', label = 'Predict Unknown compounds'),
+                    tableOutput('prediction_tab1'), width = 12, collapsible = T, title = 'Prediction of new compounds', collapsed = T)
+                 
+                   #end of side bar panel2
+                  , width = 12)),
         
-        
-        #  # 3. tab Putative pathways -----------------------------------------------
-        
+### Tab 3: Putative pathways ---------------------------------------------------        
         
         tabItem(tabName = 'p2',
                  headerPanel('Putative pathways as the mode of action for EDCs'), 

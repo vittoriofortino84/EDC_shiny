@@ -1,4 +1,3 @@
-
 # server.R
 
 library(shiny)
@@ -6,7 +5,7 @@ library(shinyjs)
 options(shiny.maxRequestSize=100*1024^2)   # maximum 100 mb upload limit for the bigger networks
 
 function(input,output,session){
-
+  
   source('functions/general_functions.R')        # harmonic sum, jaccard distance, etc
   source('functions/network_optimizer.R')        # funcitons for network optimization pareto method
   source('functions/pipeline.R')                 # functions for RWR-FGSEA 
@@ -15,38 +14,40 @@ function(input,output,session){
   source('functions/glm_functions.R')            # elastic net GLM functions
   source('functions/annotation_functions.R')     # annotation functions
   
-# 1.  Tab1: summary:  ---------------------------------------------------------
-
-  output$plot_st1<-renderPlot({   # pie chart of average edc scores in the summary tab
-    data_edcs_count_average<- readRDS('inputData/statistics/average_distribution_compounds_EDCs.rds')
-    data_edcs_count_average$type='Average'
-    data_edcs_count_harmonic<- readRDS('inputData/statistics/harmonic_distribution_compounds_EDCs.rds')
-    data_edcs_count_harmonic$type='Harmonic Sum'
-    p1<- pie_chart(data_edcs_count_average,'EDC score')
-    p2<- pie_chart(data_edcs_count_harmonic,'EDC score')
-    ggpubr::ggarrange(p1,p2,nrow = 1,common.legend = T,legend = 'bottom')
+### Tab 1: Summary -------------------------------------------------------------
+  
+  output$plot_st1 <- renderPlot({   # pie chart of average edc scores in the summary tab
+    data_edcs_count_average <- readRDS("inputData/statistics/average_distribution_compounds_EDCs.rds")
+    data_edcs_count_average$type = "Average"
+    data_edcs_count_harmonic <- readRDS("inputData/statistics/harmonic_distribution_compounds_EDCs.rds")
+    data_edcs_count_harmonic$type = "Harmonic Sum"
+    p1 <- pie_chart(data_edcs_count_average, "EDC score")
+    p2 <- pie_chart(data_edcs_count_harmonic, "EDC score")
+    ggpubr::ggarrange(p1, p2, nrow = 1, common.legend = T, legend = "bottom")
     })
   
+  output$plot_st2 <- renderPlot({   # barplot of the number of pathways in summary tab
+    data_pathways <- readRDS("inputData/statistics/patway_st.rds")
+    print(bar_stat(data_pathways))
+    })
 
-  output$plot_st2<-renderPlot({   #barplot of the pathways in summary tab
-    data_pathways<-readRDS('inputData/statistics/patway_st.rds')
-    print(bar_stat(data_pathways))})
-
-  rv_all_f1<-reactiveValues( min_p=.7,f1_names_colrs=readRDS('inputData/statistics/f1_scores.rds'))
-  output$plot_st4<-renderPlot({   #boxplot of k-fold-cross-validation in the summary tab
+  rv_all_f1 <- reactiveValues(min_p = .7, f1_names_colrs = readRDS("inputData/statistics/f1_scores.rds"))
+  
+  output$plot_st4 <- renderPlot({   #boxplot of k-fold-cross-validation in the summary tab
     print(box_plot(rv_all_f1$f1_names_colrs$f1_scores,
                    rv_all_f1$f1_names_colrs$net_names,
                    rv_all_f1$f1_names_colrs$color_vals,
-                   rv_all_f1$min_p))})
+                   rv_all_f1$min_p))
+    })
 
   observeEvent(input$F1_scores_input,{ # adding a new data F1 layer for comparison
-    temp_f1_scores<-rv_all_f1$f1_names_colrs
-    f1<-readRDS(input$F1_scores_input$datapath)
-    temp_f1_scores$f1_scores<-rbind(temp_f1_scores$f1_scores,f1)
-    rv_all_f1$min_p<-min(temp_f1_scores$f1_scores$values,na.rm = T)
-    temp_f1_scores$color_vals<-c(temp_f1_scores$color_vals,input$new_F1_Colr_input)
-    temp_f1_scores$net_names<-c(temp_f1_scores$net_names,unique(f1$networks))
-    rv_all_f1$f1_names_colrs<-temp_f1_scores
+    temp_f1_scores <- rv_all_f1$f1_names_colrs
+    f1 <- readRDS(input$F1_scores_input$datapath)
+    temp_f1_scores$f1_scores <- rbind(temp_f1_scores$f1_scores, f1)
+    rv_all_f1$min_p <- min(temp_f1_scores$f1_scores$values, na.rm = T)
+    temp_f1_scores$color_vals <- c(temp_f1_scores$color_vals, input$new_F1_Colr_input)
+    temp_f1_scores$net_names <- c(temp_f1_scores$net_names, unique(f1$networks))
+    rv_all_f1$f1_names_colrs <- temp_f1_scores
   })
 
    
