@@ -63,11 +63,11 @@ function(input,output,session){
   
   dataset_export<-reactive({
     switch(input$export_input,
-         'pathway activation score'=list(NES_scores=rv_pipeline$NES,labels=rv_pipeline$class),
-         'All_model_parameters_for_prediction'=rv_pipeline$params,
-         'F1_scores'=rv_pipeline$f1_scores[,c('values','networks')],
-         'data_frame_GLM_coefs'=rv_pipeline$data_frame,
-         'predicted_items'=rv_pipeline$predicted_data)})
+         "Pathway activation score" = list(NES_scores=rv_pipeline$NES,labels=rv_pipeline$class),
+         "Model parameters" = rv_pipeline$params,
+         "F1 scores" = rv_pipeline$f1_scores[,c('values','networks')],
+         "Elastic net coefficients" = rv_pipeline$data_frame,
+         "predicted_items" = rv_pipeline$predicted_data)})
    output$export_btn <- downloadHandler(
      filename = function() {
        paste(input$export_input, ".rds", sep = "")

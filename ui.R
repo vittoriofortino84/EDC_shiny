@@ -19,8 +19,8 @@ shinyUI(
                   menuItem("Summary", tabName = "dashboard", icon = icon("dashboard")),
                   menuItem("Toxicogenomics Pipeline", tabName = "p1", icon = icon('th')),
                   menuItem("Pathway activation scores", tabName = "p2", icon = icon('th')),
-                  menuItem("Predcited EDC scores", tabName = "p3", icon = icon('th')),
-                  menuItem("Evaluation with ToxPi", tabName = "p4", icon = icon('th'))
+                  menuItem("Predicted EDC scores", tabName = "p3", icon = icon('th')),
+                  menuItem("Comparison with ToxPi scores", tabName = "p4", icon = icon('th'))
                  #menuItem("Prediction from MIEs", tabName = "p5", icon = icon('th'))
                 )
       ),
@@ -31,7 +31,7 @@ shinyUI(
 ### Tab 0: Home ----------------------------------------------------------------
 
 #        tabItem(),
-# To create home page with pipeline diagram and text expaining the pipeline
+# To create home page with pipeline diagram and text explaining the pipeline
 
 ### Tab 1: Summary -------------------------------------------------------------
 
@@ -164,19 +164,20 @@ shinyUI(
                           textInput('final_edge_input',label = 'Final Edge  proportion from the network:',value = '.05'), width = 6, solidHeader = T)
                     ),
                     fluidRow(
-                      box(numericInput('k_input', 'K folds Cross Validation', 5, min=2, max = 20, step = 1),width = 6,solidHeader = T),
+                      box(numericInput('k_input', 'K-fold cross validation', 5, min=2, max = 20, step = 1), width = 6, solidHeader = T),
                       box(numericInput('repeat_input', 'Cross validation repeats',1, min=1, max = 10, step = 1),width = 6,solidHeader = T)
                       ),
                     actionButton('network_btn',label = 'Run RWR-FGSEA-GLM'),
                     plotOutput('f1_plt'),
-                    width = 12, collapsed = T, collapsible = T, title = 'RWR-Gene set enrichment-GLM'),
+                    width = 12, collapsed = T, collapsible = T, title = "Training and validation of elastic net based classifier"),
                   
                   box(
                     selectInput('export_input', 'Select data set to export as rds file:',
-                                choices = c('pathway activation score',
-                                            'All_model_parameters_for_prediction',
-                                            'F1_scores','data_frame_GLM_coefs',
-                                            'predicted_items')),
+                                choices = c("Pathway activation scores",
+                                            "Model parameters",
+                                            "F1 scores",
+                                            "Elastic net coefficients",
+                                            "predicted_items")),
                     downloadButton('export_btn', 'Export selected item'), width = 12, title = 'Export', collapsible = T, collapsed = T),
                   
                   box(
@@ -191,36 +192,41 @@ shinyUI(
         
 ### Tab 3: Putative pathways ---------------------------------------------------        
         
-        tabItem(tabName = 'p2',
-                 headerPanel('Putative pathways as the mode of action for EDCs'), 
+         tabItem(tabName = 'p2',
+                 headerPanel("Profiling the molecular activity of EDCs / Molecular activity profiling of EDCs"), 
                  sidebarPanel(
                    bsButton("q2", label = "", icon = icon("question"), style = "info", size = "extra-small"),
                    bsPopover(id = "q2", title = "GLM coefficients",
-                             content = paste0('Set the minimum cutoff for GLM coefficient'),
+                             content = paste("Select the minimum GLM coefficient for visualization"),
                              placement = "right", 
                              trigger = "hover",
                              options = list(container = "body")),
                    sliderInput(inputId = 'GLM_coef',
-                               label='GLM Coefficients',
-                               min = 0,max=1,value=0,step = .01,round = F),
+                               label='GLM Coefficient cut-off',
+                               min = 0, max = 1, value = 0, step = 0.01, round = F),
                    bsButton("q3", label = "", icon = icon("question"), style = "info", size = "extra-small"),
                    bsPopover(id = "q3", title = "Pathway activation score",
-                             content = paste0('Set the minimum cutoff for the average of enrrichment pathway activation scores for EDCs'),
+                             content = paste("Select the minimum pathway activation score for visualization"),
                              placement = "right", 
                              trigger = "hover",
                              options = list(container = "body")),
                    sliderInput(inputId = 'NES',
-                               label=' pathway activation scores',
-                               min = 0,max=1.7,value=0,step = .01,round = F),
+                               label = "Pathway activation score cut-off",
+                               min = 0, max = 1.7, value = 0, step = 0.01, round = F),
                    hr(),
-                   selectInput('pathway_category_input', 'Pathway category (Hold Ctrl to select multi categories)', 
-                               c('KEGG','REACTOME','WIKI','GO'), multiple=TRUE, selectize=FALSE),
-                  
+                   selectInput(inputId = "pathway_category_input", 
+                               label = "Pathway databases (Hold Ctrl to select multiple databases)", 
+                               choices = c('KEGG','REACTOME','WIKI','GO'), 
+                               multiple=TRUE, selectize=FALSE),
                    hr(),
-                   selectInput('data_layer_input', 'Data layers (Hold Ctrl to select multi data layers)', state.name, multiple=TRUE, selectize=FALSE),
-                   actionButton(inputId = 'calc2', label = 'Show'),hr(),br(),
+                   selectInput(inputId = 'data_layer_input', 
+                               label = 'Data layers (Hold Ctrl to select multiple data layers)', 
+                               state.name, multiple = TRUE, selectize = FALSE),
+                   actionButton(inputId = 'calc2', label = 'Show'),
+                   hr(),
+                   br(),
                    bsButton("q1", label = "", icon = icon("question"), style = "info", size = "extra-small"),
-                   bsPopover(id = "q1", title = "data structure",
+                   bsPopover(id = "q1", title = "New data layer",
                              content = paste0('A data frame as rds file with four columns is needed, the first column should be ', 
                                               'the name of data layer ','the second column should be the average of pathway activations scores ',
                                               'across all EDCs for that pathway , the third column is the GLM coefficients for the pathway ',
@@ -229,47 +235,42 @@ shinyUI(
                              placement = "right", 
                              trigger = "hover",
                              options = list(container = "body")),
-                   fileInput('new_data_glm_input',label = 'Add a new data layer',accept = c(
-                     "rds", 
-                     "A list",
-                     ".rds")
-                   )
-                 
-                   
-                   
-                 ),                                   #end of side bar panel2
-                 mainPanel(  
+                   fileInput('new_data_glm_input', label = 'Add new data layer', accept = c("rds", "A list", ".rds"))
+                   ), #end of side bar panel2
+                 mainPanel(
                    plotOutput('plt_ptway',
                               height = 900,
                               dblclick = 'ptw_dbl_click',
                               brush = brushOpts(id = 'ptw_brush',
                                                 resetOnNew = T)),
-                   downloadButton('export_btn_pathways','Export Plot data as csv'),br(),hr()
-                   
-                 )                                   # end of main panel2
-        ),                                           # end tabpanel 2 prediction form MIEs
+                   downloadButton('export_btn_pathways', 'Export Plot data as csv'),
+                   br(),
+                   hr()
+                   ) # end of main panel2
+                 ),  # end tabpanel 2 prediction form MIEs
         
-        
-        #  # 4. tab Class probabities for EDCs -----------------------------------------
-       
-        tabItem(tabName = 'p3',         
-                 headerPanel('Compound EDC Probability'), 
+### Tab 4: Class probabilities for EDCs ----------------------------------------     
+
+         tabItem(tabName = 'p3',         
+                 headerPanel("EDC class probability"), 
                  sidebarPanel( 
                    bsButton("qtedc1", label = "", icon = icon("question"), style = "info", size = "extra-small"),
-                   bsPopover(id = "qtedc1", title = "EDC_scores",
-                             content = paste0('Selected data layers will be used for the prediction of ', 
-                                              'average and harmonic sum scores. Hold Ctrl key to select ',
-                                              'mutli data layers. The class probabilites of',
-                                              ' maximum 5 compounds can be compared.'
-                                              ),
+                   bsPopover(id = "qtedc1", title = "Compounds and data layers",
+                             content = paste("Enter the compound(s) for which class probabilities to visualize.",
+                                               "The data layers selected below will be used for the prediction of average and harmonic sum scores.",  
+                                               "Hold Ctrl key to select multiple data layers.", 
+                                               "Note: Maximum 5 compounds can be viewed/compared at once.", sep = " "),
                              placement = "right", 
                              trigger = "hover",
                              options = list(container = "body")),
-                   selectizeInput('cmpname','CAS, MESH ID, Compound name',
-                                  choices=c('1962-83-0'),
-                                  options = list(maxOptions = 10,maxItems=5)),
-                  selectInput('edc_score_layer_input', 'Data layers', c('PPI_STRINGdb'),
-                               multiple=TRUE, selectize=FALSE),
+                   selectizeInput(inputId = 'cmpname', 
+                                  label = 'CAS, MESH ID, Compound name',
+                                  choices = c('1962-83-0'),
+                                  options = list(maxOptions = 10, maxItems = 5)),
+                   selectInput(inputId = 'edc_score_layer_input', 
+                               label = 'Data layers', 
+                               c('PPI_STRINGdb'),
+                               multiple=TRUE, selectize = FALSE),
                    #checkboxInput('chkbox_most_informatiave',
                    #'Select the most correlated networks with ToxCast',F),   # most informative 
 
@@ -315,8 +316,7 @@ shinyUI(
                  )                                           # End of main panel 1
         ),
 
-
-        #  # 5. tab Evaluation with toxpi ----------------------------------------------
+### Tab 5: Evaluation of ToxPi -------------------------------------------------   
 
 
        tabItem(tabName = 'p4',         
