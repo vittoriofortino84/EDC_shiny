@@ -9,7 +9,7 @@ bar_stat <- function(patwa_statistics){
           theme_minimal() +
           theme(legend.position = "bottom",
                 axis.title.y = element_text(size = 14),
-                axis.text.x = element_text(size = 14, angle = 0, hjust = 1))
+                axis.text.x = element_text(size = 14, angle = 45, hjust = 1))
   return(p)
   }# used in summary tab for barplot of pathways
 
