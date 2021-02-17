@@ -255,14 +255,16 @@ shinyUI(
                  headerPanel("EDC class probability"), 
                  sidebarPanel( 
                    bsButton("qtedc1", label = "", icon = icon("question"), style = "info", size = "extra-small"),
-                   bsPopover(id = "qtedc1", title = "Compounds and data layers",
+                   bsPopover(id = "qtedc1", title = "Class probability for CTD chemicals",
                              content = paste("Enter the compound(s) for which class probabilities to visualize.",
-                                               "The data layers selected below will be used for the prediction of average and harmonic sum scores.",  
+                                               "The data layers selected below will be used for the prediction of average and harmonic sum of EDC scores.",  
                                                "Hold Ctrl key to select multiple data layers.", 
                                                "Note: Maximum 5 compounds can be viewed/compared at once.", sep = " "),
                              placement = "right", 
                              trigger = "hover",
                              options = list(container = "body")),
+                   
+                   
                    selectizeInput(inputId = 'cmpname', 
                                   label = 'CAS, MESH ID, Compound name',
                                   choices = c('1962-83-0'),
@@ -271,50 +273,56 @@ shinyUI(
                                label = 'Data layers', 
                                c('PPI_STRINGdb'),
                                multiple=TRUE, selectize = FALSE),
-                   #checkboxInput('chkbox_most_informatiave',
+                 
+                   
+                     #checkboxInput('chkbox_most_informatiave',
                    #'Select the most correlated networks with ToxCast',F),   # most informative 
 
-                   actionButton(inputId = 'calc',
-                                label = 'Show on the plot'),br(),hr(),
-                  downloadButton('export_btn_edcscores','Export Plot data as csv'),
+                   actionButton(inputId = 'calc', label = 'Show on plot'),
+                   br(),
+                   hr(),
+                   downloadButton('export_btn_edcscores','Export plot data as csv'),
                    # helpText("Note: You can compare the class probabilities ",
                    #          "as well as the EDC scores for maximum 5 compounds ")
-                       hr(),
+                   hr(),
+
                    bsButton("qtfile", label = "", icon = icon("question"), style = "info", size = "extra-small"),
-                   bsPopover(id = "qtfile", title = "Precompiled networks",
-                             content = paste0('The MIEs (Genes) of one compound will be used to ',
-                                              'predict class probabilities ',
-                                              'on the 24 data layers. ',
-                                              'For this module to run the file all_precompiled_pipeline.RDSS  ',
-                                              'should exist in the folder large_file'),
+                   bsPopover(id = "qtfile", title = "Class probability for other chemicals",
+                             content = paste("For chemicals not in CTD, its MIEs can be used as input to calculate the EDC scores.",
+                                             "Enter the name of the compound and the list of MIEs as Entrez gene ID in the respective fields below.",
+                                             "Select the data layers based on which to calculate the probability scores and hit the",
+                                             strong("Calculate from MIEs"), "button to calculate.", br(),
+                                             "Notes: 1) For this module to run, the file", 
+                                             em("all_precompiled_pipeline.RDSS"), "should exist in the folder large_file.",
+                                             "If missing, the", strong("Calculate from MIEs"), "button will not appear.", br(),
+                                             "2) Only one compound at a time.", br(),
+                                             "3) The function might return an error if the MIE is not among the data space genes.", sep = " "),
                              placement = "right", 
                              trigger = "hover",
                              options = list(container = "body")),
-                   textInput("txt_input_newcompound_name", "Name of the compound",
+                   textInput(inputId = "txt_input_newcompound_name", 
+                             label = "Name of the compound",
                              value = "new_compound"),
 
-                   textInput("txt_input_mies", "MIES of one compound", 
+                   textInput(inputId = "txt_input_mies", 
+                             label = "MIEs of the compound", 
                              value = "4617,4654,4656,5077,25937"),
                    useShinyjs(),
-                   actionButton(inputId = 'mie2classprob_btn',label = 'Calculate from MIEs'),hr()
-                 ),                                         # End of side bar panel 1
+                   actionButton(inputId = 'mie2classprob_btn', label = 'Calculate from MIEs'),
+                   hr()
+                   ), # End of side bar panel 1
                  mainPanel(
-                  box(tableOutput('table_edc_scores'),collapsible = T,collapsed = T,width = 12),
+                  box(tableOutput('table_edc_scores'), collapsible = T, collapsed = T, width = 12, title = "Average and harmonic sum of EDC scores"),
                   box(
-                   plotOutput('plot_class_prob_scores',
+                    plotOutput('plot_class_prob_scores',
                               height = 500,
                               dblclick = 'plot_class_prob_scores_dbl_click',
-                              brush = brushOpts(id = 'class_prob_scores_brush',
-                                                resetOnNew = T)),width = 12,collapsible = T)
-                 
-                 
-                  
-                  #plotOutput('plot_edc_score',
-                  #            height = 300),
-                   
-                  
-                 )                                           # End of main panel 1
-        ),
+                              brush = brushOpts(id = 'class_prob_scores_brush', resetOnNew = T)
+                              ), 
+                    width = 12, collapsible = T, title = "Plot of compound class probability across data layers")
+                  #plotOutput('plot_edc_score', height = 300),
+                  ) # End of main panel 1
+                 ),
 
 ### Tab 5: Evaluation of ToxPi -------------------------------------------------   
 
