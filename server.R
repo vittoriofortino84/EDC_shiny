@@ -254,7 +254,6 @@ function(input,output,session){
    
    # outputs
    output$prediction_tab1<-renderTable({rv_pipeline$predicted_data}) #predicted compounds table
-   
    output$pareto_tabl<-renderTable({rv_pipeline$pareto}) #predicted compounds table
    
    output$status_lbl<-renderText({print(rv_pipeline$status)}) # status verbatim update
@@ -433,9 +432,10 @@ rv_edc_score$table_scors<-table_data
 #  if (input$chkbox_most_informatiave==T){
 #   updateSelectInput(session,"edc_score_layer_input",choices = networks,selected = networks[c(1,2,4,13,14,15)])}})
 
-# 5.  Tab5: Toxpi evaluation ------------------------------------------------------------------
-rv_eval_toxpi<-reactiveValues(plot_data=readRDS('inputData/toxpi_scores.rds'),
-                              selected_for_score=networks)
+### Tab 5: Comparison with ToxPi Scores ----------------------------------------
+
+  rv_eval_toxpi <- reactiveValues(plot_data = readRDS('inputData/toxpi_scores.rds'),
+                                  selected_for_score = networks)
   
 updateSelectInput(session,'toxpi_layer_input',choices = networks)
 ranges_toxpi <- reactiveValues(x = NULL, y = NULL)

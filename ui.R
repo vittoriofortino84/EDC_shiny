@@ -15,12 +15,12 @@ shinyUI(
     dashboardHeader(title = "EDTox"),
     dashboardSidebar(
       sidebarMenu(id = "tabs",
-                  #menuItem("Home", tabName = "home", icon = icon("dashboard")),
-                  menuItem("Summary", tabName = "dashboard", icon = icon("dashboard")),
-                  menuItem("Toxicogenomics Pipeline", tabName = "p1", icon = icon('th')),
-                  menuItem("Pathway activation scores", tabName = "p2", icon = icon('th')),
-                  menuItem("Predicted EDC scores", tabName = "p3", icon = icon('th')),
-                  menuItem("Comparison with ToxPi scores", tabName = "p4", icon = icon('th'))
+                  #menuItem("Home", tabName = "tab_home", icon = icon("dashboard")),
+                  menuItem("Summary", tabName = "tab_dashboard", icon = icon("dashboard")),
+                  menuItem("Toxicogenomics Pipeline", tabName = "tab_pipeline", icon = icon('th')),
+                  menuItem("Pathway activation scores", tabName = "tab_pathway", icon = icon('th')),
+                  menuItem("EDC-class probability", tabName = "tab_edcScore", icon = icon('th')),
+                  menuItem("Comparison with ToxPi scores", tabName = "tab_toxpiScore", icon = icon('th'))
                   #menuItem("Prediction from MIEs", tabName = "p5", icon = icon('th'))
                 )
       ),
@@ -30,7 +30,7 @@ shinyUI(
 
 ### Tab 0: Home ----------------------------------------------------------------
 # 
-#          tabItem(tabName = "home",
+#          tabItem(tabName = "tab_home",
 #                  fluidRow(
 #                    
 #                    #bsButton("test", label = "", icon = icon("question"), style = "info", size = "extra-small"),
@@ -46,13 +46,13 @@ shinyUI(
 
 ### Tab 1: Summary -------------------------------------------------------------
 
-         tabItem(tabName = "dashboard",
+         tabItem(tabName = "tab_dashboard",
                  fluidRow(
                    box(plotOutput("plot_st1", height = 250), width = 6, height = 300),
                    box(
-                     title = list(strong("Pathways used in the pipeline"), bsButton("qtf2", label = "", icon = icon("question"), style = "info", size = "extra-small")),#---
-                     #---bsButton("qtf2", label = "", icon = icon("question"), style = "info", size = "extra-small"),
-                     bsPopover(id = "qtf2", title = "Pathways",
+                     title = list(strong("Pathways used in the pipeline"), bsButton("qt_path", label = "", icon = icon("question"), style = "info", size = "extra-small")),#---
+                     #---bsButton("qt_path", label = "", icon = icon("question"), style = "info", size = "extra-small"),
+                     bsPopover(id = "qt_path", title = "Pathways",
                                content = paste0("Only pathways related to metabolic syndrome were considered from each databases."),
                                placement = "right",
                                trigger = "hover",
@@ -63,9 +63,9 @@ shinyUI(
                  fluidRow(
                    #box(plotOutput("plot_st3",height = 400),width = 12,height = 500),
                    box(plotOutput("plot_st4", height = 400),
-                       #--- bsButton("qtf1", label = "", icon = icon("question"), style = "info", size = "extra-small"),
-                       bsPopover(id = "qtf1", title = "F1 scores",
-                                 content = paste0('a data frame as RDS file with two columns. The first column should be named values (the F1 scores)',
+                       #--- bsButton("qt_f1Score", label = "", icon = icon("question"), style = "info", size = "extra-small"),
+                       bsPopover(id = "qt_f1Score", title = "F1 scores",
+                                 content = paste0('A data frame as RDS file with two columns. The first column should be named values (the F1 scores)',
                                                   '. The second column should be named networks (a similar name for all rows i.e example/outPut/F1_scores.rds).'),
                                  placement = "right",
                                  trigger = "hover",
@@ -73,7 +73,7 @@ shinyUI(
                        fluidRow(
                          box(
                            fileInput("F1_scores_input", 
-                                     label = list("Add new F1-scores", bsButton("qtf1", label = "", icon = icon("question"), style = "info", size = "extra-small")), 
+                                     label = list("Add new F1-scores", bsButton("qt_f1Score", label = "", icon = icon("question"), style = "info", size = "extra-small")), 
                                      accept = c("rds","A list",".rds")), 
                            width = 6, solidHeader = T),
                          box(textInput("new_F1_Colr_input", label = "Color for the new layer", value = "orange"), width = 6, solidHeader = T)
@@ -85,7 +85,7 @@ shinyUI(
 
 ### Tab 2: Toxicogenomics pipeline ---------------------------------------------
 
-         tabItem(tabName = 'p1',
+         tabItem(tabName = "tab_pipeline",
                  headerPanel(""),
                  mainPanel(
                    fluidRow(
@@ -100,56 +100,56 @@ shinyUI(
                                     '),
                          textInput("clientTime", "Client Time", value = ""),
                          numericInput('number_cpu_input', 'number of cpus', 4, min=1, step = 1),
-                         #---bsButton("qtjob", label = "", icon = icon("question"), style = "info", size = "extra-small"),
-                         bsPopover(id = "qtjob", title = "Job name",
+                         #---bsButton("qt_jobName", label = "", icon = icon("question"), style = "info", size = "extra-small"),
+                         bsPopover(id = "qt_jobName", title = "Job name",
                                    content = paste("Please enter a job name. This name will be used during visualization of the relults."),
                                    placement = "right",
                                    trigger = "hover",
                                    options = list(container = "body")),
                          textInput('job_name_input',
-                                   label = list("Job name", bsButton("qtjob", label = "", icon = icon("question"), style = "info", size = "extra-small")),  #---
+                                   label = list("Job name", bsButton("qt_jobName", label = "", icon = icon("question"), style = "info", size = "extra-small")),  #---
                                    value = 'my_job'),
                          verbatimTextOutput('status_lbl'), br(),
                          height = 400, width = 6, solidHeader = T),
 
                      box(
-                       #---bsButton("qtnet", label = "", icon = icon("question"), style = "info", size = "extra-small"),
-                       bsPopover(id = "qtnet", title = "Network",
+                       #---bsButton("qt_net", label = "", icon = icon("question"), style = "info", size = "extra-small"),
+                       bsPopover(id = "qt_net", title = "Network",
                                  content = paste("Gene-gene co-expression network as three column (gene1, gene2, edge parameter) data frame in rds format. Maximum file size: 100mb.",
-                                                  "Note: Use only Entrez IDs for gene. The edge parameter could be edge weight generated from WGCNA or wTO package.", sep = " " ),
+                                                  br(), "Note: Use only Entrez IDs for gene. The edge parameter could be edge weight generated from WGCNA or wTO package.", sep = " " ),
                                  placement = "right",
                                  trigger = "hover",
                                  options = list(container = "body")),
                        fileInput('network_input',
-                                 label = list("Gene-Gene network", bsButton("qtnet", label = "", icon = icon("question"), style = "info", size = "extra-small")), #---
+                                 label = list("Gene-Gene network", bsButton("qt_net", label = "", icon = icon("question"), style = "info", size = "extra-small")), #---
                                  accept = c("rds", "A data frame with three columns gene1 gene2 weight/p_value", ".rds")),
-                       #---bsButton("qtedc", label = "", icon = icon("question"), style = "info", size = "extra-small"),
-                       bsPopover(id = "qtedc", title = "EDCs",
+                       #---bsButton("qt_edc", label = "", icon = icon("question"), style = "info", size = "extra-small"),
+                       bsPopover(id = "qt_edc", title = "EDCs",
                                  content = paste0('Named R list as rds file where each item contain the MIEs releated  ',
                                                   'to that EDC as Entrez gene IDs'),
                                  placement = "right",
                                  trigger = "hover",
                                  options = list(container = "body")),
                        fileInput('edc_input',
-                                 label = list("List of EDCs and its MIEs", bsButton("qtedc", label = "", icon = icon("question"), style = "info", size = "extra-small")), #---
+                                 label = list("List of EDCs and its MIEs", bsButton("qt_edc", label = "", icon = icon("question"), style = "info", size = "extra-small")), #---
                                  accept = c("rds","A list", ".rds")),
-                       #---bsButton("qtdec", label = "", icon = icon("question"), style = "info", size = "extra-small"),
-                       bsPopover(id = "qtdec", title = "Negative controls",
+                       #---bsButton("qt_decoy", label = "", icon = icon("question"), style = "info", size = "extra-small"),
+                       bsPopover(id = "qt_decoy", title = "Negative controls",
                                  content = paste0('Named R list as rds file where each item contain the MIEs releated  ',
                                                   'to that negative control as Entrez gene IDs'),
                                  placement = "right",
                                  trigger = "hover",
                                  options = list(container = "body")),
                        fileInput('decoy_input',
-                                 label = list("List of negative controls and MIEs", bsButton("qtdec", label = "", icon = icon("question"), style = "info", size = "extra-small")), #---
+                                 label = list("List of negative controls and MIEs", bsButton("qt_decoy", label = "", icon = icon("question"), style = "info", size = "extra-small")), #---
                                  accept = c("rds","A list",".rds")),
                        height = 400, width = 6, solidHeader = T)
 
                    ),
 
                    box(
-                     #---bsButton("qtopt", label = "", icon = icon("question"), style = "info", size = "extra-small"),
-                     bsPopover(id = "qtopt", title = "Parameter selection",
+                     #---bsButton("qt_optimize", label = "", icon = icon("question"), style = "info", size = "extra-small"),
+                     bsPopover(id = "qt_optimize", title = "Parameter selection",
                                content = paste("Selection of optimal parameters for RWR-GSEA (Optional step). The step uses pareto based solution to",
                                                "find the optimal (read minimal) proportion of edges with highest weight from the actual network to be",
                                                "used during RWR and the number of genes with highest visit probability to be selected post-RWR for",
@@ -166,32 +166,32 @@ shinyUI(
                      actionButton('pareto_btn',label = 'Optimize'),
                      tableOutput('pareto_tabl'),
                      width = 12, collapsible = T, collapsed = T, 
-                     title = list("Selction of optimal parameters for RWR-GSEA", bsButton("qtopt", label = "", icon = icon("question"), style = "info", size = "extra-small"))),#---
+                     title = list("Selction of optimal parameters for RWR-GSEA", bsButton("qt_optimize", label = "", icon = icon("question"), style = "info", size = "extra-small"))),#---
 
                    box(
                      fluidRow(
                        box( 
-                         #---bsButton("qfinal_gene", label = "", icon = icon("question"), style = "info", size = "extra-small"),
-                         bsPopover(id = "qfinal_gene", title = "Final gene set for enrichment",
+                         #---bsButton("qt_rwrGene", label = "", icon = icon("question"), style = "info", size = "extra-small"),
+                         bsPopover(id = "qt_rwrGene", title = "Final gene set for enrichment",
                                    content = paste("The number of genes with highest visit probability to be selected after RWR for gene set enrichment analysis.",
                                                     "The field is automatically updated if optimization step is used.", sep = " "),
                                    placement = "right",
                                    trigger = "hover",
                                    options = list(container = "body")),
                          textInput('final_gene_input',
-                                   label = list("Number of top genes to select after Random Walk:", bsButton("qfinal_gene", label = "", icon = icon("question"), style = "info", size = "extra-small")), #--- 
+                                   label = list("Number of top genes to select after Random Walk:", bsButton("qt_rwrGene", label = "", icon = icon("question"), style = "info", size = "extra-small")), #--- 
                                    value = '500'),
                          width = 6, solidHeader = T),
                        box(
-                         #---bsButton("qfinal_edge", label = "", icon = icon("question"), style = "info", size = "extra-small"),
-                         bsPopover(id = "qfinal_edge", title = "Edge percent from the network",
+                         #---bsButton("qt_rwrEdge", label = "", icon = icon("question"), style = "info", size = "extra-small"),
+                         bsPopover(id = "qt_rwrEdge", title = "Edge proportion from the network",
                                      content = paste("The proportion of edges with highest weight from the actual network  to be used for RWR.",
                                                       "The field is automatically updated if optimization step is used.", sep = " "),
                                      placement = "right",
                                      trigger = "hover",
                                      options = list(container = "body")),
                            textInput('final_edge_input',
-                                     label = list("Proportion of network edges to consider for Random Walk (%):", bsButton("qfinal_edge", label = "", icon = icon("question"), style = "info", size = "extra-small")), #---
+                                     label = list("Proportion of network edges to consider for Random Walk (%):", bsButton("qt_rwrEdge", label = "", icon = icon("question"), style = "info", size = "extra-small")), #---
                                      value = '.05'), 
                          width = 6, solidHeader = T)
                      ),
@@ -204,13 +204,16 @@ shinyUI(
                      width = 12, collapsed = T, collapsible = T, title = "Training and validation of elastic net based classifier"),
 
                    box(
-                     selectInput('export_input', 'Select data set to export as rds file:',
+                     selectInput(inputId = 'export_input', 
+                                 label = "Select data set to export as rds file:",
                                  choices = c("Pathway activation scores",
                                              "Model parameters",
                                              "F1 scores",
                                              "Elastic net coefficients",
                                              "predicted_items")),
-                     downloadButton('export_btn', 'Export selected item'), width = 12, title = 'Export', collapsible = T, collapsed = T),
+                     
+                     downloadButton('export_btn', 'Export selected item'), 
+                     width = 12, title = 'Export', collapsible = T, collapsed = T),
 
                    box(
                      fluidRow(
@@ -222,28 +225,28 @@ shinyUI(
                     #end of side bar panel2
                    , width = 12)),
 
-### Tab 3: Putative pathways ---------------------------------------------------
+### Tab 3: Molecular activity profiling of EDCs --------------------------------
 
-         tabItem(tabName = 'p2',
+         tabItem(tabName = "tab_pathway",
                  headerPanel("Profiling the molecular activity of EDCs / Molecular activity profiling of EDCs"),
                  sidebarPanel(
-                   #---bsButton("q2", label = "", icon = icon("question"), style = "info", size = "extra-small"),
-                   bsPopover(id = "q2", title = "GLM coefficients",
+                   #---bsButton("qt_glmCoef", label = "", icon = icon("question"), style = "info", size = "extra-small"),
+                   bsPopover(id = "qt_glmCoef", title = "GLM coefficients",
                              content = paste("Select the minimum GLM coefficient for visualization"),
                              placement = "right",
                              trigger = "hover",
                              options = list(container = "body")),
                    sliderInput(inputId = 'GLM_coef',
-                               label = list("GLM Coefficient cut-off ", bsButton("q2", label = "", icon = icon("question"), style = "info", size = "extra-small")), #---
+                               label = list("GLM Coefficient cut-off ", bsButton("qt_glmCoef", label = "", icon = icon("question"), style = "info", size = "extra-small")), #---
                                min = 0, max = 1, value = 0, step = 0.01, round = F),
-                   #---bsButton("q3", label = "", icon = icon("question"), style = "info", size = "extra-small"),
-                   bsPopover(id = "q3", title = "Pathway activation score",
+                   #---bsButton("qt_pathScore", label = "", icon = icon("question"), style = "info", size = "extra-small"),
+                   bsPopover(id = "qt_pathScore", title = "Pathway activation score",
                              content = paste("Select the minimum pathway activation score for visualization"),
                              placement = "right",
                              trigger = "hover",
                              options = list(container = "body")),
                    sliderInput(inputId = 'NES',
-                               label = list("Pathway activation score cut-off", bsButton("q3", label = "", icon = icon("question"), style = "info", size = "extra-small")), #---
+                               label = list("Pathway activation score cut-off", bsButton("qt_pathScore", label = "", icon = icon("question"), style = "info", size = "extra-small")), #---
                                min = 0, max = 1.7, value = 0, step = 0.01, round = F),
                    hr(),
                    selectInput(inputId = "pathway_category_input",
@@ -252,23 +255,21 @@ shinyUI(
                                multiple=TRUE, selectize=FALSE),
                    hr(),
                    selectInput(inputId = 'data_layer_input',
-                               label = 'Data layers (Hold Ctrl to select multiple data layers)',
+                               label = "Data layers (Hold Ctrl select multiple data layers)",
                                state.name, multiple = TRUE, selectize = FALSE),
                    actionButton(inputId = 'calc2', label = 'Show'),
                    hr(),
                    br(),
-                   #---bsButton("q1", label = "", icon = icon("question"), style = "info", size = "extra-small"),
-                   bsPopover(id = "q1", title = "New data layer",
-                             content = paste0('A data frame as rds file with four columns is needed, the first column should be ',
-                                              'the name of data layer ','the second column should be the average of pathway activations scores ',
-                                              'across all EDCs for that pathway , the third column is the GLM coefficients for the pathway ',
-                                              'and the last column is the name of the pathway. You can select any ',
-                                              'names for the columns but the order should be as above'),
+                   #---bsButton("qt_newLayer", label = "", icon = icon("question"), style = "info", size = "extra-small"),
+                   bsPopover(id = "qt_newLayer", title = "New data layer(s)",
+                             content = paste("New data layer can be imported as a four column data frame in rds format.",
+                                               "The columns should list the name of the data layer, the average pathway activation scores across all EDCs for the pathway,",
+                                               "the GLM coefficient for the pathway and the name of the pathway, respectively in the order mentioned.", sep = " "),
                              placement = "right",
                              trigger = "hover",
                              options = list(container = "body")),
                    fileInput('new_data_glm_input', 
-                             label = list("Add new data layer", bsButton("q1", label = "", icon = icon("question"), style = "info", size = "extra-small")),  #---
+                             label = list("Add new data layer", bsButton("qt_newLayer", label = "", icon = icon("question"), style = "info", size = "extra-small")),  #---
                              accept = c("rds", "A list", ".rds"))
                    ), #end of side bar panel2
                  mainPanel(
@@ -283,17 +284,17 @@ shinyUI(
                    ) # end of main panel2
                  ),  # end tabpanel 2 prediction form MIEs
 
-### Tab 4: Class probabilities for EDCs ----------------------------------------
+### Tab 4: EDC class probability -----------------------------------------------
 
-         tabItem(tabName = 'p3',
-                 headerPanel("EDC class probability"),
+         tabItem(tabName = "tab_edcScore",
+                 headerPanel("EDC-class probability"),
                  sidebarPanel(
-                   p(strong("Class probability for CTD chemicals "), bsButton("qtedc1", label = "", icon = icon("question"), style = "info", size = "extra-small")),
-                   #---bsButton("qtedc1", label = "", icon = icon("question"), style = "info", size = "extra-small"),
-                   bsPopover(id = "qtedc1", title = "Class probability for CTD chemicals",
+                   p(strong("Class probability for CTD chemicals "), bsButton("qt_scoreCTD", label = "", icon = icon("question"), style = "info", size = "extra-small")),
+                   #---bsButton("qt_scoreCTD", label = "", icon = icon("question"), style = "info", size = "extra-small"),
+                   bsPopover(id = "qt_scoreCTD", title = "Class probability for CTD chemicals",
                              content = paste("Enter the compound(s) for which class probabilities to visualize.",
-                                               "The data layers selected below will be used for the prediction of average and harmonic sum of EDC scores.",
-                                               "Hold Ctrl key to select multiple data layers.",
+                                               "The data layers selected below will be used for the calculation of average and harmonic sum of EDC-class probabilities.",
+                                               "Hold", strong("Ctrl"), "key to select multiple data layers.", br(),
                                                "Note: Maximum 5 compounds can be viewed/compared at once.", sep = " "),
                              placement = "right",
                              trigger = "hover",
@@ -321,10 +322,10 @@ shinyUI(
                    # helpText("Note: You can compare the class probabilities ",
                    #          "as well as the EDC scores for maximum 5 compounds ")
                    hr(),
-                   p(strong("Class probability for other chemicals "), bsButton("qtfile", label = "", icon = icon("question"), style = "info", size = "extra-small")),
-                   #---bsButton("qtfile", label = "", icon = icon("question"), style = "info", size = "extra-small"),
-                   bsPopover(id = "qtfile", title = "Class probability for other chemicals",
-                             content = paste("For chemicals not in CTD, its MIEs can be used as input to calculate the EDC scores.",
+                   p(strong("Class probability for other chemicals "), bsButton("qt_scoreOther", label = "", icon = icon("question"), style = "info", size = "extra-small")),
+                   #---bsButton("qt_scoreOther", label = "", icon = icon("question"), style = "info", size = "extra-small"),
+                   bsPopover(id = "qt_scoreOther", title = "Class probability for other chemicals",
+                             content = paste("For chemicals not in CTD, its MIEs can be used as input to calculate the EDC-class probabilities.",
                                              "Enter the name of the compound and the list of MIEs as Entrez gene ID in the respective fields below.",
                                              "Select the data layers based on which to calculate the probability scores and hit the",
                                              strong("Calculate from MIEs"), "button to calculate.", br(),
@@ -348,7 +349,7 @@ shinyUI(
                    hr()
                    ), # End of side bar panel 1
                  mainPanel(
-                  box(tableOutput('table_edc_scores'), collapsible = T, collapsed = T, width = 12, title = "Average and harmonic sum of EDC scores"),
+                  box(tableOutput('table_edc_scores'), collapsible = T, collapsed = T, width = 12, title = "Average and harmonic sum of EDC-class probabilities"),
                   box(
                     plotOutput('plot_class_prob_scores',
                               height = 500,
@@ -360,13 +361,13 @@ shinyUI(
                   ) # End of main panel 1
                  ),
 
-### Tab 5: Evaluation of ToxPi -------------------------------------------------
+### Tab 5: Comparison with ToxPi Scores ----------------------------------------
 
-         tabItem(tabName = 'p4',
-                 headerPanel('Comparison with ToxPi Scores'),
+         tabItem(tabName = "tab_toxpiScore",
+                 headerPanel("Comparison with ToxPi Scores"),
                  sidebarPanel(
-                   #---bsButton("qt4_1", label = "", icon = icon("question"), style = "info", size = "extra-small"),
-                   bsPopover(id = "qt4_1", title = "Data Layers",
+                   #---bsButton("qt_dataLayer", label = "", icon = icon("question"), style = "info", size = "extra-small"),
+                   bsPopover(id = "qt_dataLayer", title = "Data layers",
                              content = paste("Select data layers to be used for calculation of average EDC scores.",
                                                 "Hold", strong("Ctrl"), "to select multiple data layers.", sep = " "),
                              placement = "right",
@@ -374,16 +375,16 @@ shinyUI(
                              options = list(container = "body")),
                    #---selectInput(inputId = 'toxpi_layer_input', label = 'Data layers', c('PPI_STRINGdb'), multiple = T, selectize = F),
                    selectInput(inputId = 'toxpi_layer_input', 
-                               label = list("Data layers", bsButton("qt4_1", label = "", icon = icon("question"), style = "info", size = "extra-small")), 
+                               label = list("Data layers", bsButton("qt_dataLayer", label = "", icon = icon("question"), style = "info", size = "extra-small")), 
                                c('PPI_STRINGdb'), multiple = T, selectize = F),
                    sliderInput(inputId = 'slider_toxpi_plt_toxpi_cutoff',
-                               label='Minimum Toxpi score:',
+                               label='Minimum ToxPi score:',
                                min = 0.000, max = 0.4, value = 0.1, step = 0.01, round = F),
                    sliderInput(inputId = 'slider_toxpi_plt_edc_score_cutoff',
                                label ='Minimum EDC score:',
                                min = 0.000, max = 1, value = 0.8, step = 0.01, round = F),
                    sliderInput(inputId = 'slider_click_toxpi',
-                               label = 'Plot Click prescision ',
+                               label = 'Plot click prescision:',
                                min = 0.000, max = 0.05, value = 0.005, step = 0.0001, round = F),
                    actionButton(inputId = 'toxpi_btn', label = 'Calculate'),
                    br(),
