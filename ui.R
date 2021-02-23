@@ -25,6 +25,9 @@ shinyUI(
                 )
       ),
       dashboardBody(
+       tags$script(HTML("$('body').addClass('fixed');")), #To fix header and sidebar
+       tags$head(tags$style(HTML('.content-wrapper { overflow: auto; }'))), #To keep fixed background (esp in tab2)
+        
        tabItems(
         
 
@@ -228,7 +231,7 @@ shinyUI(
 ### Tab 3: Molecular activity profiling of EDCs --------------------------------
 
          tabItem(tabName = "tab_pathway",
-                 headerPanel("Profiling the molecular activity of EDCs / Molecular activity profiling of EDCs"),
+                 headerPanel("Molecular activity profiling of EDCs"),
                  sidebarPanel(
                    #---bsButton("qt_glmCoef", label = "", icon = icon("question"), style = "info", size = "extra-small"),
                    bsPopover(id = "qt_glmCoef", title = "GLM coefficients",
