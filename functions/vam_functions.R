@@ -1,4 +1,4 @@
-edc_score<-function(all_vam_library,inp,all_data_levels,col.scores=1:24){
+edc_score<-function(all_vam_library,inp,all_data_levels,col.scores=1:24,is_stacked_cols=TRUE){
   require(tidyr)
   
   one_compound_harmonic_sum<-function(data,col.scores){
@@ -26,6 +26,7 @@ edc_score<-function(all_vam_library,inp,all_data_levels,col.scores=1:24){
   }
   # 
   res<-as.data.frame(res)
+  if (is_stacked_cols %in% TRUE){
   res$nnames<-paste(res$comp_names,res$mesh,res$is_in_training,sep = '_')
   # colnames(res)<-gsub(x=colnames(res),
   #                     pattern ="Consensus_Rat_invitro_Drug.Matrix_TG_GATEs",
@@ -36,6 +37,6 @@ edc_score<-function(all_vam_library,inp,all_data_levels,col.scores=1:24){
  
   res<-tidyr::gather(res,key = 'network',value = 'score',-c(nnames))
   res$score<-as.numeric(res$score)
-  
+  }
   return(res)
-} # end function
+} #end function

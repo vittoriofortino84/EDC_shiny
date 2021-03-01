@@ -3,7 +3,7 @@
 
 library(shiny)
 library(shinyjs)
-options(shiny.maxRequestSize=100*1024^2)   # maximum 100 mb upload limit for the bigger networks
+options(shiny.maxRequestSize=100*1024^2)        # maximum 100 mb upload limit for the bigger networks
 
 function(input,output,session){
 
@@ -37,7 +37,10 @@ function(input,output,session){
     print(box_plot(rv_all_f1$f1_names_colrs$f1_scores,
                    rv_all_f1$f1_names_colrs$net_names,
                    rv_all_f1$f1_names_colrs$color_vals,
-                   rv_all_f1$min_p))})
+                   rv_all_f1$min_p))
+   #Sys.sleep(20)
+   shinyjs::hide('loading-content')
+    })
 
   observeEvent(input$F1_scores_input,{ # adding a new data F1 layer for comparison
     temp_f1_scores<-rv_all_f1$f1_names_colrs
@@ -47,6 +50,7 @@ function(input,output,session){
     temp_f1_scores$color_vals<-c(temp_f1_scores$color_vals,input$new_F1_Colr_input)
     temp_f1_scores$net_names<-c(temp_f1_scores$net_names,unique(f1$networks))
     rv_all_f1$f1_names_colrs<-temp_f1_scores
+   
   })
 
    
@@ -323,6 +327,7 @@ function(input,output,session){
   # params and variables
   all_vam<-readRDS('inputData/all_edc_scores.rds')     # edc scores and class probs for networks
   networks<-readRDS('inputData/network_names.rds')     # names of the networks
+
   network_score_levelss=c(networks,'average_edc_score','harmonic_sum_edc_score')
   
   all_possible_mesh_cas_names=c(unique(all_vam$mesh),
@@ -337,11 +342,17 @@ function(input,output,session){
                                                            network_score_levelss)[1:24,],
                                harmonic_average_scores=edc_score(all_vam,'1962-83-0',
                                                            network_score_levelss)[25:26,]) #Default compound at launch
-  updateSelectizeInput(session, "cmpname", selected = '1962-83-0',choices  =all_possible_mesh_cas_names)
-  updateSelectInput(session,"edc_score_layer_input",
-                    choices = networks,selected = networks[1:24])
+  
+
+
+  
   ranges_class_prob <- reactiveValues(x = NULL, y = NULL)
   ranges_edc_score <- reactiveValues(x = NULL, y = NULL)
+  shinyjs::hide('calc')
+  shinyjs::hide('cmpname')
+  shinyjs::hide('score_for_all_btn')
+  shinyjs::hide('edc_score_layer_input')
+  
   path_2_network<-'large_file/all_precompiled_pipeline.RDSS'  # all networks and paramterers and models
   if(!file.exists(path_2_network))shinyjs::hide('mie2classprob_btn')
   # events 
@@ -349,7 +360,22 @@ function(input,output,session){
                brush_adjust(input$class_prob_scores_brush, ranges_class_prob)}) #plot fucntion call
   
   # data before multi compate plot are calculated
-  observeEvent(input$calc,{  
+  observeEvent(input$activate_score_panel_btn,{ 
+    showNotification("Wait to retrieve data of 12K compounds")
+    updateSelectInput(session,"edc_score_layer_input",choices = networks,selected = networks[1:24])
+    updateSelectizeInput(session, "cmpname", selected = '1962-83-0',choices  =all_possible_mesh_cas_names)
+    shinyjs::hide("activate_score_panel_btn")
+    shinyjs::show('calc')
+    shinyjs::show('cmpname')
+    shinyjs::show('score_for_all_btn')
+    shinyjs::show('edc_score_layer_input')
+
+  })   # activate scores button
+  
+  
+  
+  observeEvent(input$calc,{
+    print(input$calc)
   if (!is.null(input$cmpname)){
   data_for_edc_score_plot<-edc_score(rv_edc_library$all_vam,
                                      input$cmpname,
@@ -365,14 +391,28 @@ colnames(table_data)<-c('Compounds','Average','Harmonic_Sum')
 rv_edc_score$table_scors<-table_data
   }else{showNotification('Enter at least one compound for visualization',type = 'error')}
    })   # show on plot BUTTON
-  # plot
+ 
+  observeEvent(input$score_for_all_btn,{  
+    all_scores<-edc_score(rv_edc_library$all_vam,
+                          unique(all_vam$mesh),
+                          network_score_levelss,
+                          col.scores = input$edc_score_layer_input,
+                          is_stacked_cols=F)
+  })   # compile edc scores for all compounds
   
+  
+  
+  
+   # plot
+
   output$plot_class_prob_scores<-renderPlot({edc_multi_compare_bar(rv_edc_score$class_prob_scores,
                                                                     network_score_levelss[factor(networks,
                                                                                                  levels = networks)],
                                                                     ranges_class_prob,
                                                                     'Class Prob.',
-                                                                    c(0,1),angle_t = 60)}) #plot_functions call
+                                                                    c(0,1),angle_t = 60)
+   
+    }) #plot_functions call
   output$table_edc_scores<-renderTable({rv_edc_score$table_scors}) # table
   
    # output$plot_edc_score<-renderPlot({edc_multi_compare_bar(rv_edc_score$harmonic_average_scores,

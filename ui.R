@@ -7,11 +7,29 @@ library(shinyBS)
 library(shinydashboard)
 library(shinyjs)
 library(DT)
+
+
+
+appCSS <- "
+#loading-content {
+  position: absolute;
+  background: #AAAAAA;
+  opacity: 0.9;
+  z-index: 100;
+  animation-duration=200ms;
+  left: 0;
+  right: 0;
+  height: 100%;
+  text-align: center;
+  color: #FFFFFF;
+}
+"
 shinyUI(
   dashboardPage(
     dashboardHeader(title="EDCmet"),
     dashboardSidebar(
-      sidebarMenu(id="tabs",
+
+                  sidebarMenu(id="tabs",
                   menuItem("Summary", tabName = "dashboard", icon = icon("dashboard")),
                   menuItem('Toxicogenomics Pipeline',tabName = 'p1',icon = icon('th')),
                   menuItem("Pathway activation scores",tabName="p2",icon = icon('th')),
@@ -21,8 +39,18 @@ shinyUI(
       )
     ),
     dashboardBody(
-      tabItems(
+      fluidPage(
+      inlineCSS(appCSS),
+    # includeCSS("https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"),
+    includeCSS("animate.css"),
+    
+       div(
+         id="loading-content",time=10,
+         h3(style="margin-top:150px;",class="animate__animated animate__bounce animate__delay-2s", "Initializing EDCmet dashboard")
+       )
+    ),
 
+      tabItems(
         #  # 1. tab summary-----------------------------------------------------------------------
 
  tabItem(tabName = "dashboard",
@@ -233,16 +261,22 @@ shinyUI(
                              placement = "right", 
                              trigger = "hover",
                              options = list(container = "body")),
-                   selectizeInput('cmpname','CAS, MESH ID, Compound name',
-                                  choices=c('1962-83-0'),
-                                  options = list(maxOptions = 10,maxItems=5)),
-                  selectInput('edc_score_layer_input', 'Data layers', c('PPI_STRINGdb'),
+                    selectizeInput('cmpname','CAS, MESH ID, Compound name',
+                                  choices=c(''),
+                                  options = list(maxOptions = 3,maxItems=5)
+                   ),
+                  selectInput('edc_score_layer_input', 'Data layers', '',
                                multiple=TRUE, selectize=FALSE),
                    #checkboxInput('chkbox_most_informatiave',
                    #'Select the most correlated networks with ToxCast',F),   # most informative 
 
-                   actionButton(inputId = 'calc',
+                  
+                  actionButton(inputId = 'activate_score_panel_btn',
+                               label = 'Activate the score panel'),br(),hr(),
+                  actionButton(inputId = 'calc',
                                 label = 'Show on the plot'),br(),hr(),
+                  actionButton(inputId = 'score_for_all_btn',
+                               label = 'Calculated EDC scores for all compunds'),br(),hr(),
                   downloadButton('export_btn_edcscores','Export Plot data as csv'),
                    # helpText("Note: You can compare the class probabilities ",
                    #          "as well as the EDC scores for maximum 5 compounds ")
