@@ -1,3 +1,4 @@
+# plots
 bar_stat<-function(patwa_statistics){ 
 require(ggplot2)
 p<-ggplot(patwa_statistics, aes(x=type,
