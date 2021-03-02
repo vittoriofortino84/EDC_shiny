@@ -26,9 +26,10 @@ appCSS <- "
 "
 shinyUI(
   dashboardPage(
-    dashboardHeader(title="EDCmet"),
+    dashboardHeader(
+      title="EDCmet"
+                    ),
     dashboardSidebar(
-
                   sidebarMenu(id="tabs",
                   menuItem("Summary", tabName = "dashboard", icon = icon("dashboard")),
                   menuItem('Toxicogenomics Pipeline',tabName = 'p1',icon = icon('th')),
@@ -40,16 +41,15 @@ shinyUI(
     ),
     dashboardBody(
       fluidPage(
-      inlineCSS(appCSS),
-    # includeCSS("https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"),
-    includeCSS("animate.css"),
-    
-       div(
-         id="loading-content",time=10,
-         h3(style="margin-top:150px;",class="animate__animated animate__bounce animate__delay-2s", "Initializing EDCmet dashboard")
-       )
-    ),
-
+        inlineCSS(appCSS),
+        # includeCSS("https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"),
+        includeCSS("animate.css"),
+        
+        div(
+          id="loading-content",time=10,
+          h3(style="margin-top:150px;",class="animate__animated animate__bounce animate__delay-2s", "Initializing EDCmet dashboard")
+        ) #div
+      ),#fluid page 
       tabItems(
         #  # 1. tab summary-----------------------------------------------------------------------
 
@@ -267,19 +267,22 @@ shinyUI(
                    ),
                   selectInput('edc_score_layer_input', 'Data layers', '',
                                multiple=TRUE, selectize=FALSE),
-                   #checkboxInput('chkbox_most_informatiave',
-                   #'Select the most correlated networks with ToxCast',F),   # most informative 
-
-                  
+              
                   actionButton(inputId = 'activate_score_panel_btn',
-                               label = 'Activate the score panel'),br(),hr(),
+                               label = 'Activate the score panel'),
                   actionButton(inputId = 'calc',
-                                label = 'Show on the plot'),br(),hr(),
+                                label = 'Show selected cases'),br(),hr(),
+                  bsButton("qallcompile", label = "", icon = icon("question"), style = "info", size = "extra-small"),
+                  bsPopover(id = "qallcompile", title = "Precompiled networks",
+                            content = paste0('The selected networks will be used to compile ',
+                                             'harmonic_sum and average edc scores for all 12K compounds',
+                                            ' It takes a bit time.'),
+                            placement = "right", 
+                            trigger = "hover",
+                            options = list(container = "body")),																													 
                   actionButton(inputId = 'score_for_all_btn',
-                               label = 'Calculated EDC scores for all compunds'),br(),hr(),
-                  downloadButton('export_btn_edcscores','Export Plot data as csv'),
-                   # helpText("Note: You can compare the class probabilities ",
-                   #          "as well as the EDC scores for maximum 5 compounds ")
+                               label = 'Compile for 12k compounds'),br(),hr(),
+                  downloadButton('export_all_btn_edcscores','Export all scores'),
                        hr(),
                    bsButton("qtfile", label = "", icon = icon("question"), style = "info", size = "extra-small"),
                    bsPopover(id = "qtfile", title = "Precompiled networks",
@@ -306,7 +309,12 @@ shinyUI(
                               height = 500,
                               dblclick = 'plot_class_prob_scores_dbl_click',
                               brush = brushOpts(id = 'class_prob_scores_brush',
-                                                resetOnNew = T)),width = 12,collapsible = T)
+                                                resetOnNew = T)),width = 12,collapsible = T,
+                   
+                   downloadButton('export_btn_edcscores','Export Plot data as csv')
+                   
+                   
+                   )
                  
                  
                   
@@ -344,8 +352,8 @@ shinyUI(
                             label=' Plot Click prescision ',
                             min = 0.000,max=0.05,value=0.005,step = .0001,round = F),
                 actionButton(inputId = 'toxpi_btn',label = 'Calculate'),br(),hr(),
-                actionButton(inputId = 'toxpiBtn_refresh',label = 'Refresh'),br(),hr(),
-                downloadButton('export_btn_toxpi','Export Plot data as csv')
+                actionButton(inputId = 'toxpiBtn_refresh',label = 'Refresh'),br(),hr()
+              
                # verbatimTextOutput("txt_toxpi_selected_layers",placeholder = F)
                 ),
             mainPanel(                    
@@ -353,7 +361,9 @@ shinyUI(
                    # dblclick = 'toxpi_plot_dbl_click',
                     #brush = brushOpts(id = 'toxpi_brush',
                     #                  resetOnNew = T)
-                    ),collapsible = T,width = 12),
+                    ),
+              downloadButton('export_btn_toxpi','Export Plot data as csv')
+              ,collapsible = T,width = 12),
           verbatimTextOutput("txt_toxpi_click"),
           # verbatimTextOutput("txt_toxpi_compounds"),
           #tags$head(tags$style("#txt_toxpi_compounds{color:blue; font-size:14px; font-style:bold; overflow-y:scroll; max-height: 100px; background: ghostwhite;}")),

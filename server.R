@@ -25,23 +25,23 @@ function(input,output,session){
     p1<- pie_chart(data_edcs_count_average,'EDC score')
     p2<- pie_chart(data_edcs_count_harmonic,'EDC score')
     ggpubr::ggarrange(p1,p2,nrow = 1,common.legend = T,legend = 'bottom')
-    })
+  })
   
-
+  
   output$plot_st2<-renderPlot({   #barplot of the pathways in summary tab
     data_pathways<-readRDS('inputData/statistics/patway_st.rds')
     print(bar_stat(data_pathways))})
-
+  
   rv_all_f1<-reactiveValues( min_p=.7,f1_names_colrs=readRDS('inputData/statistics/f1_scores.rds'))
   output$plot_st4<-renderPlot({   #boxplot of k-fold-cross-validation in the summary tab
     print(box_plot(rv_all_f1$f1_names_colrs$f1_scores,
                    rv_all_f1$f1_names_colrs$net_names,
                    rv_all_f1$f1_names_colrs$color_vals,
                    rv_all_f1$min_p))
-   #Sys.sleep(20)
-   shinyjs::hide('loading-content')
-    })
-
+    #Sys.sleep(20)
+    shinyjs::hide('loading-content')
+  })
+  
   observeEvent(input$F1_scores_input,{ # adding a new data F1 layer for comparison
     temp_f1_scores<-rv_all_f1$f1_names_colrs
     f1<-readRDS(input$F1_scores_input$datapath)
@@ -50,7 +50,7 @@ function(input,output,session){
     temp_f1_scores$color_vals<-c(temp_f1_scores$color_vals,input$new_F1_Colr_input)
     temp_f1_scores$net_names<-c(temp_f1_scores$net_names,unique(f1$networks))
     rv_all_f1$f1_names_colrs<-temp_f1_scores
-   
+    
   })
 
    
@@ -257,11 +257,8 @@ function(input,output,session){
    
    # outputs
    output$prediction_tab1<-renderTable({rv_pipeline$predicted_data}) #predicted compounds table
-   
    output$pareto_tabl<-renderTable({rv_pipeline$pareto}) #predicted compounds table
-   
    output$status_lbl<-renderText({print(rv_pipeline$status)}) # status verbatim update
-   
    output$f1_plt<-renderPlot({barplot(rv_pipeline$f1_scores$values,main = 'K-Fold-CV',ylab = 'F1 Scores')}) # k-fold-CV plot
   
 
@@ -277,11 +274,7 @@ function(input,output,session){
                                   networks=networks,
                                   networks_selected=networks)
    ranges_ptw <- reactiveValues(x = NULL, y = NULL)
-   
-  
   observeEvent(input$ptw_dbl_click, {brush_adjust(input$ptw_brush,ranges_ptw)}) #plot fucntion call
- 
-   
   output$export_btn_pathways <- downloadHandler(
     filename = function() {
       'pat.csv'
@@ -324,7 +317,7 @@ function(input,output,session){
 
 
 # 4.  Tab4: Edc scores and class probabilties  -----------------------------
-  # params and variables
+  # params and variables on edc score tab
   all_vam<-readRDS('inputData/all_edc_scores.rds')     # edc scores and class probs for networks
   networks<-readRDS('inputData/network_names.rds')     # names of the networks
 
@@ -342,9 +335,7 @@ function(input,output,session){
                                                            network_score_levelss)[1:24,],
                                harmonic_average_scores=edc_score(all_vam,'1962-83-0',
                                                            network_score_levelss)[25:26,]) #Default compound at launch
-  
-
-
+  rv_all_compounds_score<-reactiveValues(scores=c())
   
   ranges_class_prob <- reactiveValues(x = NULL, y = NULL)
   ranges_edc_score <- reactiveValues(x = NULL, y = NULL)
@@ -352,14 +343,16 @@ function(input,output,session){
   shinyjs::hide('cmpname')
   shinyjs::hide('score_for_all_btn')
   shinyjs::hide('edc_score_layer_input')
-  
+  shinyjs::hide('qallcompile')
+  shinyjs::hide('export_all_btn_edcscores')
   path_2_network<-'large_file/all_precompiled_pipeline.RDSS'  # all networks and paramterers and models
   if(!file.exists(path_2_network))shinyjs::hide('mie2classprob_btn')
-  # events 
+  
+  # events on edc score tab 
   observeEvent(input$plot_class_prob_scores_dbl_click,{
                brush_adjust(input$class_prob_scores_brush, ranges_class_prob)}) #plot fucntion call
   
-  # data before multi compate plot are calculated
+  # activation of the show score panel
   observeEvent(input$activate_score_panel_btn,{ 
     showNotification("Wait to retrieve data of 12K compounds")
     updateSelectInput(session,"edc_score_layer_input",choices = networks,selected = networks[1:24])
@@ -369,11 +362,11 @@ function(input,output,session){
     shinyjs::show('cmpname')
     shinyjs::show('score_for_all_btn')
     shinyjs::show('edc_score_layer_input')
-
+    shinyjs::show('qallcompile')
   })   # activate scores button
   
   
-  
+  # data of multi compate plot are calculated
   observeEvent(input$calc,{
     print(input$calc)
   if (!is.null(input$cmpname)){
@@ -384,27 +377,33 @@ function(input,output,session){
   rv_edc_score$class_prob_scores<-data_for_edc_score_plot[data_for_edc_score_plot$network %in% input$edc_score_layer_input,]
   rv_edc_score$harmonic_average_scores<-data_for_edc_score_plot[data_for_edc_score_plot$network %in% c('average_edc_score',
                                                                                                        'harmonic_sum_edc_score'),]
-
 table_data<-data_for_edc_score_plot[data_for_edc_score_plot$network %in% 'average_edc_score'  ,c('nnames','score')]
 table_data$harmonic<-data_for_edc_score_plot$score[data_for_edc_score_plot$network %in% 'harmonic_sum_edc_score']
 colnames(table_data)<-c('Compounds','Average','Harmonic_Sum')
 rv_edc_score$table_scors<-table_data
   }else{showNotification('Enter at least one compound for visualization',type = 'error')}
-   })   # show on plot BUTTON
- 
-  observeEvent(input$score_for_all_btn,{  
+   }) # data ready for the plot
+  
+  
+ # compile the scores for all compounds
+  observeEvent(input$score_for_all_btn,{
+    showNotification("Please wait to compile the scores for all the compounds")
+    shinyjs::hide('score_for_all_btn')
     all_scores<-edc_score(rv_edc_library$all_vam,
                           unique(all_vam$mesh),
                           network_score_levelss,
                           col.scores = input$edc_score_layer_input,
                           is_stacked_cols=F)
-  })   # compile edc scores for all compounds
+    rv_all_compounds_score$scores=all_scores
+    shinyjs::show('score_for_all_btn')
+    shinyjs::show('export_all_btn_edcscores')
+    showNotification("Finished")
+  })   #compile edc scores for all compounds
   
   
   
   
-   # plot
-
+   # multi bar plot
   output$plot_class_prob_scores<-renderPlot({edc_multi_compare_bar(rv_edc_score$class_prob_scores,
                                                                     network_score_levelss[factor(networks,
                                                                                                  levels = networks)],
@@ -415,15 +414,8 @@ rv_edc_score$table_scors<-table_data
     }) #plot_functions call
   output$table_edc_scores<-renderTable({rv_edc_score$table_scors}) # table
   
-   # output$plot_edc_score<-renderPlot({edc_multi_compare_bar(rv_edc_score$harmonic_average_scores,
-   #                                                          network_score_levelss[network_score_levelss %in% c('average_edc_score',
-   #                                                                                                             'harmonic_sum_edc_score')],
-   #                                                          ranges_edc_score,
-   #                                                          'edc score',
-   #                                                          c(0,2),angle_t = 0,show_leg = F)}) #plot_functions call
 
-  
-   # mie 2 class prob
+   # mie 2 class prob: calculates the EDC scores using the entrez gene IDs of the compouunds as MIEs
   observeEvent(input$mie2classprob_btn,{
     if(any(tolower(trimws(input$txt_input_newcompound_name)) %in% tolower(rv_edc_library$all_possible_mesh_cas_names)) %in% F &
        (!trimws(input$txt_input_newcompound_name)=='')){ 
@@ -453,20 +445,31 @@ rv_edc_score$table_scors<-table_data
         rv_edc_library$all_possible_mesh_cas_names<-c(results$comp_names,rv_edc_library$all_possible_mesh_cas_names)
         updateSelectizeInput(session, "cmpname", selected = results$comp_names,choices  =rv_edc_library$all_possible_mesh_cas_names)
         
-        showNotification('finished')}else{showNotification('Wrong MIEs')}
+        showNotification('finished')}else{showNotification('MIEs were not  found in the network')}
       
-    }else{showNotification('the compounds already exists in the data base or the field is empty')}
+    }else{showNotification('either the compounds already exists in the data base or you entered no name')}
     
   })  #MIE 2 edc score
+  
+  # export the plot data
   output$export_btn_edcscores <- downloadHandler(
     filename = function() {
-      'pat.csv'
+      'edc_scores.csv'
     },
     content = function(file) {
       write.csv(rbind(rv_edc_score$class_prob_scores,rv_edc_score$harmonic_average_scores), file)
     }
   )  
-    
+  
+  # export all compounds scores  
+  output$export_all_btn_edcscores <- downloadHandler(
+    filename = function() {
+      'all_compounds_edc_scores.csv'
+    },
+    content = function(file) {
+      write.csv(rv_all_compounds_score$scores, file)
+    }
+  ) 
     
 # observeEvent(input$chkbox_most_informatiave,{
 #  if (input$chkbox_most_informatiave==T){
