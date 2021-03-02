@@ -1,5 +1,5 @@
 # EDC_shiny
-## Description of EDC_shiny
+## Description of EDC_shiny dashboard
 - EDC_shiny is a shiny app to predict endocrine disrupting compound (EDC) probability  using a machine learning approach based on toxicogenomics data. 
 In this approach random walk with restart on gene co-expression networks starting from MIES ,molecular initiating events, (perturbing genes related to each compounds) will be used before fast geneset enrichment analysis (FGSEA). The results of FGSEA will be used as pathway activation scores to train elastic net GLM classifier with compounds tethering known EDC effect label and compounds labeled as negative controls (decoys). After validation of the classifier by means of cross-validation the obtained model can be used to predict EDC probability of unknown compound from a set of primary perturbing known genes.
 - The user can select to optimize the pipeline in terms of the number of edges in the network and sorted genes resulting from random walk before FGSEA using pareto solution.
