@@ -32,10 +32,10 @@ shinyUI(
     dashboardSidebar(
                   sidebarMenu(id="tabs",
                   menuItem("Summary", tabName = "dashboard", icon = icon("dashboard")),
-                  menuItem('Toxicogenomics Pipeline',tabName = 'p1',icon = icon('th')),
+                  menuItem('Develop new model',tabName = 'p1',icon = icon('th')),
                   menuItem("Pathway activation scores",tabName="p2",icon = icon('th')),
-                  menuItem("Predcited EDC scores",tabName="p3",icon = icon('th')),
-                  menuItem("Evaluation with ToxPi ",tabName="p4",icon = icon('th'))
+                  menuItem("Predcit EDC scores",tabName="p3",icon = icon('th')),
+                  menuItem("Evaluate scores with ToxPi ",tabName="p4",icon = icon('th'))
                 #  menuItem("Prediction from MIEs ",tabName="p5",icon = icon('th'))
       )
     ),

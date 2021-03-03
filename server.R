@@ -345,6 +345,7 @@ function(input,output,session){
   shinyjs::hide('edc_score_layer_input')
   shinyjs::hide('qallcompile')
   shinyjs::hide('export_all_btn_edcscores')
+  shinyjs::hide('mie2classprob_btn')
   path_2_network<-'large_file/all_precompiled_pipeline.RDSS'  # all networks and paramterers and models
   if(!file.exists(path_2_network))shinyjs::hide('mie2classprob_btn')
   
@@ -363,6 +364,8 @@ function(input,output,session){
     shinyjs::show('score_for_all_btn')
     shinyjs::show('edc_score_layer_input')
     shinyjs::show('qallcompile')
+    if(file.exists(path_2_network))shinyjs::show('mie2classprob_btn')
+    
   })   # activate scores button
   
   
