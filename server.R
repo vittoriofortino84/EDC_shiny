@@ -14,6 +14,8 @@ function(input,output,session){
   source('functions/glm_functions.R')            # elastic net GLM functions
   source('functions/annotation_functions.R')     # annotation functions
   
+### Tab 0: Home-----------------------------------------------------------------
+
 ### Tab 1: Summary -------------------------------------------------------------
   
   output$plot_st1 <- renderPlot({   # pie chart of average edc scores in the summary tab
@@ -51,7 +53,7 @@ function(input,output,session){
   })
 
    
-# 2.  Tab2: toxicogenomics pipeline----------------------------------------------------------------------
+### Tab 2: Toxicogenomics pipeline ---------------------------------------------
   library(parallel)
   det_cpus<-detectCores()
   
@@ -92,6 +94,7 @@ function(input,output,session){
        print('Pareto is running')
        genes<-as.numeric(unlist(strsplit(input$gene_set_input,',')))
        edge<-as.numeric(unlist(strsplit(input$edge_set_input,',')))
+       #edge <- edge/100 #
        edgelist<-cpu_splitter(n_cpuc,edge)
        library(doParallel)
        cl<-makeCluster(length(edgelist))
@@ -258,13 +261,13 @@ function(input,output,session){
    
    output$status_lbl<-renderText({print(rv_pipeline$status)}) # status verbatim update
    
-   output$f1_plt<-renderPlot({barplot(rv_pipeline$f1_scores$values,main = 'K-Fold-CV',ylab = 'F1 Scores')}) # k-fold-CV plot
+   output$f1_plt <- renderPlot({barplot(rv_pipeline$f1_scores$values, main = "K-fold cross validation", ylab = "F1 Scores")}) # k-fold-CV plot
   
 
    
    
   
-# 3.  Tab3: putative pathways-------------------
+### Tab 3: Molecular activity profiling of EDCs --------------------------------
    networks<-readRDS('inputData/network_names.rds')     # names of the networks
    glm_coefs<-readRDS('inputData/GLM_coeffs_edcs_decoys.rds')
    updateSelectInput(session,'data_layer_input',choices = networks)
@@ -319,7 +322,7 @@ function(input,output,session){
   
 
 
-# 4.  Tab4: Edc scores and class probabilties  -----------------------------
+### Tab 4: EDC class probability -----------------------------------------------
   # params and variables
   all_vam<-readRDS('inputData/all_edc_scores.rds')     # edc scores and class probs for networks
   networks<-readRDS('inputData/network_names.rds')     # names of the networks
@@ -433,7 +436,7 @@ rv_edc_score$table_scors<-table_data
 #   updateSelectInput(session,"edc_score_layer_input",choices = networks,selected = networks[c(1,2,4,13,14,15)])}})
 
 ### Tab 5: Comparison with ToxPi Scores ----------------------------------------
-
+  
   rv_eval_toxpi <- reactiveValues(plot_data = readRDS('inputData/toxpi_scores.rds'),
                                   selected_for_score = networks)
   
