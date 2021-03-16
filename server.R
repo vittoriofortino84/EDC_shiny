@@ -69,10 +69,10 @@ function(input,output,session){
          "Model parameters" = rv_pipeline$params,
          "F1 scores" = rv_pipeline$f1_scores[,c('values','networks')],
          "Elastic net coefficients" = rv_pipeline$data_frame,
-         "predicted_items" = rv_pipeline$predicted_data)})
+         "Predicted scores" = rv_pipeline$predicted_data)})
    output$export_btn <- downloadHandler(
      filename = function() {
-       paste(input$export_input, ".rds", sep = "")
+       paste(gsub(" ", "_", input$export_input), ".rds", sep = "")
      },
      content = function(file) {
        showNotification("Please wait until the complete message")
@@ -93,8 +93,7 @@ function(input,output,session){
      
        print('Pareto is running')
        genes<-as.numeric(unlist(strsplit(input$gene_set_input,',')))
-       edge<-as.numeric(unlist(strsplit(input$edge_set_input,',')))
-       #edge <- edge/100 #
+       edge<-(as.numeric(unlist(strsplit(input$edge_set_input,',')))/100) # To convert input percentage to decimal format
        edgelist<-cpu_splitter(n_cpuc,edge)
        library(doParallel)
        cl<-makeCluster(length(edgelist))
@@ -115,19 +114,21 @@ function(input,output,session){
        paret_input$edge<-as.numeric(paret_input$edge)
        library(rPref)
        ps<-psel(paret_input,high(silhouette)*low(genes)*low(edge))
+       ps.out <- data.frame(ps$edge*100, ps$genes, ps$silhouette) ##########
+       colnames(ps.out) <- c("edge", "genes", "silhouette") 
        # winning gene and edge combination based on pareto
        n_genes<-ps$genes[which(ps$silhouette==max(ps$silhouette))]
        n_edges<-ps$edge[which(ps$silhouette==max(ps$silhouette))]
        #
        updateTextInput(session,'final_gene_input',value = n_genes)
-       updateTextInput(session,'final_edge_input',value = n_edges)
+       updateTextInput(session,'final_edge_input',value = (n_edges*100)) # Convert edge percent from float to integer 
        print(paste('The optimum number of genes is:',n_genes))
-       print(paste('The optimum number of edges is:',n_edges))
+       print(paste('The optimum proportion of edges is:',n_edges*100))
        print('finished')
        rv_pipeline$status<-'Pareto is finished'
        showNotification("Finished")
-       rv_pipeline$pareto<-ps}else{
-         showNotification('The fields network,edc list, decoy list should not be empty',type = 'error')}
+       rv_pipeline$pareto<-ps.out}else{
+         showNotification('The fields network, edc list, decoy list should not be empty', type = 'error')}
      })  # Pareto solution to edge and gene size
    
    
@@ -141,10 +142,10 @@ function(input,output,session){
     decoys_list<-readRDS(input$decoy_input$datapath)
     n_cpuc<-input$number_cpu_input
     n_genes<-as.numeric(input$final_gene_input)
-    n_edges<-as.numeric(input$final_edge_input)
+    n_edges<-(as.numeric(input$final_edge_input)/100) # Convert interger percentage value to float
     withProgress(message = 'wait',value = 0,{ 
     print('Wait for randomwalk and gene set enrichment analysis')
-  
+
      # RWR-FGSEA
      patways<-readRDS('inputData/pathways.rds')
      mies<-c(edcs_list,decoys_list)
@@ -247,7 +248,7 @@ function(input,output,session){
      predicted_class<-predict(model$modl,fgs,type='raw')
      predicted_prob<-predict(model$modl,fgs,type='prob')
      rv_pipeline$predicted_data<-as.data.frame(list(rownames(fgs),predicted_prob[,'edc'],predicted_class))
-     colnames(rv_pipeline$predicted_data)<-c('names','EDC_probability','class')
+     colnames(rv_pipeline$predicted_data)<-c('Names', 'EDC_probability', 'Class')
      rv_pipeline$status<-'Prediction of newcompounds is finished'
      incProgress(1/2,detail = 'Prediction is finished')
      showNotification("Finished")

@@ -34,7 +34,7 @@ pie_chart <- function(pie_data,title){
 
 box_plot <- function(dat, nams, color_values, min_point = 0.7){
   require(ggplot2)
-  p <- ggplot(dat, aes(x = factor(networks, level = nams), y = values)) +
+  p <- ggplot(dat, aes(x = factor(networks, level = nams), y = values)) + #fill=factor(networks,level=nams)
           geom_boxplot(show.legend = F) + theme_minimal() + ggtitle("Accuracy of Data layers") +
           xlab("Data Layers") +
           ylab("F1-score") + scale_fill_manual(values = color_values)+

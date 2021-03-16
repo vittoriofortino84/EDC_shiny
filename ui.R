@@ -12,11 +12,11 @@ library(DT)
 
 shinyUI(
   dashboardPage(
-    dashboardHeader(title = "EDTox"),
+    dashboardHeader(title = "EDTox:GUI"),
     dashboardSidebar(
       sidebarMenu(id = "tabs",
                   menuItem("Home", tabName = "tab_home", icon = icon("dashboard")),
-                  menuItem("Summary", tabName = "tab_dashboard", icon = icon("dashboard")),
+                  menuItem("Summary", tabName = "tab_dashboard", icon = icon("th")),
                   menuItem("Toxicogenomics Pipeline", tabName = "tab_pipeline", icon = icon('th')),
                   menuItem("Pathway activation scores", tabName = "tab_pathway", icon = icon('th')),
                   menuItem("EDC-class probability", tabName = "tab_edcScore", icon = icon('th')),
@@ -32,11 +32,17 @@ shinyUI(
         
 
 ### Tab 0: Home ----------------------------------------------------------------
+# Home page with pipeline diagram and text explaining the pipeline
 
          tabItem(tabName = "tab_home",
-                 fluidRow(box(img(src = "images/EDTox_Pipeline.jpg"), width = 20), align = "center")
+                 fluidRow(box(img(style = "max-width: 100%; width: 70%; height: auto", src = "images/EDTox_Pipeline.jpg"),
+                          p(style = "font-size: 125%; text-align: justify; margin: 0.5% 1% 0.5% 1%", "The EDTox:GUI is an R Shiny appliation that provides an interactive graphical user interface to utilize the EDTox dataspace", 
+                              "for prediction of endocrine disruption potential of a chemical compound and prediction of possible adverse outcome pathways (AOP).",
+                              "The R Shiny application serves two purposes. First, it can be used to generate models for classification of chemicals",
+                              "as EDCs or non-EDCs based on networks derieved from toxicogenomics data.",
+                              "And the second, it can be used for infering endocrine disruption potential based on the EDTox dataspace"), width = 20), 
+                          align = "center")
                  ),
-# To create home page with pipeline diagram and text explaining the pipeline
 
 ### Tab 1: Summary -------------------------------------------------------------
 
@@ -56,7 +62,6 @@ shinyUI(
                  fluidRow(
                    #box(plotOutput("plot_st3",height = 400),width = 12,height = 500),
                    box(plotOutput("plot_st4", height = 400),
-                       #--- bsButton("qt_f1Score", label = "", icon = icon("question"), style = "info", size = "extra-small"),
                        bsPopover(id = "qt_f1Score", title = "F1 scores",
                                  content = paste0('A data frame as RDS file with two columns. The first column should be named values (the F1 scores)',
                                                   '. The second column should be named networks (a similar name for all rows i.e example/outPut/F1_scores.rds).'),
@@ -154,7 +159,7 @@ shinyUI(
                      actionButton('pareto_btn',label = 'Optimize'),
                      tableOutput('pareto_tabl'),
                      width = 12, collapsible = T, collapsed = T, 
-                     title = list("Selction of optimal parameters for RWR-GSEA", bsButton("qt_optimize", label = "", icon = icon("question"), style = "info", size = "extra-small"))),#---
+                     title = list("Selction of optimal parameters for RWR-FGSEA", bsButton("qt_optimize", label = "", icon = icon("question"), style = "info", size = "extra-small"))),#---
 
                    box(
                      fluidRow(
@@ -178,7 +183,7 @@ shinyUI(
                                      options = list(container = "body")),
                            textInput('final_edge_input',
                                      label = list("Proportion of network edges to consider for Random Walk (%):", bsButton("qt_rwrEdge", label = "", icon = icon("question"), style = "info", size = "extra-small")), #---
-                                     value = '.05'), 
+                                     value = '5'), 
                          width = 6, solidHeader = T)
                      ),
                      fluidRow(
@@ -196,7 +201,7 @@ shinyUI(
                                              "Model parameters",
                                              "F1 scores",
                                              "Elastic net coefficients",
-                                             "predicted_items")),
+                                             "Predicted scores")),
                      
                      downloadButton('export_btn', 'Export selected item'), 
                      width = 12, title = 'Export', collapsible = T, collapsed = T),
@@ -205,7 +210,7 @@ shinyUI(
                      fluidRow(
                        box(fileInput('test_compounds_input',label = 'A list of MIEs for unknown compounds', accept = c("rds","A list",".rds")), width = 6, solidHeader = T),
                        box(fileInput('all_model_parameters_input', label = 'Model and paramters for prediction', accept = c("rds","A list",".rds")), width = 6, solidHeader = T)),
-                     actionButton('predict_btn', label = 'Predict Unknown compounds'),
+                     actionButton('predict_btn', label = 'Predict unknown compounds'),
                      tableOutput('prediction_tab1'), width = 12, collapsible = T, title = 'Prediction of new compounds', collapsed = T)
 
                     #end of side bar panel2
