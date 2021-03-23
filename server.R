@@ -75,7 +75,7 @@ function(input,output,session){
        paste(gsub(" ", "_", input$export_input), ".rds", sep = "")
      },
      content = function(file) {
-       showNotification("Please wait until the complete message")
+       showNotification("Please wait for completion")
        saveRDS(dataset_export(), file)
        showNotification("Saving Finished")
      }) # saving  the output  of the pipeline
@@ -526,4 +526,3 @@ observeEvent(input$toxpiBtn_refresh,{
   
 } # server function
 
-#Updated by: Arindam Ghosh

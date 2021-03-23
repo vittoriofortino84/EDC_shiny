@@ -36,11 +36,11 @@ shinyUI(
 
          tabItem(tabName = "tab_home",
                  fluidRow(box(img(style = "max-width: 100%; width: 70%; height: auto", src = "images/EDTox_Pipeline.jpg"),
-                          p(style = "font-size: 125%; text-align: justify; margin: 0.5% 1% 0.5% 1%", "The EDTox:GUI is an R Shiny appliation that provides an interactive graphical user interface to utilize the EDTox dataspace", 
+                          p(style = "font-size: 125%; text-align: justify; margin: 0.5% 1% 0.5% 1%", paste("The EDTox:GUI is an R Shiny appliation that provides an interactive graphical user interface to utilize the EDTox dataspace", 
                               "for prediction of endocrine disruption potential of a chemical compound and prediction of possible adverse outcome pathways (AOP).",
                               "The R Shiny application serves two purposes. First, it can be used to generate models for classification of chemicals",
                               "as EDCs or non-EDCs based on networks derieved from toxicogenomics data.",
-                              "And the second, it can be used for infering endocrine disruption potential based on the EDTox dataspace"), width = 20), 
+                              "And the second, it can be used for infering endocrine disruption potential based on the EDTox dataspace.", sep = " ")), width = 20), 
                           align = "center")
                  ),
 
@@ -63,8 +63,9 @@ shinyUI(
                    #box(plotOutput("plot_st3",height = 400),width = 12,height = 500),
                    box(plotOutput("plot_st4", height = 400),
                        bsPopover(id = "qt_f1Score", title = "F1 scores",
-                                 content = paste0('A data frame as RDS file with two columns. The first column should be named values (the F1 scores)',
-                                                  '. The second column should be named networks (a similar name for all rows i.e example/outPut/F1_scores.rds).'),
+                                 content = paste("A data frame as RDS file with two columns. The first column should be named values (the F1 scores).",
+                                                  "The second column should be named networks (a similar name for all rows i.e example/outPut/F1_scores.rds).",
+                                                 "The new F1 scores would be appended at the end of the plot.", sep = " "),
                                  placement = "right",
                                  trigger = "hover",
                                  options = list(container = "body")),
@@ -74,7 +75,7 @@ shinyUI(
                                      label = list("Add new F1-scores", bsButton("qt_f1Score", label = "", icon = icon("question"), style = "info", size = "extra-small")), 
                                      accept = c("rds","A list",".rds")), 
                            width = 6, solidHeader = T),
-                         box(textInput("new_F1_Colr_input", label = "Color for the new layer", value = "orange"), width = 6, solidHeader = T)
+                         #box(textInput("new_F1_Colr_input", label = "Color for the new layer", value = "orange"), width = 6, solidHeader = T)
                          ),
                        width = 12, height = 580)
                    )
@@ -411,4 +412,3 @@ shinyUI(
 
 
 
-#Updated by: Arindam Ghosh
