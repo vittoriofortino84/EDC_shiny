@@ -487,14 +487,14 @@ observeEvent(input$toxpiBtn_refresh,{
      ind_comps<-unique(p_data$X)
      ind_comps[!ind_comps %in% '']
      res<-p_data[which(p_data$compound_name %in% ind_comps),
-                                        c("compound_name" ,"cas","toxpi","unk_VAM_scores",'status' )]
+                                        c("compound_name", "cas", "toxpi", "unk_VAM_scores", "status")]
      
-     colnames(res)<-c("compound_name" ,"cas","toxpi","Average_EDC_score",'type' )
-     res$link<-sprintf('<a href="https://comptox.epa.gov/dashboard/dsstoxdb/results?abbreviation=TOXCAST_PH2&search=%s" target="_blank" class="btn btn-primary">link_comptox</a>',res$cas)
-     res<-res[,c("compound_name","toxpi","Average_EDC_score",'link','type')]
+     colnames(res)<-c("compound_name", "cas", "toxpi", "Average_EDC_score", "type")
+     res$link<-sprintf('<a href="https://comptox.epa.gov/dashboard/dsstoxdb/results?abbreviation=TOXCAST_PH2&search=%s" target="_blank" class="btn btn-primary">CompTox</a>',res$cas)
+     res<-res[,c("compound_name", "toxpi", "Average_EDC_score", "link", "type")]
      res$toxpi<-round(res$toxpi,3)
      res$Average_EDC_score<-round(res$Average_EDC_score,3)
-    
+     colnames(res)<-c("Compound name", "ToxPi", "Average EDC-class probability", "Link", "Type")
      return(res)
      },escape=F,options = list(
        pageLength = 5))

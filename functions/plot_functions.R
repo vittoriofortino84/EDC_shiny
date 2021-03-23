@@ -35,7 +35,7 @@ pie_chart <- function(pie_data,title){
 box_plot <- function(dat, nams, color_values, min_point = 0.7){
   require(ggplot2)
   p <- ggplot(dat, aes(x = factor(networks, level = nams), y = values)) + #fill=factor(networks,level=nams)
-          geom_boxplot(show.legend = F) + theme_minimal() + ggtitle("Accuracy of Data layers") +
+          geom_boxplot(show.legend = F) + theme_minimal() + ggtitle("Accuracy of data layers") +
           xlab("Data Layers") +
           ylab("F1-score") + scale_fill_manual(values = color_values)+
           labs(x = '', fill='Data Layers') +
@@ -47,6 +47,8 @@ box_plot <- function(dat, nams, color_values, min_point = 0.7){
                 panel.grid.minor = element_blank())
   return(p)
   }#used in summary tab for k-fold-cv results
+
+# Bubble plot of pathway activation scores and GLM coefficients --------------------------------------------------------
 
 bubble_plot<-function(data_x,net_names,ranges,Title=''){
   require(ggplot2);require(RColorBrewer)
@@ -92,17 +94,18 @@ edc_multi_compare_bar<-function(edc_data,net_lvls,ranges,ylbl,y_scale,angle_t=60
   
 }# used in edc score tab
 
+# Plot of ToxPi scores against EDC-class probability --------------------------------------------------------
 toxpi_plot<-function(all_mat,ranges,min_toxpi=0.1,min_edc_score=0.8){ 
   require(ggplot2)
   all_mat$colr<-'grey50'
   all_mat$colr[all_mat$unk_VAM_scores >=min_edc_score & all_mat$toxpi >=min_toxpi]<-'red'
   ggplot(all_mat,aes(x=unk_VAM_scores,y=toxpi))+
     geom_point(size=3,color=all_mat$colr)+
-    geom_text(label=all_mat$X,size=5,segment.size = 0.2, segment.color = "grey",show.legend = F) +
+    geom_text(label=all_mat$X,size=5,segment.size = 0.2, segment.color = "grey", show.legend = F) +
     ylab('TOXPI score')+ xlab('Average EDC score')+
     theme_minimal()+ 
     coord_cartesian(xlim = ranges$x, ylim = ranges$y, expand = T)+
-    ggtitle('Average EDC score VS TOXPI scores')+xlab('EDC score')+ylab('TOXPI score')
+    ggtitle("Average EDC-class probability VS ToxPi scores")+xlab("Average EDC-class probability")+ylab("ToxPi scores")
 }#used in evaluation with toxpi tab
 
 brush_adjust<-function(brush,ranges){

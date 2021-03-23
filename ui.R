@@ -17,7 +17,7 @@ shinyUI(
       sidebarMenu(id = "tabs",
                   menuItem("Home", tabName = "tab_home", icon = icon("dashboard")),
                   menuItem("Summary", tabName = "tab_dashboard", icon = icon("th")),
-                  menuItem("Toxicogenomics Pipeline", tabName = "tab_pipeline", icon = icon('th')),
+                  menuItem("Toxicogenomics pipeline", tabName = "tab_pipeline", icon = icon('th')),
                   menuItem("Pathway activation scores", tabName = "tab_pathway", icon = icon('th')),
                   menuItem("EDC-class probability", tabName = "tab_edcScore", icon = icon('th')),
                   menuItem("Comparison with ToxPi scores", tabName = "tab_toxpiScore", icon = icon('th'))
@@ -50,7 +50,7 @@ shinyUI(
                  fluidRow(
                    box(plotOutput("plot_st1", height = 250), width = 6, height = 315),
                    box(
-                     title = list(strong("Pathways used in the pipeline"), bsButton("qt_path", label = "", icon = icon("question"), style = "info", size = "extra-small")),#---
+                     title = list(strong("Pathways used in the pipeline"), bsButton("qt_path", label = "", icon = icon("question"), style = "info", size = "extra-small")),
                      bsPopover(id = "qt_path", title = "Pathways",
                                content = paste0("Only pathways related to metabolic syndrome were considered from each databases."),
                                placement = "right",
@@ -105,7 +105,7 @@ shinyUI(
                                    trigger = "hover",
                                    options = list(container = "body")),
                          textInput('job_name_input',
-                                   label = list("Job name", bsButton("qt_jobName", label = "", icon = icon("question"), style = "info", size = "extra-small")),  #---
+                                   label = list("Job name", bsButton("qt_jobName", label = "", icon = icon("question"), style = "info", size = "extra-small")),  
                                    value = 'my_job'),
                          verbatimTextOutput('status_lbl'), br(),
                          height = 400, width = 6, solidHeader = T),
@@ -118,7 +118,7 @@ shinyUI(
                                  trigger = "hover",
                                  options = list(container = "body")),
                        fileInput('network_input',
-                                 label = list("Gene-Gene network", bsButton("qt_net", label = "", icon = icon("question"), style = "info", size = "extra-small")), #---
+                                 label = list("Gene-Gene network", bsButton("qt_net", label = "", icon = icon("question"), style = "info", size = "extra-small")), 
                                  accept = c("rds", "A data frame with three columns gene1 gene2 weight/p_value", ".rds")),
                        bsPopover(id = "qt_edc", title = "EDCs",
                                  content = paste0('Named R list as rds file where each item contain the MIEs releated  ',
@@ -127,7 +127,7 @@ shinyUI(
                                  trigger = "hover",
                                  options = list(container = "body")),
                        fileInput('edc_input',
-                                 label = list("List of EDCs and its MIEs", bsButton("qt_edc", label = "", icon = icon("question"), style = "info", size = "extra-small")), #---
+                                 label = list("List of EDCs and its MIEs", bsButton("qt_edc", label = "", icon = icon("question"), style = "info", size = "extra-small")), 
                                  accept = c("rds","A list", ".rds")),
                        bsPopover(id = "qt_decoy", title = "Negative controls",
                                  content = paste0('Named R list as rds file where each item contain the MIEs releated  ',
@@ -136,7 +136,7 @@ shinyUI(
                                  trigger = "hover",
                                  options = list(container = "body")),
                        fileInput('decoy_input',
-                                 label = list("List of negative controls and MIEs", bsButton("qt_decoy", label = "", icon = icon("question"), style = "info", size = "extra-small")), #---
+                                 label = list("List of negative controls and MIEs", bsButton("qt_decoy", label = "", icon = icon("question"), style = "info", size = "extra-small")), 
                                  accept = c("rds","A list",".rds")),
                        height = 400, width = 6, solidHeader = T)
 
@@ -160,7 +160,7 @@ shinyUI(
                      actionButton('pareto_btn',label = 'Optimize'),
                      tableOutput('pareto_tabl'),
                      width = 12, collapsible = T, collapsed = T, 
-                     title = list("Selction of optimal parameters for RWR-FGSEA", bsButton("qt_optimize", label = "", icon = icon("question"), style = "info", size = "extra-small"))),#---
+                     title = list("Selction of optimal parameters for RWR-FGSEA", bsButton("qt_optimize", label = "", icon = icon("question"), style = "info", size = "extra-small"))),
 
                    box(
                      fluidRow(
@@ -172,7 +172,7 @@ shinyUI(
                                    trigger = "hover",
                                    options = list(container = "body")),
                          textInput('final_gene_input',
-                                   label = list("Number of top genes to select after Random Walk:", bsButton("qt_rwrGene", label = "", icon = icon("question"), style = "info", size = "extra-small")), #--- 
+                                   label = list("Number of top genes to select after Random Walk:", bsButton("qt_rwrGene", label = "", icon = icon("question"), style = "info", size = "extra-small")),  
                                    value = '500'),
                          width = 6, solidHeader = T),
                        box(
@@ -183,7 +183,7 @@ shinyUI(
                                      trigger = "hover",
                                      options = list(container = "body")),
                            textInput('final_edge_input',
-                                     label = list("Proportion of network edges to consider for Random Walk (%):", bsButton("qt_rwrEdge", label = "", icon = icon("question"), style = "info", size = "extra-small")), #---
+                                     label = list("Proportion of network edges to consider for Random Walk (%):", bsButton("qt_rwrEdge", label = "", icon = icon("question"), style = "info", size = "extra-small")), 
                                      value = '5'), 
                          width = 6, solidHeader = T)
                      ),
@@ -228,7 +228,7 @@ shinyUI(
                              trigger = "hover",
                              options = list(container = "body")),
                    sliderInput(inputId = 'GLM_coef',
-                               label = list("GLM Coefficient cut-off ", bsButton("qt_glmCoef", label = "", icon = icon("question"), style = "info", size = "extra-small")), #---
+                               label = list("GLM Coefficient cut-off ", bsButton("qt_glmCoef", label = "", icon = icon("question"), style = "info", size = "extra-small")), 
                                min = 0, max = 1, value = 0, step = 0.01, round = F),
                    bsPopover(id = "qt_pathScore", title = "Pathway activation score",
                              content = paste("Select the minimum pathway activation score for visualization"),
@@ -236,7 +236,7 @@ shinyUI(
                              trigger = "hover",
                              options = list(container = "body")),
                    sliderInput(inputId = 'NES',
-                               label = list("Pathway activation score cut-off", bsButton("qt_pathScore", label = "", icon = icon("question"), style = "info", size = "extra-small")), #---
+                               label = list("Pathway activation score cut-off", bsButton("qt_pathScore", label = "", icon = icon("question"), style = "info", size = "extra-small")), 
                                min = 0, max = 1.7, value = 0, step = 0.01, round = F),
                    hr(),
                    selectInput(inputId = "pathway_category_input",
@@ -258,7 +258,7 @@ shinyUI(
                              trigger = "hover",
                              options = list(container = "body")),
                    fileInput('new_data_glm_input', 
-                             label = list("Add new data layer", bsButton("qt_newLayer", label = "", icon = icon("question"), style = "info", size = "extra-small")),  #---
+                             label = list("Add new data layer", bsButton("qt_newLayer", label = "", icon = icon("question"), style = "info", size = "extra-small")),  
                              accept = c("rds", "A list", ".rds"))
                    ), #end of side bar panel2
                  mainPanel(
@@ -359,7 +359,6 @@ shinyUI(
                              placement = "right",
                              trigger = "hover",
                              options = list(container = "body")),
-                   #---selectInput(inputId = 'toxpi_layer_input', label = 'Data layers', c('PPI_STRINGdb'), multiple = T, selectize = F),
                    selectInput(inputId = 'toxpi_layer_input', 
                                label = list("Data layers", bsButton("qt_dataLayer", label = "", icon = icon("question"), style = "info", size = "extra-small")), 
                                c('PPI_STRINGdb'), multiple = T, selectize = F),
@@ -382,11 +381,11 @@ shinyUI(
                    #verbatimTextOutput("txt_toxpi_selected_layers",placeholder = F)
                    ),
                  mainPanel(
-                   box(plotOutput('plot_toxpi',click = "toxpi_plot_click"
+                   box(plotOutput('plot_toxpi', click = "toxpi_plot_click"
                                   #dblclick = 'toxpi_plot_dbl_click',
                                   #brush = brushOpts(id = 'toxpi_brush',
                                   #resetOnNew = T)
-                                  ) ,collapsible = T, width = 12),
+                                  ), collapsible = T, width = 12),
                    verbatimTextOutput("txt_toxpi_click"),
                    #verbatimTextOutput("txt_toxpi_compounds"),
                    #tags$head(tags$style("#txt_toxpi_compounds{color:blue; font-size:14px; font-style:bold; overflow-y:scroll; max-height: 100px; background: ghostwhite;}")),
