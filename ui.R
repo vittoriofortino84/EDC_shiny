@@ -98,7 +98,7 @@ shinyUI(
                            });
                                     '),
                          textInput("clientTime", "Client Time", value = ""),
-                         numericInput('number_cpu_input', 'number of cpus', 4, min=1, step = 1),
+                         numericInput('number_cpu_input', 'Number of CPUs', 4, min=1, step = 1),
                          bsPopover(id = "qt_jobName", title = "Job name",
                                    content = paste("Please enter a job name. This name will be used during visualization of the relults."),
                                    placement = "right",
