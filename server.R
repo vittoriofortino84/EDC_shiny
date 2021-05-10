@@ -77,7 +77,7 @@ function(input,output,session){
      content = function(file) {
        showNotification("Please wait for completion")
        saveRDS(dataset_export(), file)
-       showNotification("Saving Finished")
+       showNotification("Completed saving")
      }) # saving  the output  of the pipeline
   
  
@@ -125,7 +125,7 @@ function(input,output,session){
        print(paste('The optimum number of genes is:',n_genes))
        print(paste('The optimum proportion of edges is:',n_edges*100))
        print('finished')
-       rv_pipeline$status<-'Pareto is finished'
+       rv_pipeline$status<-'Pareto optimization completed'
        showNotification("Finished")
        rv_pipeline$pareto<-ps.out}else{
          showNotification('The fields network, edc list, decoy list should not be empty', type = 'error')}
@@ -156,8 +156,8 @@ function(input,output,session){
        }
      fgsea_res<-pipeline(network,patways,n_edges,n_genes,mies,p)
      bpstop(p)
-     print('Gene set enrichment analysis is finished')
-     incProgress(1/3,detail = 'RWR-Geneset enrichment analysis is finished')
+     print('Gene set enrichment analysis completed')
+     incProgress(1/3,detail = 'RWR-Gene set enrichment analysis completed')
      # pretreatment of NES values
      fgs<-t(fgsea_res$NES)
      fgs[is.na(fgs)]<-0
@@ -169,8 +169,8 @@ function(input,output,session){
      
      # ML part training model
      modl<-elastic_net_model_two_class(fgs,class)
-     print('Machine Learning is finished')
-     incProgress(1/3,detail = 'Machine learning is finished')
+     print('Machine Learning completed')
+     incProgress(1/3,detail = 'Machine learning completed')
      
      # Cross validtion
      print('starting kfold CV validation')
@@ -207,8 +207,8 @@ function(input,output,session){
      updateSelectInput(session,'data_layer_input',choices = rv_bubble_plot$networks)
      rv_bubble_plot$data_glm<-rbind(rv_bubble_plot$data_glm,all_df)
      # 
-     rv_pipeline$status<-'RWR-FGSEA-GLM is finished'
-     incProgress(1/3,detail = 'Kfold_CV is finished')
+     rv_pipeline$status<-'RWR-FGSEA-GLM completed'
+     incProgress(1/3,detail = 'Kfold_CV completed')
      })
      showNotification("Finished")
      rv_pipeline$params<-list(n_genes=n_genes,n_edges=n_edges,network=network,model=modl)}else{
@@ -249,8 +249,8 @@ function(input,output,session){
      predicted_prob<-predict(model$modl,fgs,type='prob')
      rv_pipeline$predicted_data<-as.data.frame(list(rownames(fgs),predicted_prob[,'edc'],predicted_class))
      colnames(rv_pipeline$predicted_data)<-c('Names', 'EDC_probability', 'Class')
-     rv_pipeline$status<-'Prediction of newcompounds is finished'
-     incProgress(1/2,detail = 'Prediction is finished')
+     rv_pipeline$status<-'Prediction of newcompounds completed'
+     incProgress(1/2,detail = 'Prediction completed')
      showNotification("Finished")
      })
    }) #predcition of new compounds
