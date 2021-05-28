@@ -35,7 +35,7 @@ pie_chart <- function(pie_data,title){
 box_plot <- function(dat, nams, color_values, min_point = 0.7){
   require(ggplot2)
   p <- ggplot(dat, aes(x = factor(networks, level = nams), y = values)) + #fill=factor(networks,level=nams)
-          geom_boxplot(show.legend = F) + theme_minimal() + ggtitle("Accuracy of data layers") +
+          geom_boxplot(show.legend = F) + theme_minimal() + ggtitle("") + #Accuracy of trained classifiers
           xlab("Data Layers") +
           ylab("F1-score") + scale_fill_manual(values = color_values)+
           labs(x = '', fill='Data Layers') +
@@ -43,8 +43,9 @@ box_plot <- function(dat, nams, color_values, min_point = 0.7){
           theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 10), 
                 axis.title.y = element_text(size = 16),
                 axis.ticks.x = element_blank(),legend.position = "none",
-                plot.margin = margin(0, 0, 0, 5, "cm"),
-                panel.grid.minor = element_blank())
+                plot.margin = margin(0, 2, 0, 4, "cm"),
+                panel.grid.minor = element_blank(),
+                plot.title = element_text(face = "bold"))
   return(p)
   }#used in summary tab for k-fold-cv results
 
@@ -105,7 +106,7 @@ toxpi_plot<-function(all_mat,ranges,min_toxpi=0.1,min_edc_score=0.8){
     ylab('TOXPI score')+ xlab('Average EDC score')+
     theme_minimal()+ 
     coord_cartesian(xlim = ranges$x, ylim = ranges$y, expand = T)+
-    ggtitle("Average EDC-class probability VS ToxPi scores")+xlab("Average EDC-class probability")+ylab("ToxPi scores")
+    ggtitle("")+xlab("Average EDC-class probability")+ylab("ToxPi scores")
 }#used in evaluation with toxpi tab
 
 brush_adjust<-function(brush,ranges){

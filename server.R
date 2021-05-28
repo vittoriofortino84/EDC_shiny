@@ -14,9 +14,9 @@ function(input,output,session){
   source('functions/glm_functions.R')            # elastic net GLM functions
   source('functions/annotation_functions.R')     # annotation functions
   
-### Tab 0: Home-----------------------------------------------------------------
+### Tab 1: Home-----------------------------------------------------------------
 
-### Tab 1: Summary -------------------------------------------------------------
+### Tab 2: Summary -------------------------------------------------------------
   
   output$plot_st1 <- renderPlot({   # pie chart of average edc scores in the summary tab
     data_edcs_count_average <- readRDS("inputData/statistics/average_distribution_compounds_EDCs.rds")
@@ -53,7 +53,7 @@ function(input,output,session){
   })
 
    
-### Tab 2: Toxicogenomics pipeline ---------------------------------------------
+### Tab 3: Toxicogenomics pipeline ---------------------------------------------
   library(parallel)
   det_cpus<-detectCores()
   
@@ -156,7 +156,7 @@ function(input,output,session){
        }
      fgsea_res<-pipeline(network,patways,n_edges,n_genes,mies,p)
      bpstop(p)
-     print('Gene set enrichment analysis completed')
+     print('Gene-set enrichment analysis completed')
      incProgress(1/3,detail = 'RWR-Gene set enrichment analysis completed')
      # pretreatment of NES values
      fgs<-t(fgsea_res$NES)
@@ -173,7 +173,7 @@ function(input,output,session){
      incProgress(1/3,detail = 'Machine learning completed')
      
      # Cross validtion
-     print('starting kfold CV validation')
+     print('Starting k-fold cross validation')
      all_index<-caret::createMultiFolds(class,k=input$k_input,times=input$repeat_input)
      cpu_ind<-cpu_splitter(n_cpuc,1:length(all_index))
      library(doParallel)
@@ -228,7 +228,7 @@ function(input,output,session){
      n_genes<-as.numeric(rv_pipeline$params$n_genes)
      n_edges<-as.numeric(rv_pipeline$params$n_edges)
      print(n_genes);print(n_edges)
-     showNotification('wait for random walk and FGSEA')
+     showNotification('Wait for random walk and FGSEA')
     
      # RWR-FGSEA
      patways<-readRDS('inputData/pathways.rds')
@@ -268,7 +268,7 @@ function(input,output,session){
    
    
   
-### Tab 3: Molecular activity profiling of EDCs --------------------------------
+### Tab 4: Molecular activity profiling of EDCs --------------------------------
    networks<-readRDS('inputData/network_names.rds')     # names of the networks
    glm_coefs<-readRDS('inputData/GLM_coeffs_edcs_decoys.rds')
    updateSelectInput(session,'data_layer_input',choices = networks)
@@ -284,7 +284,7 @@ function(input,output,session){
    
   output$export_btn_pathways <- downloadHandler(
     filename = function() {
-      'pat.csv'
+      'Plot_Pathways.csv'
     },
     content = function(file) {
       write.csv(rv_bubble_plot$data_subset, file)
@@ -323,7 +323,7 @@ function(input,output,session){
   
 
 
-### Tab 4: EDC class probability -----------------------------------------------
+### Tab 5: EDC class probability -----------------------------------------------
   # params and variables
   all_vam<-readRDS('inputData/all_edc_scores.rds')     # edc scores and class probs for networks
   networks<-readRDS('inputData/network_names.rds')     # names of the networks
@@ -338,12 +338,12 @@ function(input,output,session){
   
   rv_edc_score<-reactiveValues(table_scors=c(),
                                class_prob_scores=edc_score(all_vam,'1962-83-0',
-                                                           network_score_levelss)[1:24,],
+                                                           network_score_levelss)[1:20,],
                                harmonic_average_scores=edc_score(all_vam,'1962-83-0',
-                                                           network_score_levelss)[25:26,]) #Default compound at launch
+                                                           network_score_levelss)[21:22,]) #Default compound at launch
   updateSelectizeInput(session, "cmpname", selected = '1962-83-0',choices  =all_possible_mesh_cas_names)
   updateSelectInput(session,"edc_score_layer_input",
-                    choices = networks,selected = networks[1:24])
+                    choices = networks,selected = networks[1:20])
   ranges_class_prob <- reactiveValues(x = NULL, y = NULL)
   ranges_edc_score <- reactiveValues(x = NULL, y = NULL)
   path_2_network<-'large_file/all_precompiled_pipeline.RDSS'  # all networks and paramterers and models
@@ -419,12 +419,12 @@ rv_edc_score$table_scors<-table_data
         
         showNotification('finished')}else{showNotification('Wrong MIEs')}
       
-    }else{showNotification('the compounds already exists in the data base or the field is empty')}
+    }else{showNotification('The compound already exists in the database or the field is empty')}
     
   })  #MIE 2 edc score
   output$export_btn_edcscores <- downloadHandler(
     filename = function() {
-      'pat.csv'
+      'Plot_EdcClassProbability.csv'
     },
     content = function(file) {
       write.csv(rbind(rv_edc_score$class_prob_scores,rv_edc_score$harmonic_average_scores), file)
@@ -436,7 +436,7 @@ rv_edc_score$table_scors<-table_data
 #  if (input$chkbox_most_informatiave==T){
 #   updateSelectInput(session,"edc_score_layer_input",choices = networks,selected = networks[c(1,2,4,13,14,15)])}})
 
-### Tab 5: Comparison with ToxPi Scores ----------------------------------------
+### Tab 6: Comparison with ToxPi Scores ----------------------------------------
   
   rv_eval_toxpi <- reactiveValues(plot_data = readRDS('inputData/toxpi_scores.rds'),
                                   selected_for_score = networks)
@@ -481,7 +481,7 @@ observeEvent(input$toxpiBtn_refresh,{
               min_edc_score=input$slider_toxpi_plt_edc_score_cutoff)}) #plot_functions call
   
  
- # data table bellow the plot
+ # data table below the plot
    output$table_toxpi<-renderDataTable({
      p_data<-rv_eval_toxpi$plot_data
      ind_comps<-unique(p_data$X)
@@ -502,7 +502,7 @@ observeEvent(input$toxpiBtn_refresh,{
   
   output$export_btn_toxpi <- downloadHandler(
     filename = function() {
-      'pat.csv'
+      'Plot_EdcClassProbability_ToxPi.csv'
     },
     content = function(file) {
       write.csv(rv_eval_toxpi$plot_data, file)

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+    <title>Home</title>
+
+    <body>
+
+        <h1>EDTox</h1>
+        <h2>Description</h2>
+        <p>The EDTox is an R shiny application for prediction of endocrine disruption potential of a compound  using a machine learning approach based on toxicogenomics data. In this approach, starting from the molecular initiating events (MIEs) of a compound, a random walk with restart (RWR) is performed on a network build using toxicogenomics data to identify the genes perturbed by the compound in question. The resulting list of perturbed genes is then used for fast gene-set enrichment analysis (FGSEA) to retrieve the activated pathways. The pathway activation scores obtained from FGSEA are used to train a GLM based classifier to predict the endocine disruption potential of a compound (defined as EDC-class probability score). The pipeline also allows an option to use pareto solution to select the optimal proportion of edges from the original network that will be used as input for RWR and the number of genes with highest probability after RWR to be taken into FGSEA. Validation of the model can be performed by k-fold cross-validation.<br>
+
+        As a pilot study, we have trained classifiers based on toxicogenomics data from DrugMatrix, open TG-Gates and LINCS databases. An additional classifier based on a protein-protein interaction network from STRING database has also been trained. In each case, only liver genes were included in the initial network for training the classifiers. A sample set of ## endocrine disrupting chemicals (EDCs) and ## negative controls were used as training set. The negative controls were selected such that they had maximum dissimilarity with the EDCs based on their MIEs. The MIEs of the compounds were retrieved from the Comparative Toxicogenomics Database (CTD). The accuracy of the trained classifiers can be viewed on the summary tab of this application.<br>
+
+        While users can train a new classifier based on their own network and training set compounds, the application also provides a way to calculate EDC-class probability scores based on the 20 classifiers trained using the toxicogenomics data mentioned above. The application can also be used to view the EDC-class probabilities of the 12,278 compounds in CTD predicted using  the EDTox pipeline and compare it with the ToxPi scores from ToxCast. </p>
+
+
+        <h2>Application tabs</h2>
+        <ul>
+            <li><strong>Home:</strong> The initial landing page. Contains an itroduction to the application.</li>
+            <li><strong>Summary:</strong> Provides an overview of the accuracy of the pre-trained classifiers, the number of pathways included in the pipeline and basic statistics regarding the EDC-class probability scores of the CTD compounds.</li>
+            <li><strong>Toxicogenomics Pipeline:</strong> Allows the user to train a new classifier starting from a network and lists of training set EDCs and negative controls along with their corresponding MIEs. Prediction of EDC-class probability scores for componds based on the newly trained can also be performed here.</li>
+            <li><strong>Pathway activation scores:</strong> View and compare pathways predicted to be activated based on the different classifiers.</li>
+            <li><strong>EDC-class probability:</strong> Retrieve the EDC-class probability scores of individual compounds. Also allows for comparision of EDC-class probability scores of upto five compounds.</li>
+            <li><strong>Comparison with ToxPi Scores:</strong> Plot and compare the compiled EDC-class probability scores against the ED-based ToxPi scores from ToxCast.</li>
+        </ul>
+
+
+        <h2>Databases</h2>
+        <ul>
+            <li> <a href="https://www.ebi.ac.uk/biostudies/studies/S-DIXA-AN-009?query=S-DIXA-AN-009"> DrugMatrix </a> </li>
+            <li> <a href="https://toxico.nibiohn.go.jp/english/datalist.html"> Open TG-GATEs </a> </li>
+            <li> <a href="https://pubmed.ncbi.nlm.nih.gov/27028627/"> LINCS 1000 [Phase I, Phase II] </a> </li>
+            <li> <a href="https://string-db.org/cgi/input"> STRING v10 </a> </li>
+            <li> <a href="https://ctdbase.org/"> Comparative Toxicogenomics Database (CTD) [Release: June 2020] </a> </li>
+            <li> <a href="https://aopwiki.org/"> Collaborative Adverse Outcome Pathway Wiki (AOP-Wiki) [Release: 2019-01-01] </a> </li>
+            <li> <a href="https://reactome.org/"> Reactome </a> </li>
+            <li> <a href="https://www.epa.gov/chemical-research/exploring-toxcast-data-downloadable-data"> ToxCast v3.1 </a> </li>
+        </ul>
+
+    </body>
+</html>

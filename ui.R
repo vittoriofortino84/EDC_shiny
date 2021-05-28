@@ -12,7 +12,7 @@ library(DT)
 
 shinyUI(
   dashboardPage(
-    dashboardHeader(title = "EDTox:GUI"),
+    dashboardHeader(title = "EDTox"),
     dashboardSidebar(
       sidebarMenu(id = "tabs",
                   menuItem("Home", tabName = "tab_home", icon = icon("dashboard")),
@@ -21,7 +21,6 @@ shinyUI(
                   menuItem("Pathway activation scores", tabName = "tab_pathway", icon = icon('th')),
                   menuItem("EDC-class probability", tabName = "tab_edcScore", icon = icon('th')),
                   menuItem("Comparison with ToxPi scores", tabName = "tab_toxpiScore", icon = icon('th'))
-                  #menuItem("Prediction from MIEs", tabName = "p5", icon = icon('th'))
                 )
       ),
       dashboardBody(
@@ -31,24 +30,21 @@ shinyUI(
        tabItems(
         
 
-### Tab 0: Home ----------------------------------------------------------------
+### Tab 1: Home ----------------------------------------------------------------
 # Home page with pipeline diagram and text explaining the pipeline
 
          tabItem(tabName = "tab_home",
-                 fluidRow(box(img(style = "max-width: 100%; width: 70%; height: auto", src = "images/EDTox_Pipeline.jpg"),
-                          p(style = "font-size: 125%; text-align: justify; margin: 0.5% 1% 0.5% 1%", paste("The EDTox:GUI is an R Shiny appliation that provides an interactive graphical user interface to utilize the EDTox dataspace", 
-                              "for prediction of endocrine disruption potential of a chemical compound and prediction of possible adverse outcome pathways (AOP).",
-                              "The R Shiny application serves two purposes. First, it can be used to generate models for classification of chemicals",
-                              "as EDCs or non-EDCs based on networks derieved from toxicogenomics data.",
-                              "And the second, it can be used for infering endocrine disruption potential based on the EDTox dataspace.", sep = " ")), width = 20), 
-                          align = "center")
+                 fluidRow(box(includeHTML("www/Home.html"),
+                          width = 20, height = "100%", align = "justify")
+                          )
                  ),
 
-### Tab 1: Summary -------------------------------------------------------------
+### Tab 2: Summary -------------------------------------------------------------
 
          tabItem(tabName = "tab_dashboard",
                  fluidRow(
-                   box(plotOutput("plot_st1", height = 250), width = 6, height = 315),
+                   box(title = strong("EDC-class probability of CTD chemicals"),
+                     plotOutput("plot_st1", height = 250), width = 6, height = 315),
                    box(
                      title = list(strong("Pathways used in the pipeline"), bsButton("qt_path", label = "", icon = icon("question"), style = "info", size = "extra-small")),
                      bsPopover(id = "qt_path", title = "Pathways",
@@ -60,8 +56,8 @@ shinyUI(
                      )
                    ),
                  fluidRow(
-                   #box(plotOutput("plot_st3",height = 400),width = 12,height = 500),
-                   box(plotOutput("plot_st4", height = 400),
+                   box(title = strong("Accuracy of trained classifiers"),
+                       plotOutput("plot_st4", height = 400),
                        bsPopover(id = "qt_f1Score", title = "F1 scores",
                                  content = paste("A data frame as RDS file with two columns. The first column should be named values (the F1 scores).",
                                                   "The second column should be named networks (a similar name for all rows i.e example/outPut/F1_scores.rds).",
@@ -72,7 +68,7 @@ shinyUI(
                        fluidRow(
                          box(
                            fileInput("F1_scores_input", 
-                                     label = list("Add new F1-scores", bsButton("qt_f1Score", label = "", icon = icon("question"), style = "info", size = "extra-small")), 
+                                     label = list("Add classification performance of new classifier", bsButton("qt_f1Score", label = "", icon = icon("question"), style = "info", size = "extra-small")), 
                                      accept = c("rds","A list",".rds")), 
                            width = 6, solidHeader = T),
                          #box(textInput("new_F1_Colr_input", label = "Color for the new layer", value = "orange"), width = 6, solidHeader = T)
@@ -82,7 +78,7 @@ shinyUI(
                  ),
 
 
-### Tab 2: Toxicogenomics pipeline ---------------------------------------------
+### Tab 3: Toxicogenomics pipeline ---------------------------------------------
 
          tabItem(tabName = "tab_pipeline",
                  headerPanel(""),
@@ -193,7 +189,7 @@ shinyUI(
                        ),
                      actionButton('network_btn',label = 'Run RWR-FGSEA-GLM'),
                      plotOutput('f1_plt'),
-                     width = 12, collapsed = T, collapsible = T, title = "Training and validation of elastic net based classifier"),
+                     width = 12, collapsed = T, collapsible = T, title = "Training and validation of GLM based classifier"),
 
                    box(
                      selectInput(inputId = 'export_input', 
@@ -217,26 +213,26 @@ shinyUI(
                     #end of side bar panel2
                    , width = 12)),
 
-### Tab 3: Molecular activity profiling of EDCs --------------------------------
+### Tab 4: Molecular activity profiling of EDCs --------------------------------
 
          tabItem(tabName = "tab_pathway",
                  headerPanel("Molecular activity profiling of EDCs"),
                  sidebarPanel(
                    bsPopover(id = "qt_glmCoef", title = "GLM coefficients",
-                             content = paste("Select the minimum GLM coefficient for visualization"),
+                             content = paste("Select the minimum GLM coefficient"),
                              placement = "right",
                              trigger = "hover",
                              options = list(container = "body")),
                    sliderInput(inputId = 'GLM_coef',
-                               label = list("GLM Coefficient cut-off ", bsButton("qt_glmCoef", label = "", icon = icon("question"), style = "info", size = "extra-small")), 
+                               label = list("GLM coefficient threshold ", bsButton("qt_glmCoef", label = "", icon = icon("question"), style = "info", size = "extra-small")), 
                                min = 0, max = 1, value = 0, step = 0.01, round = F),
                    bsPopover(id = "qt_pathScore", title = "Pathway activation score",
-                             content = paste("Select the minimum pathway activation score for visualization"),
+                             content = paste("Select the minimum pathway activation score"),
                              placement = "right",
                              trigger = "hover",
                              options = list(container = "body")),
                    sliderInput(inputId = 'NES',
-                               label = list("Pathway activation score cut-off", bsButton("qt_pathScore", label = "", icon = icon("question"), style = "info", size = "extra-small")), 
+                               label = list("Pathway activation score threshold ", bsButton("qt_pathScore", label = "", icon = icon("question"), style = "info", size = "extra-small")), 
                                min = 0, max = 1.7, value = 0, step = 0.01, round = F),
                    hr(),
                    selectInput(inputId = "pathway_category_input",
@@ -245,20 +241,20 @@ shinyUI(
                                multiple=TRUE, selectize=FALSE),
                    hr(),
                    selectInput(inputId = 'data_layer_input',
-                               label = "Data layers (Hold Ctrl select multiple data layers)",
+                               label = "Classifiers (Hold Ctrl select multiple classifiers)",
                                state.name, multiple = TRUE, selectize = FALSE),
                    actionButton(inputId = 'calc2', label = 'Show'),
                    hr(),
                    br(),
-                   bsPopover(id = "qt_newLayer", title = "New data layer(s)",
-                             content = paste("New data layer can be imported as a four column data frame in rds format.",
-                                               "The columns should list the name of the data layer, the average pathway activation scores across all EDCs for the pathway,",
+                   bsPopover(id = "qt_newLayer", title = "Pathway activation scores from new classifier",
+                             content = paste("Pathway activation scores from a new classifier can be imported as a four column data frame in rds format.",
+                                               "The columns should list the name of the classifier, the average pathway activation scores across all EDCs for the pathway,",
                                                "the GLM coefficient for the pathway and the name of the pathway, respectively in the order mentioned.", sep = " "),
                              placement = "right",
                              trigger = "hover",
                              options = list(container = "body")),
                    fileInput('new_data_glm_input', 
-                             label = list("Add new data layer", bsButton("qt_newLayer", label = "", icon = icon("question"), style = "info", size = "extra-small")),  
+                             label = list("Add new classifier", bsButton("qt_newLayer", label = "", icon = icon("question"), style = "info", size = "extra-small")),  
                              accept = c("rds", "A list", ".rds"))
                    ), #end of side bar panel2
                  mainPanel(
@@ -267,13 +263,13 @@ shinyUI(
                               dblclick = 'ptw_dbl_click',
                               brush = brushOpts(id = 'ptw_brush',
                                                 resetOnNew = T)),
-                   downloadButton('export_btn_pathways', 'Export Plot data as csv'),
+                   downloadButton('export_btn_pathways', 'Export plot data'),
                    br(),
                    hr()
                    ) # end of main panel2
                  ),  # end tabpanel 2 prediction form MIEs
 
-### Tab 4: EDC class probability -----------------------------------------------
+### Tab 5: EDC class probability -----------------------------------------------
 
          tabItem(tabName = "tab_edcScore",
                  headerPanel("EDC-class probability"),
@@ -281,7 +277,7 @@ shinyUI(
                    p(strong("Class probability for CTD chemicals "), bsButton("qt_scoreCTD", label = "", icon = icon("question"), style = "info", size = "extra-small")),
                    bsPopover(id = "qt_scoreCTD", title = "Class probability for CTD chemicals",
                              content = paste("Enter the compound(s) for which class probabilities to visualize.",
-                                               "The data layers selected below will be used for the calculation of average and harmonic sum of EDC-class probabilities.",
+                                               "The classifiers selected below will be used to generate the EDC-class probability scores.",
                                                "Hold", strong("Ctrl"), "key to select multiple data layers.", br(),
                                                "Note: Maximum 5 compounds can be viewed/compared at once.", sep = " "),
                              placement = "right",
@@ -295,7 +291,7 @@ shinyUI(
                                   options = list(maxOptions = 10, maxItems = 5)),
 
                    selectInput(inputId = 'edc_score_layer_input',
-                               label = 'Data layers',
+                               label = 'Classifiers',
                                c('PPI_STRINGdb'),
                                multiple=TRUE, selectize = FALSE),
 
@@ -306,15 +302,14 @@ shinyUI(
                    actionButton(inputId = 'calc', label = 'Show on plot'),
                    br(),
                    hr(),
-                   downloadButton('export_btn_edcscores','Export plot data as csv'),
+                   downloadButton('export_btn_edcscores','Export plot data'),
                    # helpText("Note: You can compare the class probabilities ",
                    #          "as well as the EDC scores for maximum 5 compounds ")
                    hr(),
-                   p(strong("Class probability for other chemicals "), bsButton("qt_scoreOther", label = "", icon = icon("question"), style = "info", size = "extra-small")),
-                   bsPopover(id = "qt_scoreOther", title = "Class probability for other chemicals",
-                             content = paste("For chemicals not in CTD, its MIEs can be used as input to calculate the EDC-class probabilities.",
-                                             "Enter the name of the compound and the list of MIEs as Entrez gene ID in the respective fields below.",
-                                             "Select the data layers based on which to calculate the probability scores and hit the",
+                   p(strong("Class probability for new chemicals "), bsButton("qt_scoreOther", label = "", icon = icon("question"), style = "info", size = "extra-small")),
+                   bsPopover(id = "qt_scoreOther", title = "Class probability for new chemicals",
+                             content = paste("Enter the name of the compound and the list of MIEs as Entrez gene ID in the respective fields below.",
+                                             "Select the classifiers based on which to calculate the probability scores and hit the",
                                              strong("Calculate from MIEs"), "button to calculate.", br(),
                                              "Notes: 1) For this module to run, the file",
                                              em("all_precompiled_pipeline.RDSS"), "should exist in the folder large_file.",
@@ -343,30 +338,30 @@ shinyUI(
                               dblclick = 'plot_class_prob_scores_dbl_click',
                               brush = brushOpts(id = 'class_prob_scores_brush', resetOnNew = T)
                               ),
-                    width = 12, collapsible = T, title = "Plot of compound class probability across data layers")
+                    width = 12, collapsible = T, title = "Plot of compound EDC-class probability scores for selected classifiers")
                   #plotOutput('plot_edc_score', height = 300),
                   ) # End of main panel 1
                  ),
 
-### Tab 5: Comparison with ToxPi Scores ----------------------------------------
+### Tab 6: Comparison with ToxPi Scores ----------------------------------------
 
          tabItem(tabName = "tab_toxpiScore",
-                 headerPanel("Comparison with ToxPi Scores"),
+                 headerPanel("Comparison with ED-based ToxPi Scores"),
                  sidebarPanel(
-                   bsPopover(id = "qt_dataLayer", title = "Data layers",
-                             content = paste("Select data layers to be used for calculation of average EDC scores.",
+                   bsPopover(id = "qt_dataLayer", title = "Classifiers",
+                             content = paste("Select the classifiers to be used for calculation of average EDC-class probability scores.",
                                                 "Hold", strong("Ctrl"), "to select multiple data layers.", sep = " "),
                              placement = "right",
                              trigger = "hover",
                              options = list(container = "body")),
                    selectInput(inputId = 'toxpi_layer_input', 
-                               label = list("Data layers", bsButton("qt_dataLayer", label = "", icon = icon("question"), style = "info", size = "extra-small")), 
+                               label = list("Classifiers", bsButton("qt_dataLayer", label = "", icon = icon("question"), style = "info", size = "extra-small")), 
                                c('PPI_STRINGdb'), multiple = T, selectize = F),
                    sliderInput(inputId = 'slider_toxpi_plt_toxpi_cutoff',
                                label='Minimum ToxPi score:',
                                min = 0.000, max = 0.4, value = 0.1, step = 0.01, round = F),
                    sliderInput(inputId = 'slider_toxpi_plt_edc_score_cutoff',
-                               label ='Minimum EDC score:',
+                               label ='Minimum EDC-class probability score:',
                                min = 0.000, max = 1, value = 0.8, step = 0.01, round = F),
                    sliderInput(inputId = 'slider_click_toxpi',
                                label = 'Plot click prescision:',
@@ -377,7 +372,7 @@ shinyUI(
                    actionButton(inputId = 'toxpiBtn_refresh', label = 'Refresh'),
                    br(),
                    hr(),
-                   downloadButton('export_btn_toxpi', 'Export plot data as csv')
+                   downloadButton('export_btn_toxpi', 'Export plot data')
                    #verbatimTextOutput("txt_toxpi_selected_layers",placeholder = F)
                    ),
                  mainPanel(
@@ -385,20 +380,14 @@ shinyUI(
                                   #dblclick = 'toxpi_plot_dbl_click',
                                   #brush = brushOpts(id = 'toxpi_brush',
                                   #resetOnNew = T)
-                                  ), collapsible = T, width = 12),
+                                  ), collapsible = T, width = 12, title = "Average EDC-class probabilities VS ToxPi scores"),
                    verbatimTextOutput("txt_toxpi_click"),
                    #verbatimTextOutput("txt_toxpi_compounds"),
                    #tags$head(tags$style("#txt_toxpi_compounds{color:blue; font-size:14px; font-style:bold; overflow-y:scroll; max-height: 100px; background: ghostwhite;}")),
                    dataTableOutput('table_toxpi')
                    ) # End of main panel 1
-                 ), # end of tab item toxcast
+                 ) # end of tab item toxcast
 
-### Tab 6: mie 2 class prob -------------------------------------------------
-         tabItem(tabName = 'p5',
-                 headerPanel('Predcition of class probabilities from MIEs'),
-                 sidebarPanel(),
-                 mainPanel()
-                 ) # End of prediction from mIEs
 
 ### Tab #: Any new tabs here
 
