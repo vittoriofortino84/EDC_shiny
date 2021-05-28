@@ -19,7 +19,7 @@ shinyUI(
                   menuItem("Summary", tabName = "tab_dashboard", icon = icon("th")),
                   menuItem("Toxicogenomics pipeline", tabName = "tab_pipeline", icon = icon('th')),
                   menuItem("Pathway activation scores", tabName = "tab_pathway", icon = icon('th')),
-                  menuItem("EDC-class probability", tabName = "tab_edcScore", icon = icon('th')),
+                  menuItem("EDC-class probability scores", tabName = "tab_edcScore", icon = icon('th')),
                   menuItem("Comparison with ToxPi scores", tabName = "tab_toxpiScore", icon = icon('th'))
                 )
       ),
@@ -43,7 +43,7 @@ shinyUI(
 
          tabItem(tabName = "tab_dashboard",
                  fluidRow(
-                   box(title = strong("EDC-class probability of CTD chemicals"),
+                   box(title = strong("Distribution of EDC-class probability scores of CTD chemicals"),
                      plotOutput("plot_st1", height = 250), width = 6, height = 315),
                    box(
                      title = list(strong("Pathways used in the pipeline"), bsButton("qt_path", label = "", icon = icon("question"), style = "info", size = "extra-small")),
@@ -269,13 +269,13 @@ shinyUI(
                    ) # end of main panel2
                  ),  # end tabpanel 2 prediction form MIEs
 
-### Tab 5: EDC class probability -----------------------------------------------
+### Tab 5: EDC class probability scores-----------------------------------------------
 
          tabItem(tabName = "tab_edcScore",
-                 headerPanel("EDC-class probability"),
+                 headerPanel("EDC-class probability scores"),
                  sidebarPanel(
-                   p(strong("Class probability for CTD chemicals "), bsButton("qt_scoreCTD", label = "", icon = icon("question"), style = "info", size = "extra-small")),
-                   bsPopover(id = "qt_scoreCTD", title = "Class probability for CTD chemicals",
+                   p(strong("Compile EDC-class probability scores for CTD chemicals "), bsButton("qt_scoreCTD", label = "", icon = icon("question"), style = "info", size = "extra-small")),
+                   bsPopover(id = "qt_scoreCTD", title = "Compile EDC-class probability scores for chemicals annotated in Comparative Toxicogenomics Database (CTD)",
                              content = paste("Enter the compound(s) for which class probabilities to visualize.",
                                                "The classifiers selected below will be used to generate the EDC-class probability scores.",
                                                "Hold", strong("Ctrl"), "key to select multiple data layers.", br(),
@@ -306,8 +306,8 @@ shinyUI(
                    # helpText("Note: You can compare the class probabilities ",
                    #          "as well as the EDC scores for maximum 5 compounds ")
                    hr(),
-                   p(strong("Class probability for new chemicals "), bsButton("qt_scoreOther", label = "", icon = icon("question"), style = "info", size = "extra-small")),
-                   bsPopover(id = "qt_scoreOther", title = "Class probability for new chemicals",
+                   p(strong("Compile EDC-class probability scores for new chemicals "), bsButton("qt_scoreOther", label = "", icon = icon("question"), style = "info", size = "extra-small")),
+                   bsPopover(id = "qt_scoreOther", title = "Compile EDC-class probability scores for new chemicals",
                              content = paste("Enter the name of the compound and the list of MIEs as Entrez gene ID in the respective fields below.",
                                              "Select the classifiers based on which to calculate the probability scores and hit the",
                                              strong("Calculate from MIEs"), "button to calculate.", br(),
@@ -331,7 +331,7 @@ shinyUI(
                    hr()
                    ), # End of side bar panel 1
                  mainPanel(
-                  box(tableOutput('table_edc_scores'), collapsible = T, collapsed = T, width = 12, title = "Average and harmonic sum of EDC-class probabilities"),
+                  box(tableOutput('table_edc_scores'), collapsible = T, collapsed = T, width = 12, title = "Average and harmonic sum of EDC-class probability scores"),
                   box(
                     plotOutput('plot_class_prob_scores',
                               height = 500,
