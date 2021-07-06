@@ -1,50 +1,55 @@
-bar_stat<-function(patwa_statistics){ 
-require(ggplot2)
-p<-ggplot(patwa_statistics, aes(x=type,
-                             y=number,
-                             fill=type)) +
-  geom_bar(stat="identity",show.legend = F)+
-  ggtitle('Pathways Used in the pipeline')+
-  ylab('Number of Pathways')+xlab('')+
-  theme_minimal()+
-  theme(legend.position = 'bottom',
-        axis.title.y =  element_text(size = 14),
-        axis.text.x=element_text(size = 14,angle = 45 ,hjust = 1 ))
-return(p)
-}# used in summary tab for barplot of pathways
+# Bar plot of pathway numbers --------------------------------------------------
 
-
-pie_chart<-function(pie_data,title){
+bar_stat <- function(patwa_statistics){ 
   require(ggplot2)
-  ggplot(pie_data, aes(x = 2, y = prop, fill=factor(Category,levels=rev(Category)))) +
-    geom_bar(stat = "identity", color = "white") +
-    coord_polar(theta = "y")+labs(fill=title)+
-    geom_text(aes(y = lab.ypos, label = Number), color = "Black",size=4)+
-    scale_fill_manual(values = rev(pie_data$colr))+
-    facet_wrap(.~pie_data$type)+
-    theme_void()+theme(legend.title = element_text(size = 14),
-                       strip.text = element_text(size = 16),
-                       legend.text = element_text(size = 14))+
-    xlim(0.5, 2.5)
-} # ggplot
-
-
-
-box_plot<-function(dat,nams,color_values,min_point=0.7){ 
-  require(ggplot2)
-  p<-ggplot(dat, aes(x=factor(networks,level=nams), y=values,fill=factor(networks,level=nams))) +
-    geom_boxplot(show.legend = F) +theme_minimal()+ ggtitle('Accuracy of Data layers')+
-    xlab('Data Layers')+
-    ylab('F1-score')+scale_fill_manual(values=color_values)+
-    labs(x='',fill='Data Layers')+
-    scale_y_continuous(breaks = seq(min_point,1,0.05), limits = c(min_point,1)) +
-    theme(axis.text.x=element_text(angle = 45,hjust = 1,size = 14),
-      axis.title.y = element_text(size = 16),
-      axis.ticks.x=element_blank(),legend.position = 'none',
-      plot.margin = margin(0, 0, 0, 5, "cm"),
-      panel.grid.minor = element_blank())
+  p <- ggplot(patwa_statistics, aes(x = type, y = number, fill=type)) +
+          geom_bar(stat = "identity", show.legend = F) +
+          ggtitle("") +
+          ylab("Number of Pathways") + xlab('') +
+          theme_minimal() +
+          theme(legend.position = "bottom",
+                axis.title.y = element_text(size = 14),
+                axis.text.x = element_text(size = 14, angle = 45, hjust = 1))
   return(p)
-}#used in summary tab for k-fold-cv results
+  }# used in summary tab for barplot of pathways
+
+
+# Doughnut/Pie chart of EDC average and harmonic scores distribution -----------
+
+pie_chart <- function(pie_data,title){
+  require(ggplot2)
+  ggplot(pie_data, aes(x = 2, y = prop, fill = factor(Category, levels = rev(Category)))) +
+    geom_bar(stat = "identity", color = "white") +
+    coord_polar(theta = "y") + labs(fill=title) +
+    geom_text(aes(y = lab.ypos, label = Number), color = "Black", size = 4) +
+    scale_fill_manual(values = rev(pie_data$colr)) +
+    facet_wrap(.~pie_data$type) +
+    theme_void() + 
+    theme(legend.title = element_text(size = 14), strip.text = element_text(size = 16), legend.text = element_text(size = 14)) +
+    xlim(0.5, 2.5)
+  } # ggplot
+
+
+# Box-plot of F1 scores --------------------------------------------------------
+
+box_plot <- function(dat, nams, color_values, min_point = 0.7){
+  require(ggplot2)
+  p <- ggplot(dat, aes(x = factor(networks, level = nams), y = values)) + #fill=factor(networks,level=nams)
+          geom_boxplot(show.legend = F) + theme_minimal() + ggtitle("") + #Accuracy of trained classifiers
+          xlab("Data Layers") +
+          ylab("F1-score") + scale_fill_manual(values = color_values)+
+          labs(x = '', fill='Data Layers') +
+          scale_y_continuous(breaks = seq(min_point, 1, 0.05), limits = c(min_point, 1)) +
+          theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 10), 
+                axis.title.y = element_text(size = 16),
+                axis.ticks.x = element_blank(),legend.position = "none",
+                plot.margin = margin(0, 2, 0, 4, "cm"),
+                panel.grid.minor = element_blank(),
+                plot.title = element_text(face = "bold"))
+  return(p)
+  }#used in summary tab for k-fold-cv results
+
+# Bubble plot of pathway activation scores and GLM coefficients --------------------------------------------------------
 
 bubble_plot<-function(data_x,net_names,ranges,Title=''){
   require(ggplot2);require(RColorBrewer)
@@ -90,17 +95,18 @@ edc_multi_compare_bar<-function(edc_data,net_lvls,ranges,ylbl,y_scale,angle_t=60
   
 }# used in edc score tab
 
+# Plot of ToxPi scores against EDC-class probability --------------------------------------------------------
 toxpi_plot<-function(all_mat,ranges,min_toxpi=0.1,min_edc_score=0.8){ 
   require(ggplot2)
   all_mat$colr<-'grey50'
   all_mat$colr[all_mat$unk_VAM_scores >=min_edc_score & all_mat$toxpi >=min_toxpi]<-'red'
   ggplot(all_mat,aes(x=unk_VAM_scores,y=toxpi))+
     geom_point(size=3,color=all_mat$colr)+
-    geom_text(label=all_mat$X,size=5,segment.size = 0.2, segment.color = "grey",show.legend = F) +
+    geom_text(label=all_mat$X,size=5,segment.size = 0.2, segment.color = "grey", show.legend = F) +
     ylab('TOXPI score')+ xlab('Average EDC score')+
     theme_minimal()+ 
     coord_cartesian(xlim = ranges$x, ylim = ranges$y, expand = T)+
-    ggtitle('Average EDC score VS TOXPI scores')+xlab('EDC score')+ylab('TOXPI score')
+    ggtitle("")+xlab("Average EDC-class probability")+ylab("ToxPi scores")
 }#used in evaluation with toxpi tab
 
 brush_adjust<-function(brush,ranges){
@@ -112,7 +118,6 @@ if (!is.null(brush)) {
   ranges$y <- NULL
 }
 } # used in zoom for the putative pathways, toxpi and edc score tabs
-
 
 
 
