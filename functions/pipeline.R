@@ -13,16 +13,16 @@ pipeline<-function(network,ptw,perc,ng,comp_seeds,p){
   
   #graph optimization
 
-  gr<-graph_from_data_frame(network[order(network[,3],decreasing = T),1:2][1:round(nrow(network)*perc),],directed=F)  #gettting the   percent of weighted edge values
+  gr<-graph_from_data_frame(network[order(network[,3],decreasing = T),1:2][1:round(nrow(network)*perc),],directed=F)  #getting the   percent of weighted edge values
   
   
     #gettting the   percent of weighted edge values
-  d_sign<-lapply(comp_seeds,function(x)intersect(x,V(gr)$name))    #intersection of the genes in the graph and the genes related to the compunds
+  d_sign<-lapply(comp_seeds,function(x)intersect(x,V(gr)$name))    #intersection of the genes in the graph and the genes related to the compounds
   d_sign<-d_sign[sapply(d_sign,length)>0]                     #omitting chemicals with no intersected genes inside the graph 
   mat<-sapply(d_sign,function(x)(V(gr)$name%in%x)*1)           #matrix of the genes in the row and chemicals in the columns
   rownames(mat)<-V(gr)$name 
   
-  #random walk with restrart
+  # Randomwalk With Restart (RWR)
   probm<-dRWR(gr,setSeeds=mat,normalise.affinity.matrix='quantile',parallel=T,verbose = F) 
   probm<-as.matrix(probm)
   colnames(probm)<-names(d_sign)                        #Columns are chemicals
@@ -33,8 +33,8 @@ pipeline<-function(network,ptw,perc,ng,comp_seeds,p){
   }
   
   
-  #Fgsea
-  q<-apply(probm,2,function(y)sum(y!=0)) # Counts the number of genes for each chemical which are at least once seen in random walk (probility >0)
+  # FGSEA
+  q<-apply(probm,2,function(y)sum(y!=0)) # Counts the number of genes for each chemical which are at least once seen in random walk (probability >0)
   probm<-probm[,q>=ng]                     # We take the chemicals with at least more than ng observed genes after random walk on the GCN
   probm<-as.matrix(probm)
   colnames(probm)<-names(q)[which(q>=ng)]
@@ -66,7 +66,7 @@ onecompound_mies2classprob<-function(networks,patways,models,compound_mies){
   require(igraph)
   grp<-1:length(networks$networks)
   cl_probs<-rep(NA,length(grp))
-  withProgress(message = 'wait for the RWR-FGSEA-GLM',value = 0,{
+  withProgress(message = 'Wait for RWR-FGSEA-GLM\n',value = 0,{
   for (i in 1:length(grp)) {
 
     incProgress(1/length(grp),detail = paste('network',i,' out of ',length(grp)))
@@ -75,7 +75,7 @@ onecompound_mies2classprob<-function(networks,patways,models,compound_mies){
     ng<-networks$genes_number[indd]
     ptw<-patways$all_patways_list[names(patways$all_patways_list) %in% patways$used_patways_in_models[[indd]]]
     
-    d_sign<-lapply(compound_mies,function(x)intersect(x,V(gr)$name))  #intersection of the genes in the graph and the genes related to the compunds
+    d_sign<-lapply(compound_mies,function(x)intersect(x,V(gr)$name))  #intersection of the genes in the graph and the genes related to the compounds
     
     if (length(unlist(d_sign))>0){
       mat<-sapply(d_sign,function(x)(V(gr)$name%in%x)*1)             #matrix of the genes in the row and chemicals in the columns

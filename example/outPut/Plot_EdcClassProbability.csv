@@ -1,0 +1,131 @@
+"","nnames","network","score"
+"1","furan_C039281_unk","Drug_Matrix_Rat_invitro_Single_Dose_1_day",0.5607245
+"2","HLo 7_C058577_unk","Drug_Matrix_Rat_invitro_Single_Dose_1_day",0.03640274
+"3","RMP 7_C089876_decoy","Drug_Matrix_Rat_invitro_Single_Dose_1_day",NA
+"4","JBP 485_C412308_unk","Drug_Matrix_Rat_invitro_Single_Dose_1_day",0.9302611
+"5","10,10-bis(4-pyridinylmethyl)-9(10H)-anthracenone_C112297_unk","Drug_Matrix_Rat_invitro_Single_Dose_1_day",0.7218803
+"6","furan_C039281_unk","Drug_Matrix_Rat_invivo_Single_Dose_1_day",0.1055205
+"7","HLo 7_C058577_unk","Drug_Matrix_Rat_invivo_Single_Dose_1_day",NA
+"8","RMP 7_C089876_decoy","Drug_Matrix_Rat_invivo_Single_Dose_1_day",NA
+"9","JBP 485_C412308_unk","Drug_Matrix_Rat_invivo_Single_Dose_1_day",0.9529443
+"10","10,10-bis(4-pyridinylmethyl)-9(10H)-anthracenone_C112297_unk","Drug_Matrix_Rat_invivo_Single_Dose_1_day",0.127187
+"11","furan_C039281_unk","Drug_Matrix_Rat_invivo_Repeated_Dose_3_days",0.9826052
+"12","HLo 7_C058577_unk","Drug_Matrix_Rat_invivo_Repeated_Dose_3_days",NA
+"13","RMP 7_C089876_decoy","Drug_Matrix_Rat_invivo_Repeated_Dose_3_days",NA
+"14","JBP 485_C412308_unk","Drug_Matrix_Rat_invivo_Repeated_Dose_3_days",0.9769396
+"15","10,10-bis(4-pyridinylmethyl)-9(10H)-anthracenone_C112297_unk","Drug_Matrix_Rat_invivo_Repeated_Dose_3_days",NA
+"16","furan_C039281_unk","Drug_Matrix_Rat_invivo_Repeated_Dose_5_days",0.6093274
+"17","HLo 7_C058577_unk","Drug_Matrix_Rat_invivo_Repeated_Dose_5_days",NA
+"18","RMP 7_C089876_decoy","Drug_Matrix_Rat_invivo_Repeated_Dose_5_days",NA
+"19","JBP 485_C412308_unk","Drug_Matrix_Rat_invivo_Repeated_Dose_5_days",0.928321
+"20","10,10-bis(4-pyridinylmethyl)-9(10H)-anthracenone_C112297_unk","Drug_Matrix_Rat_invivo_Repeated_Dose_5_days",NA
+"21","furan_C039281_unk","TG_GATEs_Human_invitro_Single_Dose_1_day",0.1614923
+"22","HLo 7_C058577_unk","TG_GATEs_Human_invitro_Single_Dose_1_day",0.03402805
+"23","RMP 7_C089876_decoy","TG_GATEs_Human_invitro_Single_Dose_1_day",NA
+"24","JBP 485_C412308_unk","TG_GATEs_Human_invitro_Single_Dose_1_day",0.8344156
+"25","10,10-bis(4-pyridinylmethyl)-9(10H)-anthracenone_C112297_unk","TG_GATEs_Human_invitro_Single_Dose_1_day",0.3716106
+"26","furan_C039281_unk","TG_GATEs_Rat_invitro_Single_Dose_1_day",0.1811922
+"27","HLo 7_C058577_unk","TG_GATEs_Rat_invitro_Single_Dose_1_day",NA
+"28","RMP 7_C089876_decoy","TG_GATEs_Rat_invitro_Single_Dose_1_day",NA
+"29","JBP 485_C412308_unk","TG_GATEs_Rat_invitro_Single_Dose_1_day",0.3907221
+"30","10,10-bis(4-pyridinylmethyl)-9(10H)-anthracenone_C112297_unk","TG_GATEs_Rat_invitro_Single_Dose_1_day",0.1328376
+"31","furan_C039281_unk","TG_GATEs_Rat_invivo_Repeated_Dose_15_days",0.1062867
+"32","HLo 7_C058577_unk","TG_GATEs_Rat_invivo_Repeated_Dose_15_days",0.01775604
+"33","RMP 7_C089876_decoy","TG_GATEs_Rat_invivo_Repeated_Dose_15_days",NA
+"34","JBP 485_C412308_unk","TG_GATEs_Rat_invivo_Repeated_Dose_15_days",0.9187846
+"35","10,10-bis(4-pyridinylmethyl)-9(10H)-anthracenone_C112297_unk","TG_GATEs_Rat_invivo_Repeated_Dose_15_days",0.03091979
+"36","furan_C039281_unk","TG_GATEs_Rat_invivo_Repeated_Dose_29_days",0.2956322
+"37","HLo 7_C058577_unk","TG_GATEs_Rat_invivo_Repeated_Dose_29_days",0.08490916
+"38","RMP 7_C089876_decoy","TG_GATEs_Rat_invivo_Repeated_Dose_29_days",NA
+"39","JBP 485_C412308_unk","TG_GATEs_Rat_invivo_Repeated_Dose_29_days",0.863568
+"40","10,10-bis(4-pyridinylmethyl)-9(10H)-anthracenone_C112297_unk","TG_GATEs_Rat_invivo_Repeated_Dose_29_days",0.3116878
+"41","furan_C039281_unk","TG_GATEs_Rat_invivo_Repeated_Dose_8_days",0.08561493
+"42","HLo 7_C058577_unk","TG_GATEs_Rat_invivo_Repeated_Dose_8_days",0.03654052
+"43","RMP 7_C089876_decoy","TG_GATEs_Rat_invivo_Repeated_Dose_8_days",NA
+"44","JBP 485_C412308_unk","TG_GATEs_Rat_invivo_Repeated_Dose_8_days",0.7923409
+"45","10,10-bis(4-pyridinylmethyl)-9(10H)-anthracenone_C112297_unk","TG_GATEs_Rat_invivo_Repeated_Dose_8_days",0.2378939
+"46","furan_C039281_unk","TG_GATEs_Rat_invivo_Single_Dose_High_1_day",0.6757009
+"47","HLo 7_C058577_unk","TG_GATEs_Rat_invivo_Single_Dose_High_1_day",0.02700388
+"48","RMP 7_C089876_decoy","TG_GATEs_Rat_invivo_Single_Dose_High_1_day",NA
+"49","JBP 485_C412308_unk","TG_GATEs_Rat_invivo_Single_Dose_High_1_day",0.9197639
+"50","10,10-bis(4-pyridinylmethyl)-9(10H)-anthracenone_C112297_unk","TG_GATEs_Rat_invivo_Single_Dose_High_1_day",0.1455886
+"51","furan_C039281_unk","TG_GATEs_Rat_invivo_Single_Dose_Low_1_day",0.155082
+"52","HLo 7_C058577_unk","TG_GATEs_Rat_invivo_Single_Dose_Low_1_day",NA
+"53","RMP 7_C089876_decoy","TG_GATEs_Rat_invivo_Single_Dose_Low_1_day",NA
+"54","JBP 485_C412308_unk","TG_GATEs_Rat_invivo_Single_Dose_Low_1_day",0.7884778
+"55","10,10-bis(4-pyridinylmethyl)-9(10H)-anthracenone_C112297_unk","TG_GATEs_Rat_invivo_Single_Dose_Low_1_day",0.1791094
+"56","furan_C039281_unk","TG_GATEs_Rat_invivo_Single_Dose_Middle_1_day",0.4595768
+"57","HLo 7_C058577_unk","TG_GATEs_Rat_invivo_Single_Dose_Middle_1_day",0.05550379
+"58","RMP 7_C089876_decoy","TG_GATEs_Rat_invivo_Single_Dose_Middle_1_day",NA
+"59","JBP 485_C412308_unk","TG_GATEs_Rat_invivo_Single_Dose_Middle_1_day",0.2431136
+"60","10,10-bis(4-pyridinylmethyl)-9(10H)-anthracenone_C112297_unk","TG_GATEs_Rat_invivo_Single_Dose_Middle_1_day",0.3363805
+"61","furan_C039281_unk","TG_Gates_Rat_invivo_Repeated_15_day_High",0.4871339
+"62","HLo 7_C058577_unk","TG_Gates_Rat_invivo_Repeated_15_day_High",NA
+"63","RMP 7_C089876_decoy","TG_Gates_Rat_invivo_Repeated_15_day_High",NA
+"64","JBP 485_C412308_unk","TG_Gates_Rat_invivo_Repeated_15_day_High",0.9047048
+"65","10,10-bis(4-pyridinylmethyl)-9(10H)-anthracenone_C112297_unk","TG_Gates_Rat_invivo_Repeated_15_day_High",0.06189481
+"66","furan_C039281_unk","TG_Gates_Rat_invivo_Repeated_15_day_Low",0.06387016
+"67","HLo 7_C058577_unk","TG_Gates_Rat_invivo_Repeated_15_day_Low",0.04435186
+"68","RMP 7_C089876_decoy","TG_Gates_Rat_invivo_Repeated_15_day_Low",NA
+"69","JBP 485_C412308_unk","TG_Gates_Rat_invivo_Repeated_15_day_Low",0.7716839
+"70","10,10-bis(4-pyridinylmethyl)-9(10H)-anthracenone_C112297_unk","TG_Gates_Rat_invivo_Repeated_15_day_Low",NA
+"71","furan_C039281_unk","TG_Gates_Rat_invivo_Repeated_15_day_Middle",0.06114407
+"72","HLo 7_C058577_unk","TG_Gates_Rat_invivo_Repeated_15_day_Middle",0.0729861
+"73","RMP 7_C089876_decoy","TG_Gates_Rat_invivo_Repeated_15_day_Middle",NA
+"74","JBP 485_C412308_unk","TG_Gates_Rat_invivo_Repeated_15_day_Middle",0.786908
+"75","10,10-bis(4-pyridinylmethyl)-9(10H)-anthracenone_C112297_unk","TG_Gates_Rat_invivo_Repeated_15_day_Middle",NA
+"76","furan_C039281_unk","TG_Gates_Rat_invivo_Repeated_29_day_High",0.3855747
+"77","HLo 7_C058577_unk","TG_Gates_Rat_invivo_Repeated_29_day_High",0.07302814
+"78","RMP 7_C089876_decoy","TG_Gates_Rat_invivo_Repeated_29_day_High",NA
+"79","JBP 485_C412308_unk","TG_Gates_Rat_invivo_Repeated_29_day_High",0.7207009
+"80","10,10-bis(4-pyridinylmethyl)-9(10H)-anthracenone_C112297_unk","TG_Gates_Rat_invivo_Repeated_29_day_High",0.05699167
+"81","furan_C039281_unk","TG_Gates_Rat_invivo_Repeated_29_day_Low",0.1970965
+"82","HLo 7_C058577_unk","TG_Gates_Rat_invivo_Repeated_29_day_Low",0.6074171
+"83","RMP 7_C089876_decoy","TG_Gates_Rat_invivo_Repeated_29_day_Low",NA
+"84","JBP 485_C412308_unk","TG_Gates_Rat_invivo_Repeated_29_day_Low",0.8174797
+"85","10,10-bis(4-pyridinylmethyl)-9(10H)-anthracenone_C112297_unk","TG_Gates_Rat_invivo_Repeated_29_day_Low",0.4352936
+"86","furan_C039281_unk","TG_Gates_Rat_invivo_Repeated_29_day_Middle",0.06021727
+"87","HLo 7_C058577_unk","TG_Gates_Rat_invivo_Repeated_29_day_Middle",0.2213492
+"88","RMP 7_C089876_decoy","TG_Gates_Rat_invivo_Repeated_29_day_Middle",NA
+"89","JBP 485_C412308_unk","TG_Gates_Rat_invivo_Repeated_29_day_Middle",0.9778605
+"90","10,10-bis(4-pyridinylmethyl)-9(10H)-anthracenone_C112297_unk","TG_Gates_Rat_invivo_Repeated_29_day_Middle",0.1183576
+"91","furan_C039281_unk","TG_Gates_Rat_invivo_Repeated_8_day_High",0.310506
+"92","HLo 7_C058577_unk","TG_Gates_Rat_invivo_Repeated_8_day_High",NA
+"93","RMP 7_C089876_decoy","TG_Gates_Rat_invivo_Repeated_8_day_High",NA
+"94","JBP 485_C412308_unk","TG_Gates_Rat_invivo_Repeated_8_day_High",0.9565711
+"95","10,10-bis(4-pyridinylmethyl)-9(10H)-anthracenone_C112297_unk","TG_Gates_Rat_invivo_Repeated_8_day_High",0.1637384
+"96","furan_C039281_unk","TG_Gates_Rat_invivo_Repeated_8_day_Low",0.2282369
+"97","HLo 7_C058577_unk","TG_Gates_Rat_invivo_Repeated_8_day_Low",NA
+"98","RMP 7_C089876_decoy","TG_Gates_Rat_invivo_Repeated_8_day_Low",NA
+"99","JBP 485_C412308_unk","TG_Gates_Rat_invivo_Repeated_8_day_Low",0.8341749
+"100","10,10-bis(4-pyridinylmethyl)-9(10H)-anthracenone_C112297_unk","TG_Gates_Rat_invivo_Repeated_8_day_Low",0.0225699
+"101","furan_C039281_unk","TG_Gates_Rat_invivo_Repeated_8_day_Middle",0.1923439
+"102","HLo 7_C058577_unk","TG_Gates_Rat_invivo_Repeated_8_day_Middle",NA
+"103","RMP 7_C089876_decoy","TG_Gates_Rat_invivo_Repeated_8_day_Middle",NA
+"104","JBP 485_C412308_unk","TG_Gates_Rat_invivo_Repeated_8_day_Middle",0.6575521
+"105","10,10-bis(4-pyridinylmethyl)-9(10H)-anthracenone_C112297_unk","TG_Gates_Rat_invivo_Repeated_8_day_Middle",0.9998215
+"106","furan_C039281_unk","Consensus_Rat_invitro_DM_TG_GATEs",0.2349838
+"107","HLo 7_C058577_unk","Consensus_Rat_invitro_DM_TG_GATEs",0.1112107
+"108","RMP 7_C089876_decoy","Consensus_Rat_invitro_DM_TG_GATEs",NA
+"109","JBP 485_C412308_unk","Consensus_Rat_invitro_DM_TG_GATEs",0.2299132
+"110","10,10-bis(4-pyridinylmethyl)-9(10H)-anthracenone_C112297_unk","Consensus_Rat_invitro_DM_TG_GATEs",0.07810436
+"111","furan_C039281_unk","Consensus_LINCS_HEPG2",0.7765105
+"112","HLo 7_C058577_unk","Consensus_LINCS_HEPG2",0.06212114
+"113","RMP 7_C089876_decoy","Consensus_LINCS_HEPG2",NA
+"114","JBP 485_C412308_unk","Consensus_LINCS_HEPG2",0.2949479
+"115","10,10-bis(4-pyridinylmethyl)-9(10H)-anthracenone_C112297_unk","Consensus_LINCS_HEPG2",0.005944163
+"116","furan_C039281_unk","PPI_STRINGdb",0.006757861
+"117","HLo 7_C058577_unk","PPI_STRINGdb",0.8362976
+"118","RMP 7_C089876_decoy","PPI_STRINGdb",0.0004712731
+"119","JBP 485_C412308_unk","PPI_STRINGdb",0.7687519
+"120","10,10-bis(4-pyridinylmethyl)-9(10H)-anthracenone_C112297_unk","PPI_STRINGdb",0.1535143
+"121","furan_C039281_unk","average_edc_score",0.307630466291667
+"122","HLo 7_C058577_unk","average_edc_score",0.154727068
+"123","RMP 7_C089876_decoy","average_edc_score",0.0004712731
+"124","JBP 485_C412308_unk","average_edc_score",0.760870891666667
+"125","10,10-bis(4-pyridinylmethyl)-9(10H)-anthracenone_C112297_unk","average_edc_score",0.23456628965
+"126","furan_C039281_unk","harmonic_sum_edc_score",1.35692603903218
+"127","HLo 7_C058577_unk","harmonic_sum_edc_score",1.02968355539643
+"128","RMP 7_C089876_decoy","harmonic_sum_edc_score",0.0004712731
+"129","JBP 485_C412308_unk","harmonic_sum_edc_score",1.54305288166056
+"130","10,10-bis(4-pyridinylmethyl)-9(10H)-anthracenone_C112297_unk","harmonic_sum_edc_score",1.2896476426205

@@ -144,7 +144,7 @@ function(input,output,session){
     n_cpuc<-input$number_cpu_input
     n_genes<-as.numeric(input$final_gene_input)
     n_edges<-(as.numeric(input$final_edge_input)/100) # Convert interger percentage value to float
-    withProgress(message = 'wait',value = 0,{ 
+    withProgress(message = 'Wait',value = 0,{ 
     print('Wait for randomwalk and gene set enrichment analysis')
 
      # RWR-FGSEA
@@ -222,7 +222,7 @@ function(input,output,session){
      if (!is.null(input$all_model_parameters_input$name))rv_pipeline$params<-readRDS(input$all_model_parameters_input$datapath)
      # preparation
      showNotification("Please wait")
-     withProgress(message = 'wait',value = 0,{ 
+     withProgress(message = 'Wait',value = 0,{ 
      network<-rv_pipeline$params$network
      model<-rv_pipeline$params$model
      n_cpuc<-input$number_cpu_input
@@ -240,8 +240,8 @@ function(input,output,session){
        p<-bpstart(MulticoreParam(n_cpuc))}
      fgsea_res<-pipeline(network,patways,n_edges,n_genes,mies,p)
      bpstop(p)
-     print('Gene set enrichment was finished, wait')
-     incProgress(1/2,detail = 'RWR-FGSEA is finished')
+     print('Gene-set enrichment completed. Wait!')
+     incProgress(1/2, detail = 'RWR-FGSEA completed')
      
      #prediction 
      fgs<-t(fgsea_res$NES)
@@ -251,7 +251,7 @@ function(input,output,session){
      rv_pipeline$predicted_data<-as.data.frame(list(rownames(fgs),predicted_prob[,'edc'],predicted_class))
      colnames(rv_pipeline$predicted_data)<-c('Names', 'EDC_probability', 'Class')
      rv_pipeline$status<-'Prediction of newcompounds completed'
-     incProgress(1/2,detail = 'Prediction completed')
+     incProgress(1/2, detail = 'Prediction completed')
      showNotification("Finished")
      })
    }) #predcition of new compounds
@@ -392,7 +392,7 @@ rv_edc_score$table_scors<-table_data
    })   # show on plot BUTTON
  
   observeEvent(input$score_for_all_btn,{ 
-    showNotification("Please wait.Compile EDC-class probability scores for all the CTD chemicals")
+    showNotification("Please wait. Compiling EDC-class probability scores for all the CTD chemicals.")
     shinyjs::hide('score_for_all_btn')
     all_scores<-edc_score(rv_edc_library$all_vam,
                           unique(all_vam$mesh),
