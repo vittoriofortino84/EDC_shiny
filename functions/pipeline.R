@@ -13,7 +13,7 @@ pipeline<-function(network,ptw,perc,ng,comp_seeds,p){
   
   #graph optimization
 
-  gr<-graph_from_data_frame(network[order(network[,3],decreasing = T),1:2][1:round(nrow(network)*perc),],directed=F)  #getting the   percent of weighted edge values
+  gr<-graph_from_data_frame(network[order(network[,3],decreasing = T),1:2][1:round(nrow(network)*perc),],directed=F)  #gettting the   percent of weighted edge values
   
   
     #gettting the   percent of weighted edge values
