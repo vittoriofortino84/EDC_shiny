@@ -333,17 +333,17 @@ shinyUI(
                                label = 'Activate the score panel'),
                   actionButton(inputId = 'calc',
                                 label = 'Show selected cases'),br(),hr(),
-                  bsButton("qallcompile", label = "", icon = icon("question"), style = "info", size = "extra-small"),
-                  bsPopover(id = "qallcompile", title = "Precompiled networks",
-                            content = paste0('The selected networks will be used to compile ',
-                                             'harmonic_sum and average edc scores for all 12K compounds',
-                                            ' It takes a bit time.'),
+                  bsPopover(id = "qallcompile", title = "Scores for all CTD chemicals",
+                            content = paste0(" Calculate EDC-class probability scores for all the chemicals in CTD based on all the classifiers.",
+                                             "The classifiers selected above will be used to compute the average and harmonic scores for each compound.",
+                                             "Use the", strong("Export"), "button below to export the results as csv file.",
+                                             "Note: Compilation of the scores might take time", sep = " "),
                             placement = "right", 
                             trigger = "hover",
                             options = list(container = "body")),																													 
                   actionButton(inputId = 'score_for_all_btn',
-                               label = 'Compile for 12k compounds'),br(),hr(),
-                  downloadButton('export_all_btn_edcscores','Export all scores'),
+                               label = list('Compile scores for all CTD chemicals', bsButton("qallcompile", label = "", icon = icon("question"), style = "info", size = "extra-small"))),br(),hr(),
+                  downloadButton('export_all_btn_edcscores', 'Export scores for all CTD chemicals'),
                        hr(),
               
                    p(strong("Compile EDC-class probability scores for new chemicals "), bsButton("qt_scoreOther", label = "", icon = icon("question"), style = "info", size = "extra-small")),
@@ -380,7 +380,7 @@ shinyUI(
                               ),
                     width = 12, collapsible = T, title = "Plot of compound EDC-class probability scores for selected classifiers"),
 					      
-                       downloadButton('export_btn_edcscores','Export Plot data as csv')
+                       downloadButton('export_btn_edcscores','Export plot data')
                   #plotOutput('plot_edc_score', height = 300),
                   ) # End of main panel 1
                  ),

@@ -29,14 +29,14 @@ function(input,output,session){
     ggpubr::ggarrange(p1, p2, nrow = 1, common.legend = T, legend = "bottom")
     })
   
-  output$plot_st2 <- renderPlot({   # barplot of the number of pathways in summary tab
+  output$plot_st2 <- renderPlot({   # Barplot of the number of pathways in summary tab
     data_pathways <- readRDS("inputData/statistics/patway_st.rds")
     print(bar_stat(data_pathways))
     })
 
   rv_all_f1 <- reactiveValues(min_p = .7, f1_names_colrs = readRDS("inputData/statistics/f1_scores.rds"))
   
-  output$plot_st4 <- renderPlot({   #boxplot of k-fold-cross-validation in the summary tab
+  output$plot_st4 <- renderPlot({   #Boxplot of k-fold-cross-validation in the summary tab
     print(box_plot(rv_all_f1$f1_names_colrs$f1_scores,
                    rv_all_f1$f1_names_colrs$net_names,
                    rv_all_f1$f1_names_colrs$color_vals,
@@ -116,7 +116,7 @@ function(input,output,session){
        library(rPref)
        ps<-psel(paret_input,high(silhouette)*low(genes)*low(edge))
        ps.out <- data.frame(ps$edge*100, ps$genes, ps$silhouette) ##########
-       colnames(ps.out) <- c("edge", "genes", "silhouette") 
+       colnames(ps.out) <- c("Edge", "Genes", "Silhouette") 
        # winning gene and edge combination based on pareto
        n_genes<-ps$genes[which(ps$silhouette==max(ps$silhouette))]
        n_edges<-ps$edge[which(ps$silhouette==max(ps$silhouette))]
@@ -339,9 +339,9 @@ function(input,output,session){
   
   rv_edc_score<-reactiveValues(table_scors=c(),
                                class_prob_scores=edc_score(all_vam,'1962-83-0',
-                                                           network_score_levelss)[1:20,],
+                                                           network_score_levelss)[1:24,],
                                harmonic_average_scores=edc_score(all_vam,'1962-83-0',
-                                                           network_score_levelss)[21:22,]) #Default compound at launch
+                                                           network_score_levelss)[25:26,]) #Default compound at launch
   rv_all_compounds_score<-reactiveValues(scores=c())
   ranges_class_prob <- reactiveValues(x = NULL, y = NULL)
   ranges_edc_score <- reactiveValues(x = NULL, y = NULL)
@@ -360,7 +360,7 @@ function(input,output,session){
   
   # data before multi compate plot are calculated
   observeEvent(input$activate_score_panel_btn,{ 
-    showNotification("Wait to retrieve data of 12K compounds")
+    showNotification("Wait! Retrieving data of the compounds")
     updateSelectInput(session,"edc_score_layer_input",choices = networks,selected = networks[1:24])
     updateSelectizeInput(session, "cmpname", selected = '1962-83-0',choices  =all_possible_mesh_cas_names)
     shinyjs::hide("activate_score_panel_btn")
@@ -392,7 +392,7 @@ rv_edc_score$table_scors<-table_data
    })   # show on plot BUTTON
  
   observeEvent(input$score_for_all_btn,{ 
-    showNotification("Please wait to compile the scores for all the compounds")
+    showNotification("Please wait.Compile EDC-class probability scores for all the CTD chemicals")
     shinyjs::hide('score_for_all_btn')
     all_scores<-edc_score(rv_edc_library$all_vam,
                           unique(all_vam$mesh),
@@ -471,7 +471,7 @@ rv_edc_score$table_scors<-table_data
   # export all compounds scores  
   output$export_all_btn_edcscores <- downloadHandler(
     filename = function() {
-      'all_compounds_edc_scores.csv'
+      'All_CTD_compounds_edc_scores.csv'
     },
     content = function(file) {
       write.csv(rv_all_compounds_score$scores, file)
