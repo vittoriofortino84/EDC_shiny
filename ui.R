@@ -8,7 +8,7 @@ library(shinydashboard)
 library(shinyjs)
 library(DT)
 
-### Sidebar menu ---------------------------------------------------------------
+### Sidebar menu of the app ---------------------------------------------------------------
 
 appCSS <- "
 #loading-content {
