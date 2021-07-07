@@ -339,9 +339,9 @@ function(input,output,session){
   
   rv_edc_score<-reactiveValues(table_scors=c(),
                                class_prob_scores=edc_score(all_vam,'1962-83-0',
-                                                           network_score_levelss)[1:24,],
+                                                           network_score_levelss)[1:20,],
                                harmonic_average_scores=edc_score(all_vam,'1962-83-0',
-                                                           network_score_levelss)[25:26,]) #Default compound at launch
+                                                           network_score_levelss)[21:22,]) #Default compound at launch
   rv_all_compounds_score<-reactiveValues(scores=c())
   ranges_class_prob <- reactiveValues(x = NULL, y = NULL)
   ranges_edc_score <- reactiveValues(x = NULL, y = NULL)
@@ -361,7 +361,7 @@ function(input,output,session){
   # data before multi compate plot are calculated
   observeEvent(input$activate_score_panel_btn,{ 
     showNotification("Wait! Retrieving data of the compounds")
-    updateSelectInput(session,"edc_score_layer_input",choices = networks,selected = networks[1:24])
+    updateSelectInput(session,"edc_score_layer_input",choices = networks,selected = networks[1:20])
     updateSelectizeInput(session, "cmpname", selected = '1962-83-0',choices  =all_possible_mesh_cas_names)
     shinyjs::hide("activate_score_panel_btn")
     shinyjs::show('calc')
@@ -392,13 +392,17 @@ rv_edc_score$table_scors<-table_data
    })   # show on plot BUTTON
  
   observeEvent(input$score_for_all_btn,{ 
-    showNotification("Please wait. Compiling EDC-class probability scores for all the CTD chemicals.")
+    showNotification("Please wait to compile the scores for all the compounds")
     shinyjs::hide('score_for_all_btn')
+    shinyjs::hide('export_all_btn_edcscores')
     all_scores<-edc_score(rv_edc_library$all_vam,
                           unique(all_vam$mesh),
                           network_score_levelss,
                           col.scores = input$edc_score_layer_input,
                           is_stacked_cols=F)
+    to_keep<-networks %in% input$edc_score_layer_input
+    to_save=c(networks[to_keep], "harmonic_sum_edc_score", "average_edc_score","comp_names","mesh","cas")
+    all_scores=all_scores[,to_save]
     rv_all_compounds_score$scores=all_scores
     shinyjs::show('score_for_all_btn')
     shinyjs::show('export_all_btn_edcscores')

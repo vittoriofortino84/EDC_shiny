@@ -1,4 +1,4 @@
-edc_score<-function(all_vam_library,inp,all_data_levels,col.scores=1:24,is_stacked_cols=TRUE){
+edc_score<-function(all_vam_library,inp,all_data_levels,col.scores=1:20,is_stacked_cols=TRUE){
   require(tidyr)
   
   one_compound_harmonic_sum<-function(data,col.scores){
@@ -21,8 +21,8 @@ edc_score<-function(all_vam_library,inp,all_data_levels,col.scores=1:24,is_stack
     if (any(tolower(inp[i]) %in% tolower(all_vam_library$comp_names)))res[i,]<-as.matrix(all_vam_library[tolower(all_vam_library$comp_names)==tolower(inp[i]),])
     if (any(inp[i] %in% all_vam_library$mesh)) res[i,]<-as.matrix(all_vam_library[all_vam_library$mesh==inp[i],])
     if (any(inp[i] %in% all_vam_library$cas)) res[i,]<-as.matrix(all_vam_library[all_vam_library$cas==inp[i],])
-    res[i,"average_edc_score"]<-one_compound_mean_function(res[i,1:24],col.scores)
-    res[i,"harmonic_sum_edc_score"]<-one_compound_harmonic_sum(res[i,1:24],col.scores)
+    res[i,"average_edc_score"]<-one_compound_mean_function(res[i,1:20],col.scores)
+    res[i,"harmonic_sum_edc_score"]<-one_compound_harmonic_sum(res[i,1:20],col.scores)
   }
   # 
   res<-as.data.frame(res)
