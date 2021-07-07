@@ -325,10 +325,6 @@ shinyUI(
                                c('PPI_STRINGdb'),
                                multiple=TRUE, selectize = FALSE),
 
-
-                     #checkboxInput('chkbox_most_informatiave',
-                   #'Select the most correlated networks with ToxCast',F),   # most informative
-
                   actionButton(inputId = 'activate_score_panel_btn',
                                label = 'Activate the score panel'),
                   actionButton(inputId = 'calc',

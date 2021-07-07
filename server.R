@@ -419,12 +419,7 @@ rv_edc_score$table_scors<-table_data
                                                                     c(0,1),angle_t = 60)}) #plot_functions call
   output$table_edc_scores<-renderTable({rv_edc_score$table_scors}) # table
   
-   # output$plot_edc_score<-renderPlot({edc_multi_compare_bar(rv_edc_score$harmonic_average_scores,
-   #                                                          network_score_levelss[network_score_levelss %in% c('average_edc_score',
-   #                                                                                                             'harmonic_sum_edc_score')],
-   #                                                          ranges_edc_score,
-   #                                                          'edc score',
-   #                                                          c(0,2),angle_t = 0,show_leg = F)}) #plot_functions call
+  
 
   
    # mie 2 class prob
@@ -481,9 +476,6 @@ rv_edc_score$table_scors<-table_data
       write.csv(rv_all_compounds_score$scores, file)
     }
   ) 
-# observeEvent(input$chkbox_most_informatiave,{
-#  if (input$chkbox_most_informatiave==T){
-#   updateSelectInput(session,"edc_score_layer_input",choices = networks,selected = networks[c(1,2,4,13,14,15)])}})
 
 ### Tab 6: Comparison with ToxPi Scores ----------------------------------------
   
@@ -493,12 +485,8 @@ rv_edc_score$table_scors<-table_data
 updateSelectInput(session,'toxpi_layer_input',choices = networks)
 ranges_toxpi <- reactiveValues(x = NULL, y = NULL)
 
-  
- # observeEvent(input$toxpi_plot_dbl_click, {brush_adjust(input$toxpi_brush,ranges_toxpi)}) #plot fucntion call
 # refresh button of ToxPi
 observeEvent(input$toxpiBtn_refresh,{
-# if(!is.null(input$toxpi_layer_input)){
-#   updateSelectInput(session,'toxpi_layer_input',selected =input$toxpi_layer_input )}
   rv_eval_toxpi$plot_data<-readRDS('inputData/toxpi_scores.rds')
   })
   observeEvent(input$toxpi_btn,{
@@ -556,21 +544,6 @@ observeEvent(input$toxpiBtn_refresh,{
     content = function(file) {
       write.csv(rv_eval_toxpi$plot_data, file)
     }
-  )  # export pathways as bubble plot
-  
-  
-  # output$txt_toxpi_click<- renderText({
-  # rv_eval_toxpi$mintoxpi=input$toxpi_plot_click$y-input$slider_click_toxpi
-  # rv_eval_toxpi$maxtoxpi=input$toxpi_plot_click$y+input$slider_click_toxpi
-  # rv_eval_toxpi$minedc=input$toxpi_plot_click$x-input$slider_click_toxpi
-  # rv_eval_toxpi$maxedc=input$toxpi_plot_click$x+input$slider_click_toxpi
-  #   res2<-paste('Toxpi= ',round(as.numeric(input$toxpi_plot_click$y),2),
-  #              '  +/- ',input$slider_click_toxpi ,
-  #              '\n','EDC_score= ',
-  #              round(as.numeric(input$toxpi_plot_click$x),2),'  +/-  ',
-  #              input$slider_click_toxpi ,sep='')
-  # 
-  #   return(res2)
-  #  })
+  )  # export pathways as bubble plot 
   
 } # server function
