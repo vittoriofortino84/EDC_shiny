@@ -186,21 +186,10 @@ shinyUI(
                      actionButton('pareto_btn',label = 'Optimize'),
                      tableOutput('pareto_tabl'),
                      width = 12, collapsible = T, collapsed = T, 
-                     title = list("Selction of optimal parameters for RWR-FGSEA", bsButton("qt_optimize", label = "", icon = icon("question"), style = "info", size = "extra-small"))),
+                     title = list("Selection of optimal parameters for RWR-FGSEA", bsButton("qt_optimize", label = "", icon = icon("question"), style = "info", size = "extra-small"))),
 
                    box(
                      fluidRow(
-                       box( 
-                         bsPopover(id = "qt_rwrGene", title = "Final gene set for enrichment",
-                                   content = paste("The number of genes with highest visit probability to be selected after RWR for gene set enrichment analysis.",
-                                                    "The field is automatically updated if optimization step is used.", sep = " "),
-                                   placement = "right",
-                                   trigger = "hover",
-                                   options = list(container = "body")),
-                         textInput('final_gene_input',
-                                   label = list("Number of top genes to select after Random Walk:", bsButton("qt_rwrGene", label = "", icon = icon("question"), style = "info", size = "extra-small")),  
-                                   value = '500'),
-                         width = 6, solidHeader = T),
                        box(
                          bsPopover(id = "qt_rwrEdge", title = "Edge proportion from the network",
                                      content = paste("The proportion of edges with highest weight from the actual network  to be used for RWR.",
@@ -211,8 +200,19 @@ shinyUI(
                            textInput('final_edge_input',
                                      label = list("Proportion of network edges to consider for Random Walk (%):", bsButton("qt_rwrEdge", label = "", icon = icon("question"), style = "info", size = "extra-small")), 
                                      value = '5'), 
-                         width = 6, solidHeader = T)
-                     ),
+                         width = 6, solidHeader = T),                       
+                       box( 
+                           bsPopover(id = "qt_rwrGene", title = "Final gene set for enrichment",
+                                     content = paste("The number of genes with highest visit probability to be selected after RWR for gene set enrichment analysis.",
+                                                     "The field is automatically updated if optimization step is used.", sep = " "),
+                                     placement = "right",
+                                     trigger = "hover",
+                                     options = list(container = "body")),
+                           textInput('final_gene_input',
+                                     label = list("Number of top genes to select after Random Walk:", bsButton("qt_rwrGene", label = "", icon = icon("question"), style = "info", size = "extra-small")),  
+                                     value = '500'),
+                           width = 6, solidHeader = T)
+                       ),
                      fluidRow(
                        box(numericInput('k_input', 'K-fold cross validation', 5, min=2, max = 20, step = 1), width = 6, solidHeader = T),
                        box(numericInput('repeat_input', 'Cross validation repeats',1, min=1, max = 10, step = 1),width = 6,solidHeader = T)
@@ -263,7 +263,7 @@ shinyUI(
                              options = list(container = "body")),
                    sliderInput(inputId = 'NES',
                                label = list("Pathway activation score threshold ", bsButton("qt_pathScore", label = "", icon = icon("question"), style = "info", size = "extra-small")), 
-                               min = 0, max = 1.7, value = 0, step = 0.01, round = F),
+                               min = 0, max = 2, value = 0, step = 0.01, round = F),
                    hr(),
                    selectInput(inputId = "pathway_category_input",
                                label = "Pathway databases (Hold Ctrl to select multiple databases)",
@@ -397,7 +397,7 @@ shinyUI(
                                c('PPI_STRINGdb'), multiple = T, selectize = F),
                    sliderInput(inputId = 'slider_toxpi_plt_toxpi_cutoff',
                                label='Minimum ToxPi score:',
-                               min = 0.000, max = 0.4, value = 0.1, step = 0.01, round = F),
+                               min = 0.000, max = 0.5, value = 0.1, step = 0.01, round = F),
                    sliderInput(inputId = 'slider_toxpi_plt_edc_score_cutoff',
                                label ='Minimum EDC-class probability score:',
                                min = 0.000, max = 1, value = 0.8, step = 0.01, round = F),
