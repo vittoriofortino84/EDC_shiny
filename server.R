@@ -151,12 +151,14 @@ function(input,output,session){
      patways<-readRDS('inputData/pathways.rds')
      mies<-c(edcs_list,decoys_list)
      library(BiocParallel);library(stats)
-     if (length(grep(x=as.character(Sys.info()),pattern = 'windows',ignore.case = T))){
-       p<-bpstart(SnowParam(n_cpuc))}else{
-       p<-bpstart(MulticoreParam(n_cpuc))
-       }
+          # if (length(grep(x=as.character(Sys.info()),pattern = 'windows',ignore.case = T))){
+     #   p<-bpstart(SnowParam(n_cpuc))}else{
+     #   p<-bpstart(MulticoreParam(n_cpuc))
+     #   }
+     # fgsea_res<-pipeline(network,patways,n_edges,n_genes,mies,p)
+     # bpstop(p)
+     p=NULL
      fgsea_res<-pipeline(network,patways,n_edges,n_genes,mies,p)
-     bpstop(p)
      print('Gene-set enrichment analysis completed')
      incProgress(1/3,detail = 'RWR-Gene set enrichment analysis completed')
      # pretreatment of NES values
