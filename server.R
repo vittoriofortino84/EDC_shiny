@@ -237,11 +237,14 @@ function(input,output,session){
      patways<-readRDS('inputData/pathways.rds')
      mies<-readRDS(input$test_compounds_input$datapath)
      library(BiocParallel);library(stats)
-     if (length(grep(x=as.character(Sys.info()),pattern = 'windows',ignore.case = T))){
-       p<-bpstart(SnowParam(n_cpuc))}else{
-       p<-bpstart(MulticoreParam(n_cpuc))}
+          # if (length(grep(x=as.character(Sys.info()),pattern = 'windows',ignore.case = T))){
+     #   p<-bpstart(SnowParam(n_cpuc))}else{
+     #   p<-bpstart(MulticoreParam(n_cpuc))
+     #   }
+     # fgsea_res<-pipeline(network,patways,n_edges,n_genes,mies,p)
+     # bpstop(p)
+     p=NULL
      fgsea_res<-pipeline(network,patways,n_edges,n_genes,mies,p)
-     bpstop(p)
      print('Gene-set enrichment completed. Wait!')
      incProgress(1/2, detail = 'RWR-FGSEA completed')
      
