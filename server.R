@@ -344,9 +344,9 @@ function(input,output,session){
   
   rv_edc_score<-reactiveValues(table_scors=c(),
                                class_prob_scores=edc_score(all_vam,'1962-83-0',
-                                                           network_score_levelss)[1:20,],
+                                                           network_score_levelss)[1:21,],
                                harmonic_average_scores=edc_score(all_vam,'1962-83-0',
-                                                           network_score_levelss)[21:22,]) #Default compound at launch
+                                                           network_score_levelss)[c(22,26),]) #Default compound at launch
   rv_all_compounds_score<-reactiveValues(scores=c())
   ranges_class_prob <- reactiveValues(x = NULL, y = NULL)
   ranges_edc_score <- reactiveValues(x = NULL, y = NULL)
@@ -366,7 +366,7 @@ function(input,output,session){
   # data before multi compate plot are calculated
   observeEvent(input$activate_score_panel_btn,{ 
     showNotification("Wait! Retrieving data of the compounds")
-    updateSelectInput(session,"edc_score_layer_input",choices = networks,selected = networks[1:20])
+    updateSelectInput(session,"edc_score_layer_input",choices = networks,selected = networks[1:21])
     updateSelectizeInput(session, "cmpname", selected = '1962-83-0',choices  =all_possible_mesh_cas_names)
     shinyjs::hide("activate_score_panel_btn")
     shinyjs::show('calc')
