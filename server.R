@@ -66,7 +66,7 @@ function(input,output,session){
   
   dataset_export<-reactive({
     switch(input$export_input,
-         "Pathway activation score" = list(NES_scores=rv_pipeline$NES,labels=rv_pipeline$class),
+         "Pathway activation scores" = list(NES_scores=rv_pipeline$NES,labels=rv_pipeline$class),
          "Model parameters" = rv_pipeline$params,
          "F1 scores" = rv_pipeline$f1_scores[,c('values','networks')],
          "Elastic net coefficients" = rv_pipeline$data_frame,
