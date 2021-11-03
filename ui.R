@@ -63,11 +63,11 @@ shinyUI(
 ### Tab 1: Home ----------------------------------------------------------------
 # Home page with pipeline diagram and text explaining the pipeline
 
-         tabItem(tabName = "tab_home",
-                 fluidRow(box(includeHTML("www/Home.html"),
-                          width = 20, height = "100%", align = "justify")
-                          )
-                 ),
+
+
+          tabItem(tabName = "tab_home",
+                  fluidRow(column(width = 12, includeHTML("www/Home.html"))),
+          ),
 
 ### Tab 2: Summary -------------------------------------------------------------
 
