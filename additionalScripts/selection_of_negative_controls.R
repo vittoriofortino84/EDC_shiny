@@ -28,5 +28,5 @@ EDC_negativeControl_from<-function(Pool_compounds,edcNames,mean_similarity_cutof
 # Example:
 # We have a pool list of 131 compounds and their related MIEs, and  10 compounds are known as EDCs in this list
 # we get the compounds below average Jaccard similarity of 3% with respect to EDCs as negative controls
-load('example_negativeControl.RData')
+load('additionalScripts/example_negativeControl.RData')
 negative_controls=EDC_negativeControl_from(all,edcNames,mean_similarity_cutoff = 3)
