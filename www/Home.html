@@ -1,10 +1,68 @@
 <!DOCTYPE html>
 <html>
 <title>Home</title>
+<head>
+    <style>
+        .home_text_div {
+            height: 100%; 
+            width: 50%;
+            left: 0;
+            position: absolute;
+            padding: 1%;
+        }
 
+        .home_image_div {
+            height: 100%; 
+            width: 50%;
+            right: 0;
+            position: absolute;
+            padding: 5%;
+        }
+
+        .fig_pipeline {
+            max-height: 70%;
+            max-width: 80%;
+            border: 2px solid black;
+        } 
+
+        .fig_pipeline:hover {
+            max-height: 100%;
+            max-width: 100%;
+            overflow: scroll;
+        } 
+
+        /*For smaller screen*/
+        @media (max-width: 800px) {
+            .home_text_div {
+            width: 100%;
+            position: relative;
+            padding: 1%;
+            }
+
+        .home_image_div {
+            width: 100%;
+            position: relative;
+            padding: 5%;
+            }
+
+        .fig_pipeline {
+            max-height: 80%;
+            max-width: 90%;
+            border: 2px solid black;
+            } 
+        
+        .fig_pipeline:hover {
+            max-height: 100%;
+            max-width: 100%;
+            overflow: visible;
+            } 
+        }
+
+    </style>
+</head>
 <body>
 
-    <div style="height: 100%; width: 50%; left: 0; position: absolute; padding: 1%;">
+    <div class="home_text_div">
         <div>
             <h1>EDTox</h1>
             <h2>Description</h2>
@@ -113,9 +171,9 @@
         </div>
     </div>
 
-    <div style="height: 100%; width: 50%; right: 0; position: absolute; padding: 5%;">
-        <figure style="text-align: center;">
-            <img style="max-height: 70%; max-width: 80%; border: 2px solid black;" src="/images/EDTox_Pipeline.svg"
+    <div class="home_image_div">
+        <figure style="text-align: center; margin-bottom: 3%;">
+            <img class="fig_pipeline" src="/images/EDTox_Pipeline.svg"
                 alt="EDTox_Pipeline">
             <figcaption><strong>Fig:</strong> Overview of the software modules provided by the EDTox platform
             </figcaption>
