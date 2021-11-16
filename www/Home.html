@@ -153,6 +153,28 @@
 
             </ul>
 
+            <h2>Example files to run the application with <i>de novo</i> toxicogenomics data</h2>
+            <p>As a case study, publicly available transcriptomic dataset of HepaRG cells treated with 31 compounds for 24h and 72h
+                were used to show the applicability of this application. The input files required to train a new toxicogenomics
+                pipeline using this data can be downloaded from the links below. Here, the gene-gene co-expression network was
+                generated from the expression values of samples treated with carcinogens (20 compounds) for 24 hours. The list of
+                EDCs and negative controls along with their MIEs were retrieved from DEDuCT and CTD. Further details regarding the
+                case study can be found in the main manuscript of the application.
+            </p>
+            <ul>
+                <li><a href="https://github.com/vittoriofortino84/EDC_shiny/raw/master/example/inPut/wTO_HepaRG_network.rds">HepaRG
+                        Network</a></li>
+                <li><a href="https://github.com/vittoriofortino84/EDC_shiny/raw/master/example/inPut/edcs.rds">List of
+                        EDCs along with their MIEs</a></li>
+                <li><a href="https://github.com/vittoriofortino84/EDC_shiny/raw/master/example/inPut/negative_controls.rds">List
+                        of negative controls along with their MIEs</a></li>
+                <li><a href="https://github.com/vittoriofortino84/EDC_shiny/raw/master/example/inPut/unknow_compounds.rds">List
+                        of unlabelled compounds</a></li>
+                <li><a
+                        href="https://github.com/vittoriofortino84/EDC_shiny/blob/master/additionalScripts/selection_of_negative_controls.R">Script
+                        for selection of negative controls</a></li>
+            </ul>
+
             <div style="padding: 0.5% 1% 0.5% 1%; border: 2px solid black; margin-top: 5%;">
                 <p style="padding-top: 1%;"><strong>To cite EDTox:</strong> <br>
                     EDTox: an R Shiny application to predict the endocrine disruption potential of compounds <br>
