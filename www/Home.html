@@ -20,16 +20,16 @@
         }
 
         .fig_pipeline {
-            max-height: 70%;
-            max-width: 80%;
-            border: 2px solid black;
-        } 
-
-        .fig_pipeline:hover {
             max-height: 100%;
             max-width: 100%;
-            overflow: scroll;
+            border: 2px solid black;
         } 
+        
+        .fig_pipeline:hover {
+            max-height: 120%;
+            max-width: 120%;
+            overflow: scroll;
+	}
 
         /*For smaller screen*/
         @media (max-width: 800px) {
@@ -50,7 +50,7 @@
             max-width: 90%;
             border: 2px solid black;
             } 
-        
+
         .fig_pipeline:hover {
             max-height: 100%;
             max-width: 100%;
@@ -162,24 +162,24 @@
                 case study can be found in the main manuscript of the application.
             </p>
             <ul>
-                <li><a href="https://github.com/vittoriofortino84/EDC_shiny/raw/master/example/inPut/wTO_HepaRG_network.rds">HepaRG
+                <li><a
+                        href="https://github.com/vittoriofortino84/EDC_shiny/raw/master/example/inPut/wTO_HepaRG_network.rds">HepaRG
                         Network</a></li>
                 <li><a href="https://github.com/vittoriofortino84/EDC_shiny/raw/master/example/inPut/edcs.rds">List of
                         EDCs along with their MIEs</a></li>
-                <li><a href="https://github.com/vittoriofortino84/EDC_shiny/raw/master/example/inPut/negative_controls.rds">List
-                        of negative controls along with their MIEs</a></li>
-                <li><a href="https://github.com/vittoriofortino84/EDC_shiny/raw/master/example/inPut/unknow_compounds.rds">List
-                        of unlabelled compounds</a></li>
                 <li><a
-                        href="https://github.com/vittoriofortino84/EDC_shiny/blob/master/additionalScripts/selection_of_negative_controls.R">Script
-                        for selection of negative controls</a></li>
+                        href="https://github.com/vittoriofortino84/EDC_shiny/raw/master/example/inPut/negative_controls.rds">List
+                        of negative controls along with their MIEs</a></li>
+                <li><a
+                        href="https://github.com/vittoriofortino84/EDC_shiny/raw/master/example/inPut/unknow_compounds.rds">List
+                        of unlabelled compounds</a></li>
             </ul>
 
             <div style="padding: 0.5% 1% 0.5% 1%; border: 2px solid black; margin-top: 5%;">
                 <p style="padding-top: 1%;"><strong>To cite EDTox:</strong> <br>
                     EDTox: an R Shiny application to predict the endocrine disruption potential of compounds <br>
-                    <strong>EDTox webserver: </strong><a
-                    href="http://www.edtox.fi/">www.edtox.fi</a>
+                    <strong>Standalone version of EDTox can be downloaded from: </strong><a
+                        href="https://github.com/vittoriofortino84/EDC_shiny">https://github.com/vittoriofortino84/EDC_shiny</a>
                 </p>
             </div>
 

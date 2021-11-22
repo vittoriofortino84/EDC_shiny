@@ -1,5 +1,5 @@
 #ui.R
-# test
+
 ### Libraries to import --------------------------------------------------------
 
 library(shiny)
@@ -9,21 +9,7 @@ library(shinyjs)
 library(DT)
 
 ### Sidebar menu of the app ---------------------------------------------------------------
-
-appCSS <- "
-#loading-content {
-  position: absolute;
-  background: #AAAAAA;
-  opacity: 0.9;
-  z-index: 100;
-  animation-duration=200ms;
-  left: 0;
-  right: 0;
-  height: 100%;
-  text-align: center;
-  color: #FFFFFF;
-}
-" 
+ 
 shinyUI(
   dashboardPage(
     dashboardHeader(title = "EDTox"),
@@ -41,18 +27,10 @@ shinyUI(
        tags$script(HTML("$('body').addClass('fixed');")), #To fix header and sidebar
        tags$head(tags$style(HTML('.content-wrapper { overflow: auto; }'))), #To keep fixed background (esp in tab2)
              fluidPage(
-      inlineCSS(appCSS),
-    # includeCSS("https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"),
-    includeCSS("animate.css"),
-		
-
-																				
+      									
 																  
     
-       div(
-         id="loading-content",time=10,
-         h3(style="margin-top:150px;",class="animate__animated animate__bounce animate__delay-2s", "Initializing EDCmet dashboard")
-       )
+ 
     ),
 		
 		
@@ -62,12 +40,9 @@ shinyUI(
 
 ### Tab 1: Home ----------------------------------------------------------------
 # Home page with pipeline diagram and text explaining the pipeline
-
-
-
           tabItem(tabName = "tab_home",
-                  fluidRow(column(width = 12, includeHTML("www/Home.html"))),
-          ),
+		                    fluidRow(column(width = 12, includeHTML("www/Home.html"))),
+				              ),
 
 ### Tab 2: Summary -------------------------------------------------------------
 
@@ -78,7 +53,7 @@ shinyUI(
                    box(
                      title = list(strong("Pathways used in the pipeline"), bsButton("qt_path", label = "", icon = icon("question"), style = "info", size = "extra-small")),
                      bsPopover(id = "qt_path", title = "Pathways",
-                               content = paste0("Only pathways related to metabolic syndrome were considered from each databases."),
+                               content = paste0("Only gene sets related to adverse outcome pathways were retrieved from GO."),
                                placement = "right",
                                trigger = "hover",
                                options = list(container = "body")),
@@ -90,7 +65,7 @@ shinyUI(
                        plotOutput("plot_st4", height = 400),
                        bsPopover(id = "qt_f1Score", title = "F1 scores",
                                  content = paste("A data frame as RDS file with two columns. The first column should be named values (the F1 scores).",
-                                                  "The second column should be named networks (a similar name for all rows i.e example/outPut/F1_scores.rds).",
+                                                  "The second column should be named networks (a similar name for all rows)",
                                                  "The new F1 scores would be appended at the end of the plot.", sep = " "),
                                  placement = "right",
                                  trigger = "hover",
@@ -124,22 +99,22 @@ shinyUI(
                            });
                                     '),
                          textInput("clientTime", "Client Time", value = ""),
-                         numericInput('number_cpu_input', 'Number of CPUs', 4, min=1, step = 1),
-                         bsPopover(id = "qt_jobName", title = "Classifier name",
-                                   content = paste("Please enter a classifier name. This name will be used during visualization of the relults."),
+                         numericInput('number_cpu_input', 'Number of CPUs', 1, min=1, step = 1),
+                         bsPopover(id = "qt_jobName", title = "Job name",
+                                   content = paste("Please enter a job name. This name will be used during visualization of the relults."),
                                    placement = "right",
                                    trigger = "hover",
                                    options = list(container = "body")),
                          textInput('job_name_input',
-                                   label = list("Classifier name", bsButton("qt_jobName", label = "", icon = icon("question"), style = "info", size = "extra-small")),  
+                                   label = list("Job name", bsButton("qt_jobName", label = "", icon = icon("question"), style = "info", size = "extra-small")),  
                                    value = 'my_job'),
                          verbatimTextOutput('status_lbl'), br(),
                          height = 400, width = 6, solidHeader = T),
 
                      box(
                        bsPopover(id = "qt_net", title = "Network",
-                                 content = paste("Gene-gene co-expression network as three column (gene1, gene2, edge parameter) data frame in rds format. Maximum file size: 100mb.",
-                                                  br(), "Note: Use only Entrez IDs for gene. The edge parameter could be edge weight generated from WGCNA or wTO package.", sep = " " ),
+                                 content = paste("Gene-gene co-expression network as three column (gene1, gene2, edge parameter) data frame in rds format. Maximum file size: 50mb.",
+                                                  br(), "Note: Use only Entrez IDs for gene. The edge parameter could be edge weight generated from WGCNA or wTO package. To download example: refer to Home page", sep = " " ),
                                  placement = "right",
                                  trigger = "hover",
                                  options = list(container = "body")),
@@ -224,7 +199,9 @@ shinyUI(
                    box(
                      selectInput(inputId = 'export_input', 
                                  label = "Select data set to export as rds file:",
-                                 choices = c("Model parameters",
+                                 choices = c(
+					     #"Pathway activation scores",
+                                             "Model parameters",
                                              "F1 scores",
                                              "Elastic net coefficients",
                                              "Predicted scores")),
@@ -266,13 +243,13 @@ shinyUI(
                    hr(),
                    selectInput(inputId = "pathway_category_input",
                                label = "Pathway databases (Hold Ctrl to select multiple databases)",
-                               choices = c('KEGG','REACTOME','WIKI','GO'),
+                               choices = c('KEGG','REACTOME','WIKI','GO'),selected=c('KEGG','REACTOME','WIKI','GO'),
                                multiple=TRUE, selectize=FALSE),
                    hr(),
                    selectInput(inputId = 'data_layer_input',
                                label = "Classifiers (Hold Ctrl select multiple classifiers)",
                                state.name, multiple = TRUE, selectize = FALSE),
-                   actionButton(inputId = 'calc2', label = 'Show'),
+                   actionButton(inputId = 'calc2', label = 'Update Plot'),
                    hr(),
                    br(),
                    bsPopover(id = "qt_newLayer", title = "Pathway activation scores from new classifier",
@@ -312,22 +289,29 @@ shinyUI(
                              placement = "right",
                              trigger = "hover",
                              options = list(container = "body")),
+                   box(
 
-
-                   selectizeInput(inputId = 'cmpname',
-                                  label = 'CAS, MESH ID, Compound name',
+                   selectizeInput(inputId = 'addtocmpname',
+                                  label = 'Library of compound names',
                                   choices = c(''),
-                                  options = list(maxOptions = 10, maxItems = 5)),
+                                  options = list(maxOptions = 10, maxItems = 5)), 
+                   actionButton(inputId = 'comp_dic_btn',
+                                label = 'Fetch compounds list'),collapsible = T,collapsed = T,width = 14,title="Compound Search",solidHeader=T),
+hr(),
+
+			       textInput('cmpname',
+			                  label = 'CAS, MESH ID, Compound_name',value = 'Bisphenol B,C030298,1962-83-0'),
+
+
 
                    selectInput(inputId = 'edc_score_layer_input',
                                label = 'Classifiers',
                                c('PPI_STRINGdb'),
                                multiple=TRUE, selectize = FALSE),
 
-                  actionButton(inputId = 'activate_score_panel_btn',
-                               label = 'Activate the score panel'),
+
                   actionButton(inputId = 'calc',
-                                label = 'Show selected cases'),br(),hr(),
+                                label = 'Show on plot'),br(),hr(),
                   bsPopover(id = "qallcompile", title = "Scores for all CTD chemicals",
                             content = paste0(" Calculate EDC-class probability scores for all the chemicals in CTD based on all the classifiers.",
                                              "The classifiers selected above will be used to compute the average and harmonic scores for each compound.",
@@ -336,31 +320,28 @@ shinyUI(
                             placement = "right", 
                             trigger = "hover",
                             options = list(container = "body")),																													 
-                  actionButton(inputId = 'score_for_all_btn',
-                               label = list('Compile scores for all CTD chemicals', bsButton("qallcompile", label = "", icon = icon("question"), style = "info", size = "extra-small"))),br(),hr(),
+                            br(),hr(),
                   downloadButton('export_all_btn_edcscores', 'Export scores for all CTD chemicals'),
+			            checkboxInput('harmonicExport', 'include Harmonic EDC score', value = F, width = NULL),
                        hr(),
               
                    p(strong("Compile EDC-class probability scores for new chemicals "), bsButton("qt_scoreOther", label = "", icon = icon("question"), style = "info", size = "extra-small")),
                    bsPopover(id = "qt_scoreOther", title = "Compile EDC-class probability scores for new chemicals",
-                             content = paste("Enter the name of the compound and the list of MIEs as Entrez gene ID in the respective fields below.",
+                             content = paste("Enter the name of the compound and the comma separated list of MIEs as Entrez gene ID or Symbols in the respective fields below.i.e", strong("4617,4654,ERK3,4656,5077,25937"),
                                              "Select the classifiers based on which to calculate the probability scores and hit the",
                                              strong("Calculate from MIEs"), "button to calculate.", br(),
-                                             "Notes: 1) For this module to run, the file",
-                                             em("all_precompiled_pipeline.RDSS"), "should exist in the folder large_file.",
-                                             "If missing, the", strong("Calculate from MIEs"), "button will not appear.", br(),
-                                             "2) Only one compound at a time.", br(),
-                                             "3) The function might return an error if the MIE is not among the data space genes.", sep = " "),
+                                             "", br(),
+                                             "", sep = " "),
                              placement = "right",
                              trigger = "hover",
                              options = list(container = "body")),
                    textInput(inputId = "txt_input_newcompound_name",
-                             label = "Name of the compound",
+                             label = "Name of the new compound",
                              value = "new_compound"),
 
                    textInput(inputId = "txt_input_mies",
-                             label = "MIEs of the compound",
-                             value = "4617,4654,4656,5077,25937"),
+                             label = "MIEs of the new compound",
+                             value = ""),
                    useShinyjs(),
                    actionButton(inputId = 'mie2classprob_btn', label = 'Calculate from MIEs'),
                    hr()
@@ -406,9 +387,7 @@ shinyUI(
                    actionButton(inputId = 'toxpi_btn', label = 'Calculate'),
                    br(),
                    hr(),
-                   actionButton(inputId = 'toxpiBtn_refresh', label = 'Refresh'),
-                   br(),
-                   hr(),
+
                    downloadButton('export_btn_toxpi', 'Export plot data')
                    #verbatimTextOutput("txt_toxpi_selected_layers",placeholder = F)
                    ),

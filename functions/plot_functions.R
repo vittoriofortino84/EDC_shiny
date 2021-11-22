@@ -96,18 +96,34 @@ edc_multi_compare_bar<-function(edc_data,net_lvls,ranges,ylbl,y_scale,angle_t=60
 }# used in edc score tab
 
 # Plot of ToxPi scores against EDC-class probability --------------------------------------------------------
-toxpi_plot<-function(all_mat,ranges,min_toxpi=0.1,min_edc_score=0.8){ 
+toxpi_plot<-function(all_mat,ranges,min_toxpi=0.1,min_edc_score=0.8,comps_edcmet=c('100-51-6','101-20-2','1024-57-3')){ 
   require(ggplot2)
-  all_mat$colr<-'grey50'
+  all_mat$colr<-'green'
+  all_mat$size=1                        #default dot size
+  all_mat$alpha=.3                      #default tranparency
   all_mat$colr[all_mat$unk_VAM_scores >=min_edc_score & all_mat$toxpi >=min_toxpi]<-'red'
-  ggplot(all_mat,aes(x=unk_VAM_scores,y=toxpi))+
-    geom_point(size=3,color=all_mat$colr)+
-    geom_text(label=all_mat$X,size=5,segment.size = 0.2, segment.color = "grey", show.legend = F) +
+
+  # comps of interest for edcmet
+  all_mat$colr[all_mat$cas %in% comps_edcmet]<-'blue'
+  all_mat$size[all_mat$cas %in% comps_edcmet]<-3
+  all_mat$alpha[all_mat$cas %in% comps_edcmet]<-1
+  #all_mat$X[all_mat$cas %in% comps_edcmet]<-all_mat$compound_name
+  
+  ggplot(all_mat,aes(x=unk_VAM_scores,y=toxpi,color=factor(colr,levels = c('blue','green','red'))))+
+    geom_point(size=all_mat$size,
+               alpha=all_mat$alpha,show.legend = T)+
+    geom_text(label=all_mat$X,size=5, show.legend = F) +
     ylab('TOXPI score')+ xlab('Average EDC score')+
-    theme_minimal()+ 
     coord_cartesian(xlim = ranges$x, ylim = ranges$y, expand = T)+
+    scale_color_manual(name='Color labels',values =c('blue','green','red'),labels=c('EDCmet priorities','Low Toxicity','High Toxicity'))+
+    theme_minimal()+ 
+   # theme(axis.text = element_text(size = 20),axis.title.x = element_text(size = 20),axis.title.y = element_text(size = 20),
+  #      strip.text = element_text(size = 20),legend.position  = 'right',legend.text = element_text(size = 16))+
     ggtitle("")+xlab("Average EDC-class probability")+ylab("ToxPi scores")
-}#used in evaluation with toxpi tab
+
+  
+  
+  }#used in evaluation with toxpi tab
 
 brush_adjust<-function(brush,ranges){
 if (!is.null(brush)) {

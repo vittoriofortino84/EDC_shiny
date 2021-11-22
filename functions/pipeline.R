@@ -65,6 +65,7 @@ onecompound_mies2classprob<-function(networks,patways,models,compound_mies){
   require(dnet)
   require(igraph)
   grp<-1:length(networks$networks)
+  #grp=1:20
   cl_probs<-rep(NA,length(grp))
   withProgress(message = "Wait for RWR-FGSEA-GLM",value = 0,{
   for (i in 1:length(grp)) {

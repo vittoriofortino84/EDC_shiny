@@ -1,20 +1,21 @@
+one_compound_harmonic_sum<-function(data,col.scores){
+  dtemp<-as.numeric(data[col.scores])
+  dtemp<-dtemp[!is.na(dtemp)]
+  HS <- sum(sort(dtemp,decreasing=T)/(1:length(dtemp))^2)
+  return(HS)
+} # end function
+
+
+one_compound_mean_function<-function(data,col.scores){
+  dtemp<-as.numeric(data[col.scores]) 
+  means<-  mean(dtemp,na.rm = T)
+  return(means)
+}
+
 edc_score<-function(all_vam_library,inp,all_data_levels,col.scores=1:20,is_stacked_cols=TRUE){
   require(tidyr)
   
-  one_compound_harmonic_sum<-function(data,col.scores){
-    dtemp<-as.numeric(data[col.scores])
-    dtemp<-dtemp[!is.na(dtemp)]
-    HS <- sum(sort(dtemp,decreasing=T)/(1:length(dtemp))^2)
-    return(HS)
-  } # end function
-  
-  
-  one_compound_mean_function<-function(data,col.scores){
-    dtemp<-as.numeric(data[col.scores]) 
-    means<-  mean(dtemp,na.rm = T)
-    return(means)
-  }
-  
+
   
   res<-matrix(NA, nrow = length(inp), ncol = ncol(all_vam_library),dimnames = list(inp,colnames(all_vam_library)))
   for (i in 1:length(inp)){

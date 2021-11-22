@@ -2,7 +2,7 @@
 
 library(shiny)
 library(shinyjs)
-options(shiny.maxRequestSize=100*1024^2)   # maximum 100 mb upload limit for the bigger networks
+options(shiny.maxRequestSize=50*1024^2)   # maximum 50  mb upload limit for the bigger networks
 
 function(input,output,session){
   
@@ -16,9 +16,13 @@ function(input,output,session){
   
 ### Tab 1: Home-----------------------------------------------------------------
 	   #Sys.sleep(10)
-	shinyjs::hide('loading-content')
+	#shinyjs::hide('loading-content')
 ### Tab 2: Summary -------------------------------------------------------------
-  
+ 
+session$allowReconnect(TRUE)
+
+
+
   output$plot_st1 <- renderPlot({   # pie chart of average edc scores in the summary tab
     data_edcs_count_average <- readRDS("inputData/statistics/average_distribution_compounds_EDCs.rds")
     data_edcs_count_average$type = "Average"
@@ -55,18 +59,19 @@ function(input,output,session){
 
    
 ### Tab 3: Toxicogenomics pipeline ---------------------------------------------
-  library(parallel)
-  det_cpus<-detectCores()
-  
-  updateNumericInput(session,'number_cpu_input',
-                     value = det_cpus)
-  
+ library(parallel)
+ det_cpus<-detectCores()
+ max_possible_cpus=det_cpus-1
+ if (det_cpus==1)max_possible_cpus=1
+ updateNumericInput(session,'number_cpu_input',
+                       value = max_possible_cpus)
+
   rv_pipeline<-reactiveValues(f1_scores=data.frame(values=c(0,0,0,0,0)),
                               status='Toxicogenomics pipeline')
   
   dataset_export<-reactive({
     switch(input$export_input,
-         "Pathway activation scores" = list(NES_scores=rv_pipeline$NES,labels=rv_pipeline$class),
+         #"Pathway activation scores" = list(NES_scores=rv_pipeline$NES,labels=rv_pipeline$class),
          "Model parameters" = rv_pipeline$params,
          "F1 scores" = rv_pipeline$f1_scores[,c('values','networks')],
          "Elastic net coefficients" = rv_pipeline$data_frame,
@@ -84,17 +89,30 @@ function(input,output,session){
  
   
    observeEvent(input$pareto_btn,{ 
-    if (!is.null(input$network_input$datapath) & !is.null(input$edc_input$datapath) & !is.null(input$decoy_input$datapath) ){
+  shinyjs::hide("predict_btn")
+  shinyjs::hide("pareto_btn")
+shinyjs::hide("network_btn")
+shinyjs::hide("export_input")
+
+		  	if (!is.null(input$network_input$datapath) & !is.null(input$edc_input$datapath) & !is.null(input$decoy_input$datapath) ){
      showNotification("Please wait")
      network<-readRDS(input$network_input$datapath)
      print(input$network_input$name)
      edcs_list<-readRDS(input$edc_input$datapath)
      decoys_list<-readRDS(input$decoy_input$datapath)
-     n_cpuc<-input$number_cpu_input
+     
      
        print('Pareto is running')
        genes<-as.numeric(unlist(strsplit(input$gene_set_input,',')))
        edge<-(as.numeric(unlist(strsplit(input$edge_set_input,',')))/100) # To convert input percentage to decimal format
+       
+       # cpu settings
+       n_cpuc<-input$number_cpu_input
+
+       if (n_cpuc>max_possible_cpus) n_cpuc=max_possible_cpus
+       if (n_cpuc>length(edge)) n_cpuc=length(edge)
+       
+       
        edgelist<-cpu_splitter(n_cpuc,edge)
        library(doParallel)
        cl<-makeCluster(length(edgelist))
@@ -107,6 +125,7 @@ function(input,output,session){
                                                                                          edcs_list,
                                                                                          decoys_list)
        stopCluster(cl)
+         #modls=network2silhouette(network,edgelist[[1]],genes,edcs_list,decoys_list)
        #pareto
        silhouette_mat<-as.data.frame(do.call(rbind,modls))
        silhouette_mat$edge<-rownames(silhouette_mat)
@@ -130,18 +149,29 @@ function(input,output,session){
        showNotification("Finished")
        rv_pipeline$pareto<-ps.out}else{
          showNotification('The fields network, edc list, decoy list should not be empty', type = 'error')}
+  shinyjs::show("predict_btn")
+    shinyjs::show("pareto_btn")
+  shinyjs::show("network_btn")
+  shinyjs::show("export_input")
+
      })  # Pareto solution to edge and gene size
    
    
    observeEvent(input$network_btn,{ 
-     if (!is.null(input$network_input$datapath) & !is.null(input$edc_input$datapath) & !is.null(input$decoy_input$datapath) ){
+           shinyjs::hide("predict_btn")
+	           shinyjs::hide("pareto_btn")
+	           shinyjs::hide("network_btn")
+		   shinyjs::hide("export_input")
+
+    if (!is.null(input$network_input$datapath) & !is.null(input$edc_input$datapath) & !is.null(input$decoy_input$datapath) ){
     showNotification("Please wait")
     net_pat<-input$network_input$datapath
     network<-readRDS(net_pat)
     print(input$network_input$name)
     edcs_list<-readRDS(input$edc_input$datapath)
     decoys_list<-readRDS(input$decoy_input$datapath)
-    n_cpuc<-input$number_cpu_input
+    
+   
     n_genes<-as.numeric(input$final_gene_input)
     n_edges<-(as.numeric(input$final_edge_input)/100) # Convert interger percentage value to float
     withProgress(message = 'Wait',value = 0,{ 
@@ -151,12 +181,7 @@ function(input,output,session){
      patways<-readRDS('inputData/pathways.rds')
      mies<-c(edcs_list,decoys_list)
      library(BiocParallel);library(stats)
-          # if (length(grep(x=as.character(Sys.info()),pattern = 'windows',ignore.case = T))){
-     #   p<-bpstart(SnowParam(n_cpuc))}else{
-     #   p<-bpstart(MulticoreParam(n_cpuc))
-     #   }
-     # fgsea_res<-pipeline(network,patways,n_edges,n_genes,mies,p)
-     # bpstop(p)
+
      p=NULL
      fgsea_res<-pipeline(network,patways,n_edges,n_genes,mies,p)
      print('Gene-set enrichment analysis completed')
@@ -178,6 +203,12 @@ function(input,output,session){
      # Cross validtion
      print('Starting k-fold cross validation')
      all_index<-caret::createMultiFolds(class,k=input$k_input,times=input$repeat_input)
+     
+     # cpu settings
+     n_cpuc<-input$number_cpu_input
+     if (n_cpuc>max_possible_cpus) n_cpuc=max_possible_cpus
+     if (n_cpuc>length(all_index)) n_cpuc=length(all_index)
+     
      cpu_ind<-cpu_splitter(n_cpuc,1:length(all_index))
      library(doParallel)
      cl<-makeCluster(length(cpu_ind))
@@ -212,10 +243,16 @@ function(input,output,session){
      # 
      rv_pipeline$status<-'RWR-FGSEA-GLM completed'
      incProgress(1/3,detail = 'Kfold_CV completed')
+     shinyjs::hide("all_model_parameters_input")
      })
      showNotification("Finished")
      rv_pipeline$params<-list(n_genes=n_genes,n_edges=n_edges,network=network,model=modl)}else{
        showNotification('The fields network,edc list, decoy list should not be empty',type = 'error')}
+       shinyjs::show("predict_btn")
+         shinyjs::show("pareto_btn")
+         shinyjs::show("network_btn")
+	   shinyjs::show("export_input")
+
       }) #   RWR-FGSEA-GLM
    
   
@@ -227,7 +264,7 @@ function(input,output,session){
      withProgress(message = 'Wait',value = 0,{ 
      network<-rv_pipeline$params$network
      model<-rv_pipeline$params$model
-     n_cpuc<-input$number_cpu_input
+
      n_genes<-as.numeric(rv_pipeline$params$n_genes)
      n_edges<-as.numeric(rv_pipeline$params$n_edges)
      print(n_genes);print(n_edges)
@@ -237,12 +274,7 @@ function(input,output,session){
      patways<-readRDS('inputData/pathways.rds')
      mies<-readRDS(input$test_compounds_input$datapath)
      library(BiocParallel);library(stats)
-          # if (length(grep(x=as.character(Sys.info()),pattern = 'windows',ignore.case = T))){
-     #   p<-bpstart(SnowParam(n_cpuc))}else{
-     #   p<-bpstart(MulticoreParam(n_cpuc))
-     #   }
-     # fgsea_res<-pipeline(network,patways,n_edges,n_genes,mies,p)
-     # bpstop(p)
+
      p=NULL
      fgsea_res<-pipeline(network,patways,n_edges,n_genes,mies,p)
      print('Gene-set enrichment completed. Wait!')
@@ -258,6 +290,7 @@ function(input,output,session){
      rv_pipeline$status<-'Prediction of newcompounds completed'
      incProgress(1/2, detail = 'Prediction completed')
      showNotification("Finished")
+     shinyjs::show("all_model_parameters_input")
      })
    }) #predcition of new compounds
    
@@ -277,7 +310,7 @@ function(input,output,session){
 ### Tab 4: Molecular activity profiling of EDCs --------------------------------
    networks<-readRDS('inputData/network_names.rds')     # names of the networks
    glm_coefs<-readRDS('inputData/GLM_coeffs_edcs_decoys.rds')
-   updateSelectInput(session,'data_layer_input',choices = networks)
+   updateSelectInput(session,'data_layer_input',choices = networks,selected=networks)
    rv_bubble_plot<-reactiveValues(data_glm=glm_coefs,
                                   data_subset=glm_coefs,
                                   networks=networks,
@@ -333,16 +366,17 @@ function(input,output,session){
   # params and variables
   all_vam<-readRDS('inputData/all_edc_scores.rds')     # edc scores and class probs for networks
   networks<-readRDS('inputData/network_names.rds')     # names of the networks
+  parents_comps=readRDS('inputData/parent_comps.rds')
+  parents_comps=tolower(parents_comps)
   network_score_levelss=c(networks,'average_edc_score','harmonic_sum_edc_score')
-  
   all_possible_mesh_cas_names=c(unique(all_vam$mesh),
                                 unique(all_vam$cas),
                                 unique(all_vam$comp_names))
-  
+  all_chem_names=unique(all_vam$comp_names)
+  all_chem_names=all_chem_names[-grep(',',all_chem_names)] 
   rv_edc_library<-reactiveValues(all_vam=all_vam,
                                  all_possible_mesh_cas_names=all_possible_mesh_cas_names)
-  
-  rv_edc_score<-reactiveValues(table_scors=c(),
+  rv_edc_score<-reactiveValues(table_scors=c(),dic_status=0,
                                class_prob_scores=edc_score(all_vam,'1962-83-0',
                                                            network_score_levelss)[1:21,],
                                harmonic_average_scores=edc_score(all_vam,'1962-83-0',
@@ -350,41 +384,49 @@ function(input,output,session){
   rv_all_compounds_score<-reactiveValues(scores=c())
   ranges_class_prob <- reactiveValues(x = NULL, y = NULL)
   ranges_edc_score <- reactiveValues(x = NULL, y = NULL)
-  shinyjs::hide('calc')
-  shinyjs::hide('cmpname')
-  shinyjs::hide('score_for_all_btn')
-  shinyjs::hide('edc_score_layer_input')
-  shinyjs::hide('qallcompile')
-  shinyjs::hide('export_all_btn_edcscores')
   shinyjs::hide('mie2classprob_btn')							  
   path_2_network<-'large_file/all_precompiled_pipeline.RDSS'  # all networks and paramterers and models
   if(!file.exists(path_2_network))shinyjs::hide('mie2classprob_btn')
+  
   # events 
   observeEvent(input$plot_class_prob_scores_dbl_click,{
                brush_adjust(input$class_prob_scores_brush, ranges_class_prob)}) #plot fucntion call
-  
-  # data before multi compate plot are calculated
-  observeEvent(input$activate_score_panel_btn,{ 
-    showNotification("Wait! Retrieving data of the compounds")
-    updateSelectInput(session,"edc_score_layer_input",choices = networks,selected = networks[1:21])
-    updateSelectizeInput(session, "cmpname", selected = '1962-83-0',choices  =all_possible_mesh_cas_names)
-    shinyjs::hide("activate_score_panel_btn")
-    shinyjs::show('calc')
-    shinyjs::show('cmpname')
-    shinyjs::show('score_for_all_btn')
-    shinyjs::show('edc_score_layer_input')
-	shinyjs::show('qallcompile')
+
+  updateSelectInput(session,"edc_score_layer_input",choices = networks,selected = networks[1:4])
+
     if(file.exists(path_2_network))shinyjs::show('mie2classprob_btn')
     
-
-  })   # activate scores button											
-
-  observeEvent(input$calc,{  
-  if (!is.null(input$cmpname)){
+    
+    observeEvent(input$comp_dic_btn,{
+      if(rv_edc_score$dic_status==0){
+	      shinyjs::hide("comp_dic_btn") 
+        updateSelectizeInput(session, "addtocmpname", choices  =all_chem_names)
+        updateActionButton(session, "comp_dic_btn", label = "Add to search Box")
+	      showNotification('Wait to update compounds list')
+        rv_edc_score$dic_status=1 
+	shinyjs::show("comp_dic_btn")
+      }else{
+          updateTextInput(session, "cmpname",  value = input$addtocmpname)
+      }
+    })
+    
+    
+    
+  observeEvent(input$calc,{ 
+  if (!input$cmpname==''){
+  if(any(tolower(unlist(strsplit(input$cmpname,split = ',',fixed = T))) %in% parents_comps)){
+    showNotification('At least one entity has descendants in CTD',type = 'warning',duration=6)
+  }
+  if(!all(tolower(unlist(strsplit(input$cmpname,split = ',',fixed = T))) %in% tolower(all_possible_mesh_cas_names))){
+    showNotification('One or more entity does not exist in the library of compounds',type = 'warning',duration=6)
+  }
+    
+  
   data_for_edc_score_plot<-edc_score(rv_edc_library$all_vam,
-                                     input$cmpname,
+                                     as.character(unlist(strsplit(input$cmpname,','))),
                                      network_score_levelss,
                                      col.scores = input$edc_score_layer_input)
+ 
   rv_edc_score$class_prob_scores<-data_for_edc_score_plot[data_for_edc_score_plot$network %in% input$edc_score_layer_input,]
   rv_edc_score$harmonic_average_scores<-data_for_edc_score_plot[data_for_edc_score_plot$network %in% c('average_edc_score',
                                                                                                        'harmonic_sum_edc_score'),]
@@ -395,25 +437,7 @@ colnames(table_data)<-c('Compounds','Average','Harmonic_Sum')
 rv_edc_score$table_scors<-table_data
   }else{showNotification('Enter at least one compound for visualization',type = 'error')}
    })   # show on plot BUTTON
- 
-  observeEvent(input$score_for_all_btn,{ 
-    showNotification("Please wait to compile the scores for all the compounds")
-    shinyjs::hide('score_for_all_btn')
-    shinyjs::hide('export_all_btn_edcscores')
-    all_scores<-edc_score(rv_edc_library$all_vam,
-                          unique(all_vam$mesh),
-                          network_score_levelss,
-                          col.scores = input$edc_score_layer_input,
-                          is_stacked_cols=F)
-    to_keep<-networks %in% input$edc_score_layer_input
-    to_save=c(networks[to_keep], "harmonic_sum_edc_score", "average_edc_score","comp_names","mesh","cas")
-    all_scores=all_scores[,to_save]
-    rv_all_compounds_score$scores=all_scores
-    shinyjs::show('score_for_all_btn')
-    shinyjs::show('export_all_btn_edcscores')
-    showNotification("Finished")
-  })   # compile edc scores for all compounds
-  
+
   # plot
   
   output$plot_class_prob_scores<-renderPlot({edc_multi_compare_bar(rv_edc_score$class_prob_scores,
@@ -429,45 +453,68 @@ rv_edc_score$table_scors<-table_data
   
    # mie 2 class prob
   observeEvent(input$mie2classprob_btn,{
-    if(any(tolower(trimws(input$txt_input_newcompound_name)) %in% tolower(rv_edc_library$all_possible_mesh_cas_names)) %in% F &
-       (!trimws(input$txt_input_newcompound_name)=='')){ 
-      showNotification('wait',duration = NULL)
-      newcomp<-strsplit(input$txt_input_mies,',') #genes as MIEs
-      if (!"all_pipeline_precompiled_data" %in% ls())all_pipeline_precompiled_data<-readRDS(path_2_network)
-      results<-onecompound_mies2classprob(all_pipeline_precompiled_data$networks,
-                                          all_pipeline_precompiled_data$pathways,
-                                          all_pipeline_precompiled_data$models,
-                                          newcomp)
-      if(length(which(!is.na(results) %in% T))>0){
-        results<-as.data.frame(t(results),col.names=names(results))
-        results$harmonic_sum_edc_score<-results$average_edc_score<-0
-        results$comp_names<-trimws(input$txt_input_newcompound_name)
-        results$mesh<-results$cas<-''
-        results$is_in_training<-'unk'
-        results<-results[,colnames(rv_edc_library$all_vam)]
-        rv_edc_library$all_vam<-rbind(rv_edc_library$all_vam,results)
-        data_for_edc_score_plot<-edc_score(rv_edc_library$all_vam,
-                                           results$comp_names,
-                                           network_score_levelss,
-                                           col.scores = input$edc_score_layer_input)
-        rv_edc_score$class_prob_scores<-data_for_edc_score_plot[data_for_edc_score_plot$network %in% input$edc_score_layer_input,]
-        rv_edc_score$harmonic_average_scores<-data_for_edc_score_plot[data_for_edc_score_plot$network %in% c('average_edc_score',
-                                                                                                             'harmonic_sum_edc_score'),]
-        print(rv_edc_score$harmonic_average_scores)
-        rv_edc_library$all_possible_mesh_cas_names<-c(results$comp_names,rv_edc_library$all_possible_mesh_cas_names)
-        updateSelectizeInput(session, "cmpname", selected = results$comp_names,choices  =rv_edc_library$all_possible_mesh_cas_names)
-        
-        showNotification('finished')}else{showNotification('Wrong MIEs')}
+		       shinyjs::hide('mie2classprob_btn') 
+     shinyjs::hide('calc')
+		       gc()
+      newcomp<-unlist(strsplit(input$txt_input_mies,',')) #genes as MIEs
+       libra_genes=readRDS('inputData/mapped_genes.rds')
+       
+       #removing extra characters
+       if (!all(newcomp %in% libra_genes$ENTREZID|newcomp %in% libra_genes$ALIAS)){
+         showNotification('One or more MIES not in networks')
+         newcomp=newcomp[which(unlist(newcomp) %in% libra_genes$ENTREZID|unlist(newcomp) %in% libra_genes$ALIAS)]
+       }
+       
+       # mapping symbol genes to Entrez IDs
+       if ( any(newcomp %in% libra_genes$ALIAS)){
+       newcomp=c(newcomp[which(newcomp %in% libra_genes$ENTREZID)],
+         symbol2entrez(newcomp[which(newcomp %in% libra_genes$ALIAS)]))}
+       
       
-    }else{showNotification('The compound already exists in the database or the field is empty')}
-    
-  })  #MIE 2 edc score
+      
+      if(length(newcomp)>0){ 
+        showNotification("wait. It might take few minutes",duration=30)
+    showNotification(paste(newcomp,collapse=','))  
+      newcomp=list(newcomp)
+        
+      
+      if (!"all_pipeline_precompiled_data" %in% ls())all_pipeline_precompiled_data<-readRDS(path_2_network)
+       selected_layers<-input$edc_score_layer_input
+       patwayss<-all_pipeline_precompiled_data$pathways
+       patwayss$used_patways_in_models<-patwayss$used_patways_in_models[selected_layers]
+       networkss<-lapply(all_pipeline_precompiled_data$networks,function(x)x[selected_layers])
+       modelss<-all_pipeline_precompiled_data$models[selected_layers]
+       results<-onecompound_mies2classprob(networkss,
+                                           patwayss,
+                                           modelss,
+                                           newcomp)
+
+      if(length(which(!is.na(results) %in% T))>0){
+        new_comp_name=trimws(input$txt_input_newcompound_name)
+        if(trimws(input$txt_input_newcompound_name)=='')new_comp_name="new_compound"
+        results<-as.data.frame(results,row.names=names(results))
+        t_res<-t(results)
+        harm_score<-one_compound_harmonic_sum(t_res,1:ncol(t_res))
+        av_score<-one_compound_mean_function(t_res,1:ncol(t_res))
+        res_harm_av=as.data.frame(list(new_comp_name,av_score,harm_score))
+        colnames(res_harm_av)=c("Compounds","Average","Harmonic_Sum")
+        rv_edc_score$table_scors=res_harm_av
+        colnames(results)='score'
+        results$nnames=new_comp_name
+        results$network=rownames(results)
+        rv_edc_score$class_prob_scores=results
+      }else{showNotification('The MIEs were not found in selected classifier')}
+  }else{showNotification('No MIES were enetered or The genes not in the library ')}
+      shinyjs::show('mie2classprob_btn')
+      shinyjs::show('calc')
+   })  #MIE 2 edc score
+
   output$export_btn_edcscores <- downloadHandler(
     filename = function() {
       'Plot_EdcClassProbability.csv'
     },
     content = function(file) {
-      write.csv(rbind(rv_edc_score$class_prob_scores,rv_edc_score$harmonic_average_scores), file)
+      write.csv(rv_edc_score$class_prob_scores, file)
     }
   )  
     
@@ -478,22 +525,28 @@ rv_edc_score$table_scors<-table_data
       'All_CTD_compounds_edc_scores.csv'
     },
     content = function(file) {
-      write.csv(rv_all_compounds_score$scores, file)
+	to_sav=all_vam[,colnames(all_vam) %in% input$edc_score_layer_input]
+        av_score=apply(to_sav,1,mean,na.rm=T)
+        if (input$harmonicExport){
+          #include harmonic score if checkbox is checked
+          to_sav$unscaled_harmonic_score=apply(to_sav,1,one_compound_harmonic_sum)
+        }
+  to_sav$average_edc_score=av_score
+	to_sav$mesh=all_vam$mesh
+	to_sav$comp_names=all_vam$comp_names
+      write.csv(to_sav, file)
     }
   ) 
 
 ### Tab 6: Comparison with ToxPi Scores ----------------------------------------
-  
+  dtx=readRDS('inputData/annotaion/dtx_cas.rds')
   rv_eval_toxpi <- reactiveValues(plot_data = readRDS('inputData/toxpi_scores.rds'),
                                   selected_for_score = networks)
   
 updateSelectInput(session,'toxpi_layer_input',choices = networks)
 ranges_toxpi <- reactiveValues(x = NULL, y = NULL)
 
-# refresh button of ToxPi
-observeEvent(input$toxpiBtn_refresh,{
-  rv_eval_toxpi$plot_data<-readRDS('inputData/toxpi_scores.rds')
-  })
+# button
   observeEvent(input$toxpi_btn,{
     if(!length(input$toxpi_layer_input)==0){ # at least one layer should be selected by the user
     primary_data<-rv_eval_toxpi$plot_data
@@ -501,7 +554,12 @@ observeEvent(input$toxpiBtn_refresh,{
     primary_data$unk_VAM_scores<-mean_function(primary_data,rv_eval_toxpi$selected_for_score)
     primary_data<-primary_data[!is.na(primary_data$unk_VAM_scores),]
     rv_eval_toxpi$plot_data<-primary_data}})  #Show  button click
-  
+ comps_interest=c("1912-24-9","117-81-7","80-05-7",
+                  "1563-66-2","16655-82-6","52315-07-8",
+                  "72-55-9","56-53-1","4376-20-9","31508-00-6","35065-27-1",
+                  "335-67-1","1763-23-1","60207-90-1","1461-22-9","115-86-6","13674-87-8")
+
+   # plot   
   output$plot_toxpi<-renderPlot({
     rv_eval_toxpi$mintoxpi=input$toxpi_plot_click$y-input$slider_click_toxpi
     rv_eval_toxpi$maxtoxpi=input$toxpi_plot_click$y+input$slider_click_toxpi
@@ -517,10 +575,11 @@ observeEvent(input$toxpiBtn_refresh,{
     ind_c<-which(all_mat$compound_name %in% res$compound_name)
     rv_eval_toxpi$plot_data$X[ind_c]<-rv_eval_toxpi$plot_data$compound_name[ind_c]
  
+
     toxpi_plot(rv_eval_toxpi$plot_data,
               ranges_toxpi,
               min_toxpi=input$slider_toxpi_plt_toxpi_cutoff,
-              min_edc_score=input$slider_toxpi_plt_edc_score_cutoff)}) #plot_functions call
+              min_edc_score=input$slider_toxpi_plt_edc_score_cutoff,comps_edcmet=comps_interest)}) #plot_functions call
   
  
  # data table below the plot
@@ -532,7 +591,12 @@ observeEvent(input$toxpiBtn_refresh,{
                                         c("compound_name", "cas", "toxpi", "unk_VAM_scores", "status")]
      
      colnames(res)<-c("compound_name", "cas", "toxpi", "Average_EDC_score", "type")
-     res$link<-sprintf('<a href="https://comptox.epa.gov/dashboard/dsstoxdb/results?abbreviation=TOXCAST_PH2&search=%s" target="_blank" class="btn btn-primary">CompTox</a>',res$cas)
+     #res$link<-sprintf('<a href="https://comptox.epa.gov/dashboard/dsstoxdb/results?abbreviation=TOXCAST_PH2&search=%s" target="_blank" class="btn btn-primary">CompTox</a>',res$cas)
+     
+     dtxs=sapply(res$cas, function(x)cas2dtxsid(as.character(x),dtx=dtx))
+     res$link<-sprintf('<a href="https://comptox.epa.gov/dashboard/chemical/details/%s" target="_blank" class="btn btn-primary">CompTox</a>',dtxs)
+ 
+     
      res<-res[,c("compound_name", "toxpi", "Average_EDC_score", "link", "type")]
      res$toxpi<-round(res$toxpi,3)
      res$Average_EDC_score<-round(res$Average_EDC_score,3)
@@ -547,8 +611,17 @@ observeEvent(input$toxpiBtn_refresh,{
       'Plot_EdcClassProbability_ToxPi.csv'
     },
     content = function(file) {
-      write.csv(rv_eval_toxpi$plot_data, file)
+          to_sav=rv_eval_toxpi$plot_data
+          to_sav=to_sav[,colnames(to_sav) %in% c(input$toxpi_layer_input,"toxpi","compound_name","unk_VAM_scores")]
+	        colnames(to_sav)[which(colnames(to_sav)=="unk_VAM_scores")]='average_EDC_score'
+	        write.csv(to_sav, file)
+	   
     }
   )  # export pathways as bubble plot 
-  
+
+  autoInvalidate <- reactiveTimer(10000)
+  observe({
+	     autoInvalidate()
+	        cat(".")
+	      }) 
 } # server function
