@@ -201,10 +201,10 @@ shinyUI(
                                  label = "Select data set to export as rds file:",
                                  choices = c(
 					     #"Pathway activation scores",
-                                             "Model parameters",
+                                             "model_parameters",
                                              "F1 scores",
-                                             "Elastic net coefficients",
-                                             "Predicted scores")),
+                                             "edc_moas",
+                                             "predicted_edcscores")),
                      
                      downloadButton('export_btn', 'Export selected item'), 
                      width = 12, title = 'Export', collapsible = T, collapsed = T),

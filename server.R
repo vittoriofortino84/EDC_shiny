@@ -72,10 +72,10 @@ session$allowReconnect(TRUE)
   dataset_export<-reactive({
     switch(input$export_input,
          #"Pathway activation scores" = list(NES_scores=rv_pipeline$NES,labels=rv_pipeline$class),
-         "Model parameters" = rv_pipeline$params,
+         "model_parameters" = rv_pipeline$params,
          "F1 scores" = rv_pipeline$f1_scores[,c('values','networks')],
-         "Elastic net coefficients" = rv_pipeline$data_frame,
-         "Predicted scores" = rv_pipeline$predicted_data)})
+         "edc_moas" = rv_pipeline$data_frame,
+         "predicted_edcscores" = rv_pipeline$predicted_data)})
    output$export_btn <- downloadHandler(
      filename = function() {
        paste(gsub(" ", "_", input$export_input), ".rds", sep = "")
@@ -323,7 +323,7 @@ shinyjs::hide("export_input")
    
   output$export_btn_pathways <- downloadHandler(
     filename = function() {
-      'Plot_Pathways.csv'
+      'bb_Pathways.csv'
     },
     content = function(file) {
       write.csv(rv_bubble_plot$data_subset, file)
@@ -350,10 +350,14 @@ shinyjs::hide("export_input")
     new_data_layer<-readRDS(input$new_data_glm_input$datapath)
     if(is.data.frame(new_data_layer)){
     if (ncol(new_data_layer)==4){
+    
     colnames(new_data_layer)<-colnames(rv_bubble_plot$data_glm)
     rv_bubble_plot$networks<-c(rv_bubble_plot$networks,unique(new_data_layer$network))
     updateSelectInput(session,'data_layer_input',choices = rv_bubble_plot$networks)
-    rv_bubble_plot$data_glm<-rbind(rv_bubble_plot$data_glm,new_data_layer)}}
+    rv_bubble_plot$data_glm<-rbind(rv_bubble_plot$data_glm,new_data_layer)
+    showNotification('A new classifier was added')
+    
+    }}
     else{showNotification('The data frame does not meet the criteria')}
     })
   
@@ -511,7 +515,7 @@ rv_edc_score$table_scors<-table_data
 
   output$export_btn_edcscores <- downloadHandler(
     filename = function() {
-      'Plot_EdcClassProbability.csv'
+      'edscores_selcompounds.csv'
     },
     content = function(file) {
       write.csv(rv_edc_score$class_prob_scores, file)
@@ -522,7 +526,7 @@ rv_edc_score$table_scors<-table_data
   # export all compounds scores  
   output$export_all_btn_edcscores <- downloadHandler(
     filename = function() {
-      'All_CTD_compounds_edc_scores.csv'
+      'edscores_ctd_all.csv'
     },
     content = function(file) {
 	to_sav=all_vam[,colnames(all_vam) %in% input$edc_score_layer_input]
@@ -608,7 +612,7 @@ ranges_toxpi <- reactiveValues(x = NULL, y = NULL)
   
   output$export_btn_toxpi <- downloadHandler(
     filename = function() {
-      'Plot_EdcClassProbability_ToxPi.csv'
+      'edscores_vs_toxpiscores.csv'
     },
     content = function(file) {
           to_sav=rv_eval_toxpi$plot_data
@@ -617,7 +621,7 @@ ranges_toxpi <- reactiveValues(x = NULL, y = NULL)
 	        write.csv(to_sav, file)
 	   
     }
-  )  # export pathways as bubble plot 
+  )  # export 
 
   autoInvalidate <- reactiveTimer(10000)
   observe({
