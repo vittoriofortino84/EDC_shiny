@@ -406,7 +406,7 @@ shinyjs::hide("export_input")
 	      shinyjs::hide("comp_dic_btn") 
         updateSelectizeInput(session, "addtocmpname", choices  =all_chem_names)
         updateActionButton(session, "comp_dic_btn", label = "Add to search Box")
-	      showNotification('Wait to update compounds list')
+	      showNotification('Wait to update compound list')
         rv_edc_score$dic_status=1 
 	shinyjs::show("comp_dic_btn")
       }else{

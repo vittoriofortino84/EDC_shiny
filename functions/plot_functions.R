@@ -115,7 +115,7 @@ toxpi_plot<-function(all_mat,ranges,min_toxpi=0.1,min_edc_score=0.8,comps_edcmet
     geom_text(label=all_mat$X,size=5, show.legend = F) +
     ylab('TOXPI score')+ xlab('Average EDC score')+
     coord_cartesian(xlim = ranges$x, ylim = ranges$y, expand = T)+
-    scale_color_manual(name='Color labels',values =c('blue','green','red'),labels=c('EDCmet priorities','Low Toxicity','High Toxicity'))+
+    scale_color_manual(name='Color labels',values =c('blue','green','red'),labels=c('EDCMET priorities','Low toxicity','High toxicity'))+
     theme_minimal()+ 
    # theme(axis.text = element_text(size = 20),axis.title.x = element_text(size = 20),axis.title.y = element_text(size = 20),
   #      strip.text = element_text(size = 20),legend.position  = 'right',legend.text = element_text(size = 16))+

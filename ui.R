@@ -100,13 +100,13 @@ shinyUI(
                                     '),
                          textInput("clientTime", "Client Time", value = ""),
                          numericInput('number_cpu_input', 'Number of CPUs', 1, min=1, step = 1),
-                         bsPopover(id = "qt_jobName", title = "Job name",
-                                   content = paste("Please enter a job name. This name will be used during visualization of the relults."),
+                         bsPopover(id = "qt_jobName", title = "Classifier name",
+                                   content = paste("Please enter a classifier name. This name will be used during visualization of the relults."),
                                    placement = "right",
                                    trigger = "hover",
                                    options = list(container = "body")),
                          textInput('job_name_input',
-                                   label = list("Job name", bsButton("qt_jobName", label = "", icon = icon("question"), style = "info", size = "extra-small")),  
+                                   label = list("Classifier name", bsButton("qt_jobName", label = "", icon = icon("question"), style = "info", size = "extra-small")),  
                                    value = 'my_job'),
                          verbatimTextOutput('status_lbl'), br(),
                          height = 400, width = 6, solidHeader = T),
@@ -296,11 +296,11 @@ shinyUI(
                                   choices = c(''),
                                   options = list(maxOptions = 10, maxItems = 5)), 
                    actionButton(inputId = 'comp_dic_btn',
-                                label = 'Fetch compounds list'),collapsible = T,collapsed = T,width = 14,title="Compound Search",solidHeader=T),
+                                label = 'Fetch compound list'),collapsible = T,collapsed = T,width = 14,title="Compound Search",solidHeader=T),
 hr(),
 
 			       textInput('cmpname',
-			                  label = 'CAS, MESH ID, Compound_name',value = 'Bisphenol B,C030298,1962-83-0'),
+			                  label = 'CAS, MeSH ID, Compound name',value = 'Bisphenol B,C030298,1962-83-0'),
 
 
 
