@@ -196,13 +196,23 @@ shinyUI(
                      plotOutput('f1_plt'),
                      width = 12, collapsed = T, collapsible = T, title = "Training and validation of GLM based classifier"),
 
+                   
+                   bsPopover(id = "qt_export", title = "Export options",
+                             content = paste(strong("model_parameters:"), "For parameters of the trained model", br(),
+                                             strong("cls_perfs:"), "For F1 scores of the trained model", br(),
+                                             strong("edc_moas:"), "For GLM elastic-net coefficients and pathway activation scores", br(),
+                                             strong("predicted_edcscores:"), "For EDC-class probabilities predicted using the newly trained classifier", sep = " "),
+                             placement = "right",
+                             trigger = "hover",
+                             options = list(container = "body")),
+                   
                    box(
                      selectInput(inputId = 'export_input', 
-                                 label = "Select data set to export as rds file:",
+                                 label = list("Select data set to export as rds file:", bsButton("qt_export", label = "", icon = icon("question"), style = "info", size = "extra-small")),
                                  choices = c(
 					     #"Pathway activation scores",
                                              "model_parameters",
-                                             "F1 scores",
+                                             "cls_perfs",
                                              "edc_moas",
                                              "predicted_edcscores")),
                      

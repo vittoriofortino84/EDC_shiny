@@ -73,7 +73,7 @@ session$allowReconnect(TRUE)
     switch(input$export_input,
          #"Pathway activation scores" = list(NES_scores=rv_pipeline$NES,labels=rv_pipeline$class),
          "model_parameters" = rv_pipeline$params,
-         "F1 scores" = rv_pipeline$f1_scores[,c('values','networks')],
+         "cls_perfs" = rv_pipeline$f1_scores[,c('values','networks')],
          "edc_moas" = rv_pipeline$data_frame,
          "predicted_edcscores" = rv_pipeline$predicted_data)})
    output$export_btn <- downloadHandler(
