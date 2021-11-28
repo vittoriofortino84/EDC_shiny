@@ -569,6 +569,16 @@ ranges_toxpi <- reactiveValues(x = NULL, y = NULL)
     rv_eval_toxpi$maxtoxpi=input$toxpi_plot_click$y+input$slider_click_toxpi
     rv_eval_toxpi$minedc=input$toxpi_plot_click$x-input$slider_click_toxpi
     rv_eval_toxpi$maxedc=input$toxpi_plot_click$x+input$slider_click_toxpi
+    
+    
+    rv_eval_toxpi$toxpi_range=input$slider_range_toxpi
+    rv_eval_toxpi$edc_range=input$slider_range_edc
+    
+    
+    
+    
+    
+    
     all_mat<-rv_eval_toxpi$plot_data
     res<-all_mat[which(all_mat$toxpi<=rv_eval_toxpi$maxtoxpi               &
                          all_mat$toxpi>rv_eval_toxpi$mintoxpi              &
@@ -583,7 +593,11 @@ ranges_toxpi <- reactiveValues(x = NULL, y = NULL)
     toxpi_plot(rv_eval_toxpi$plot_data,
               ranges_toxpi,
               min_toxpi=input$slider_toxpi_plt_toxpi_cutoff,
-              min_edc_score=input$slider_toxpi_plt_edc_score_cutoff,comps_edcmet=comps_interest)}) #plot_functions call
+              min_edc_score=input$slider_toxpi_plt_edc_score_cutoff,comps_edcmet=comps_interest,
+              rv_eval_toxpi$edc_range,
+              rv_eval_toxpi$toxpi_range
+              
+              )}) #plot_functions call
   
  
  # data table below the plot

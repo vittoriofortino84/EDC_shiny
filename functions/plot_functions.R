@@ -96,7 +96,9 @@ edc_multi_compare_bar<-function(edc_data,net_lvls,ranges,ylbl,y_scale,angle_t=60
 }# used in edc score tab
 
 # Plot of ToxPi scores against EDC-class probability --------------------------------------------------------
-toxpi_plot<-function(all_mat,ranges,min_toxpi=0.1,min_edc_score=0.8,comps_edcmet=c('100-51-6','101-20-2','1024-57-3')){ 
+toxpi_plot<-function(all_mat,ranges,min_toxpi=0.1,min_edc_score=0.8,comps_edcmet=c('100-51-6','101-20-2','1024-57-3'),
+                     range_edc=c(0,1),
+                     range_toxpi=c(0,1)){ 
   require(ggplot2)
   all_mat$colr<-'green'
   all_mat$size=1                        #default dot size
@@ -114,7 +116,7 @@ toxpi_plot<-function(all_mat,ranges,min_toxpi=0.1,min_edc_score=0.8,comps_edcmet
                alpha=all_mat$alpha,show.legend = T)+
     geom_text(label=all_mat$X,size=5, show.legend = F) +
     ylab('TOXPI score')+ xlab('Average EDC score')+
-    coord_cartesian(xlim = ranges$x, ylim = ranges$y, expand = T)+
+    coord_cartesian(xlim = range_edc, ylim = range_toxpi, expand = F)+
     scale_color_manual(name='Color labels',values =c('blue','green','red'),labels=c('EDCMET priorities','Low toxicity','High toxicity'))+
     theme_minimal()+ 
    # theme(axis.text = element_text(size = 20),axis.title.x = element_text(size = 20),axis.title.y = element_text(size = 20),

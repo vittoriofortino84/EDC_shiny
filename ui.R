@@ -306,7 +306,8 @@ shinyUI(
                                   choices = c(''),
                                   options = list(maxOptions = 10, maxItems = 5)), 
                    actionButton(inputId = 'comp_dic_btn',
-                                label = 'Fetch compound list'),collapsible = T,collapsed = T,width = 14,title="Compound Search",solidHeader=T),
+                                label = 'Fetch compound list'),
+                   collapsible = T,collapsed = T,width = 14,title="Compound Search",solidHeader=T),
 hr(),
 
 			       textInput('cmpname',
@@ -385,16 +386,30 @@ hr(),
                    selectInput(inputId = 'toxpi_layer_input', 
                                label = list("Classifiers", bsButton("qt_dataLayer", label = "", icon = icon("question"), style = "info", size = "extra-small")), 
                                c('PPI_STRINGdb'), multiple = T, selectize = F),
+                   box(
                    sliderInput(inputId = 'slider_toxpi_plt_toxpi_cutoff',
                                label='Minimum ToxPi score:',
                                min = 0.000, max = 0.5, value = 0.1, step = 0.01, round = F),
                    sliderInput(inputId = 'slider_toxpi_plt_edc_score_cutoff',
                                label ='Minimum EDC-class probability score:',
                                min = 0.000, max = 1, value = 0.8, step = 0.01, round = F),
-                   sliderInput(inputId = 'slider_click_toxpi',
-                               label = 'Plot click prescision:',
-                               min = 0.000, max = 0.05, value = 0.005, step = 0.0001, round = F),
+                   collapsible = T,collapsed = F,width = 14,title="EDC definition",solidHeader=T),
+
+                   box(
+                  sliderInput(inputId = 'slider_click_toxpi',
+                                 label = 'Plot click prescision:',
+                                 min = 0.000, max = 0.05, value = 0.005, step = 0.0001, round = F),
+                   sliderInput(inputId = 'slider_range_toxpi',
+                               label = 'Range of ToxPi scores:',
+                               min = 0.000, max = .4, value = c(0,.5), step = 0.01, round = F),
+                   sliderInput(inputId = 'slider_range_edc',
+                               label = 'Range of edc scores:',
+                               min = 0.000, max = 1.2, value = c(0,1.2), step = 0.01, round = F),
+                   
                    actionButton(inputId = 'toxpi_btn', label = 'Calculate'),
+                   
+                   collapsible = T,collapsed = T,width = 14,title="Plot settings",solidHeader=T),
+                   
                    br(),
                    hr(),
 
