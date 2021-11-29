@@ -388,9 +388,9 @@ shinyjs::hide("export_input")
   rv_all_compounds_score<-reactiveValues(scores=c())
   ranges_class_prob <- reactiveValues(x = NULL, y = NULL)
   ranges_edc_score <- reactiveValues(x = NULL, y = NULL)
-  shinyjs::hide('mie2classprob_btn')							  
+							  
   path_2_network<-'large_file/all_precompiled_pipeline.RDSS'  # all networks and paramterers and models
-  if(!file.exists(path_2_network))shinyjs::hide('mie2classprob_btn')
+  
   
   # events 
   observeEvent(input$plot_class_prob_scores_dbl_click,{
@@ -398,7 +398,7 @@ shinyjs::hide("export_input")
 
   updateSelectInput(session,"edc_score_layer_input",choices = networks,selected = networks[1:4])
 
-    if(file.exists(path_2_network))shinyjs::show('mie2classprob_btn')
+   
     
     
     observeEvent(input$comp_dic_btn,{
@@ -457,8 +457,19 @@ rv_edc_score$table_scors<-table_data
   
    # mie 2 class prob
   observeEvent(input$mie2classprob_btn,{
-		       shinyjs::hide('mie2classprob_btn') 
-     shinyjs::hide('calc')
+    er=1
+    if(!file.exists(path_2_network)){
+      showNotification('No networks found. Trying to download networks. It might take a long time')
+      ftd='https://a3s.fi/EDTox_large_file/all_precompiled_pipeline.RDSS'
+      tryCatch(download.file(url = ftd,destfile = path_2_network,mode = 'wb',quiet = F),
+               error=function(e){showNotification('This functionality does not work')
+               er=0
+               })
+    }
+    
+    if (er==1){
+           shinyjs::hide('mie2classprob_btn') 
+           shinyjs::hide('calc')
 		       gc()
       newcomp<-unlist(strsplit(input$txt_input_mies,',')) #genes as MIEs
        libra_genes=readRDS('inputData/mapped_genes.rds')
@@ -511,7 +522,9 @@ rv_edc_score$table_scors<-table_data
   }else{showNotification('No MIES were enetered or The genes not in the library ')}
       shinyjs::show('mie2classprob_btn')
       shinyjs::show('calc')
-   })  #MIE 2 edc score
+   }
+  }
+)  #MIE 2 edc score
 
   output$export_btn_edcscores <- downloadHandler(
     filename = function() {

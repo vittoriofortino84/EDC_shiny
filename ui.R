@@ -405,15 +405,11 @@ hr(),
                    sliderInput(inputId = 'slider_range_edc',
                                label = 'Range of edc scores:',
                                min = 0.000, max = 1.2, value = c(0,1.2), step = 0.01, round = F),
-                   
-                   actionButton(inputId = 'toxpi_btn', label = 'Calculate'),
+                   downloadButton('export_btn_toxpi', 'Export plot data'),
                    
                    collapsible = T,collapsed = T,width = 14,title="Plot settings",solidHeader=T),
-                   
-                   br(),
-                   hr(),
-
-                   downloadButton('export_btn_toxpi', 'Export plot data')
+                   actionButton(inputId = 'toxpi_btn', label = 'Calculate')
+        
                    #verbatimTextOutput("txt_toxpi_selected_layers",placeholder = F)
                    ),
                  mainPanel(
