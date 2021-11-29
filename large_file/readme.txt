@@ -1,2 +1,2 @@
 # The precompiled gene co-expression networks and their parameters are saved in the file all_precompiled_pipeline.RDSS 
-the file should be placed in this folder to allow users for the prediction of EDC probability of new compounds using their MIEs based on these netowrk based models. You coould download the file manually at: https://a3s.fi/EDTox_large_file/all_precompiled_pipeline.RDSS or use the app to do it automatically. 
+the file should be placed in this folder to allow users for the prediction of EDC probability of new compounds using their MIEs based on these models. You could download the file manually at: https://a3s.fi/EDTox_large_file/all_precompiled_pipeline.RDSS or use the app to do it automatically. 
