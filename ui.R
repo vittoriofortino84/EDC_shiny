@@ -235,21 +235,23 @@ shinyUI(
                  headerPanel("Molecular activity profiling of EDCs"),
                  sidebarPanel(
                    bsPopover(id = "qt_glmCoef", title = "GLM coefficients",
-                             content = paste("Select the minimum GLM coefficient"),
+                             content = paste("Select the minimum GLM coefficient and click Update Plot"),
                              placement = "right",
                              trigger = "hover",
                              options = list(container = "body")),
+                   box(
                    sliderInput(inputId = 'GLM_coef',
                                label = list("GLM coefficient threshold ", bsButton("qt_glmCoef", label = "", icon = icon("question"), style = "info", size = "extra-small")), 
                                min = 0, max = 1, value = 0, step = 0.01, round = F),
                    bsPopover(id = "qt_pathScore", title = "Pathway activation score",
-                             content = paste("Select the minimum pathway activation score"),
+                             content = paste("Select the minimum pathway activation score and click Update Plot"),
                              placement = "right",
                              trigger = "hover",
                              options = list(container = "body")),
                    sliderInput(inputId = 'NES',
                                label = list("Pathway activation score threshold ", bsButton("qt_pathScore", label = "", icon = icon("question"), style = "info", size = "extra-small")), 
                                min = 0, max = 2, value = 0, step = 0.01, round = F),
+                   collapsible = T,collapsed = T,width = 14,title="Plot Settings",solidHeader=T),
                    hr(),
                    selectInput(inputId = "pathway_category_input",
                                label = "Pathway databases (Hold Ctrl to select multiple databases)",
@@ -299,6 +301,10 @@ shinyUI(
                              placement = "right",
                              trigger = "hover",
                              options = list(container = "body")),
+                   selectInput(inputId = 'edc_score_layer_input',
+                               label = 'Classifiers',
+                               c('PPI_STRINGdb'),
+                               multiple=TRUE, selectize = FALSE),
                    box(
 
                    selectizeInput(inputId = 'addtocmpname',
@@ -315,10 +321,7 @@ shinyUI(
 
 
 
-                   selectInput(inputId = 'edc_score_layer_input',
-                               label = 'Classifiers',
-                               c('PPI_STRINGdb'),
-                               multiple=TRUE, selectize = FALSE),
+ 
 
 
                   actionButton(inputId = 'calc',
