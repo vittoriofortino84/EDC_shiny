@@ -308,7 +308,7 @@ shinyUI(
                    actionButton(inputId = 'comp_dic_btn',
                                 label = 'Fetch compound list'),
                    collapsible = T,collapsed = T,width = 14,title="Compound Search",solidHeader=T),
-hr(),
+            box(
 
 			       textInput('cmpname',
 			                  label = 'CAS, MeSH ID, Compound name',value = 'Bisphenol B,C030298,1962-83-0'),
@@ -322,7 +322,7 @@ hr(),
 
 
                   actionButton(inputId = 'calc',
-                                label = 'Show on plot'),br(),hr(),
+                                label = 'Show on plot'),
                   bsPopover(id = "qallcompile", title = "Scores for all CTD chemicals",
                             content = paste0(" Calculate EDC-class probability scores for all the chemicals in CTD based on all the classifiers.",
                                              "The classifiers selected above will be used to compute the average and harmonic scores for each compound.",
@@ -330,13 +330,16 @@ hr(),
                                              "Note: Compilation of the scores might take time", sep = " "),
                             placement = "right", 
                             trigger = "hover",
-                            options = list(container = "body")),																													 
-                            br(),hr(),
+                            options = list(container = "body")),	
+			       collapsible = T,collapsed = F,width = 14,title="Class Probability",solidHeader=T),
+                
+                  box(
                   downloadButton('export_all_btn_edcscores', 'Export scores for all CTD chemicals'),
 			            checkboxInput('harmonicExport', 'include Harmonic EDC score', value = F, width = NULL),
-                       hr(),
-              
-                   p(strong("Compile EDC-class probability scores for new chemicals "), bsButton("qt_scoreOther", label = "", icon = icon("question"), style = "info", size = "extra-small")),
+			            downloadButton('export_btn_edcscores','Export plot data'),
+			            collapsible = T,collapsed = T,width = 14,title="Export",solidHeader=T),
+              box(
+                   p(strong("Compile EDC-class probability scores for a new chemical "), bsButton("qt_scoreOther", label = "", icon = icon("question"), style = "info", size = "extra-small")),
                    bsPopover(id = "qt_scoreOther", title = "Compile EDC-class probability scores for new chemicals",
                              content = paste("Enter the name of the compound and the comma separated list of MIEs as Entrez gene ID or Symbols in the respective fields below.i.e", strong("4617,4654,ERK3,4656,5077,25937"),
                                              "Select the classifiers based on which to calculate the probability scores and hit the",
@@ -355,7 +358,7 @@ hr(),
                              value = ""),
                    useShinyjs(),
                    actionButton(inputId = 'mie2classprob_btn', label = 'Calculate from MIEs'),
-                   hr()
+                   collapsible = T,collapsed = T,width = 14,title="New compound",solidHeader=T)
                    ), # End of side bar panel 1
                  mainPanel(
                   box(tableOutput('table_edc_scores'), collapsible = T, collapsed = T, width = 12, title = "Average and harmonic sum of EDC-class probability scores"),
@@ -365,9 +368,9 @@ hr(),
                               dblclick = 'plot_class_prob_scores_dbl_click',
                               brush = brushOpts(id = 'class_prob_scores_brush', resetOnNew = T)
                               ),
-                    width = 12, collapsible = T, title = "Plot of compound EDC-class probability scores for selected classifiers"),
+                    width = 12, collapsible = T, title = "Plot of compound EDC-class probability scores for selected classifiers")
 					      
-                       downloadButton('export_btn_edcscores','Export plot data')
+                      
                   #plotOutput('plot_edc_score', height = 300),
                   ) # End of main panel 1
                  ),
@@ -378,7 +381,7 @@ hr(),
                  headerPanel("Comparison with ED-based ToxPi Scores"),
                  sidebarPanel(
                    bsPopover(id = "qt_dataLayer", title = "Classifiers",
-                             content = paste("Select the classifiers to be used for calculation of average EDC-class probability scores.",
+                             content = paste("Select the classifiers to be used for calculation of average EDC-class probability scores and click calculate.",
                                                 "Hold", strong("Ctrl"), "to select multiple data layers.", sep = " "),
                              placement = "right",
                              trigger = "hover",
@@ -386,6 +389,7 @@ hr(),
                    selectInput(inputId = 'toxpi_layer_input', 
                                label = list("Classifiers", bsButton("qt_dataLayer", label = "", icon = icon("question"), style = "info", size = "extra-small")), 
                                c('PPI_STRINGdb'), multiple = T, selectize = F),
+                   actionButton(inputId = 'toxpi_btn', label = 'Calculate'),hr(),
                    box(
                    sliderInput(inputId = 'slider_toxpi_plt_toxpi_cutoff',
                                label='Minimum ToxPi score:',
@@ -407,8 +411,8 @@ hr(),
                                min = 0.000, max = 1.2, value = c(0,1.2), step = 0.01, round = F),
                    downloadButton('export_btn_toxpi', 'Export plot data'),
                    
-                   collapsible = T,collapsed = T,width = 14,title="Plot settings",solidHeader=T),
-                   actionButton(inputId = 'toxpi_btn', label = 'Calculate')
+                   collapsible = T,collapsed = T,width = 14,title="Plot settings",solidHeader=T)
+                 
         
                    #verbatimTextOutput("txt_toxpi_selected_layers",placeholder = F)
                    ),
